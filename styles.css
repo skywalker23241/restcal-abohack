@@ -124,6 +124,7 @@
 body {
     margin: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     color: var(--text);
     background-color: var(--bg);
     background-image: var(--grain);
@@ -257,6 +258,18 @@ h1 {
     outline: none;
 }
 
+/* 触屏：消除双击缩放延迟与系统点按高亮，反馈交给 :active 样式 */
+.btn,
+.control,
+.seg-btn,
+.action-btn,
+.select-option,
+.tool-row,
+.day-card.clickable {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
 .select-native {
     position: absolute;
     width: 1px !important;
@@ -333,6 +346,7 @@ h1 {
     width: max-content;
     min-width: 100%;
     max-height: min(330px, calc(100vh - 120px));
+    max-height: min(330px, calc(100dvh - 120px));
     padding: 6px;
     border: 1px solid color-mix(in srgb, var(--border) 86%, var(--ring));
     border-radius: var(--radius);
@@ -371,11 +385,18 @@ h1 {
     white-space: nowrap;
 }
 
-.select-option:hover,
 .select-option:focus-visible {
     outline: 0;
     background: var(--accent);
     color: var(--accent-foreground);
+}
+
+@media (hover: hover) {
+    .select-option:hover {
+        outline: 0;
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
 }
 
 .select-option.is-selected {
@@ -384,10 +405,16 @@ h1 {
     font-weight: 700;
 }
 
-.select-option.is-selected:hover,
 .select-option.is-selected:focus-visible {
     background: var(--primary-hover);
     color: var(--primary-foreground);
+}
+
+@media (hover: hover) {
+    .select-option.is-selected:hover {
+        background: var(--primary-hover);
+        color: var(--primary-foreground);
+    }
 }
 
 .select-menu::-webkit-scrollbar {
@@ -436,16 +463,19 @@ h1 {
     box-shadow: none;
 }
 
-.btn:hover,
-.control:hover {
-    background: var(--accent);
-    color: var(--accent-foreground);
-}
+@media (hover: hover) {
 
-.btn.primary:hover {
-    background: var(--primary-hover);
-    border-color: var(--primary-hover);
-    color: var(--primary-foreground);
+    .btn:hover,
+    .control:hover {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .btn.primary:hover {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+        color: var(--primary-foreground);
+    }
 }
 
 .btn.danger {
@@ -572,6 +602,7 @@ h1 {
     gap: 22px;
     align-items: stretch;
     min-height: calc(100vh - 128px);
+    min-height: calc(100dvh - 128px);
 }
 
 .center-column {
@@ -805,11 +836,18 @@ h1 {
     display: none;
 }
 
-.day-card.clickable:hover,
 .day-card.clickable:focus-visible {
     z-index: 2;
     filter: brightness(0.985);
     box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+@media (hover: hover) {
+    .day-card.clickable:hover {
+        z-index: 2;
+        filter: brightness(0.985);
+        box-shadow: inset 0 0 0 1px var(--ring);
+    }
 }
 
 .day-card.outside {
@@ -1421,8 +1459,10 @@ details.section[open] summary::after {
     text-align: left;
 }
 
-.tool-row:hover {
-    background: var(--heat-personal);
+@media (hover: hover) {
+    .tool-row:hover {
+        background: var(--heat-personal);
+    }
 }
 
 .tool-row:last-of-type {
@@ -1437,9 +1477,12 @@ details.section[open] summary::after {
     background: var(--card);
 }
 
-.salary-generate-button:hover,
-.leave-generate-button:hover {
-    background: var(--muted-surface);
+@media (hover: hover) {
+
+    .salary-generate-button:hover,
+    .leave-generate-button:hover {
+        background: var(--muted-surface);
+    }
 }
 
 .tool-icon {
@@ -1591,6 +1634,7 @@ details.section[open] summary::after {
 .receipt-window {
     width: min(460px, 100%);
     max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     overflow: hidden;
@@ -1615,6 +1659,7 @@ details.section[open] summary::after {
 .leave-generator-window {
     width: min(940px, 100%);
     max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     overflow: hidden;
@@ -1800,9 +1845,11 @@ details.section[open] summary::after {
     background-repeat: no-repeat;
 }
 
-.field select:hover {
-    border-color: color-mix(in srgb, var(--ring) 36%, var(--input));
-    background-color: var(--accent);
+@media (hover: hover) {
+    .field select:hover {
+        border-color: color-mix(in srgb, var(--ring) 36%, var(--input));
+        background-color: var(--accent);
+    }
 }
 
 .field select option {
@@ -1918,6 +1965,21 @@ details.section[open] summary::after {
     to {
         opacity: 0;
         transform: translateY(8px) scale(0.97);
+    }
+}
+
+/* 窄屏底部抽屉的滑入滑出（在窄屏媒体查询中启用） */
+@keyframes sheet-in {
+    from {
+        opacity: 0.4;
+        transform: translateY(55%);
+    }
+}
+
+@keyframes sheet-out {
+    to {
+        opacity: 0;
+        transform: translateY(55%);
     }
 }
 
@@ -2119,6 +2181,7 @@ html.theme-anim #themeToggle .icon {
 .modal {
     width: min(500px, 100%);
     max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
     overflow: auto;
     border-radius: var(--radius);
     border: 1px solid var(--border);
@@ -2204,9 +2267,11 @@ html.theme-anim #themeToggle .icon {
     transition: box-shadow 0.15s ease, border-color 0.15s ease, filter 0.15s ease, transform 0.12s ease;
 }
 
-.action-btn:hover {
-    border-color: var(--ring);
-    filter: saturate(1.04);
+@media (hover: hover) {
+    .action-btn:hover {
+        border-color: var(--ring);
+        filter: saturate(1.04);
+    }
 }
 
 .action-btn.work {
@@ -2285,6 +2350,33 @@ html.theme-anim #themeToggle .icon {
 @media (max-width: 760px) {
     .app {
         padding: 14px;
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
+    }
+
+    /* 模态改为底部抽屉：贴底、全宽、顶部圆角、上滑入场 */
+    .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .modal-backdrop>* {
+        width: 100%;
+        max-height: calc(100dvh - 40px);
+        border-radius: var(--radius) var(--radius) 0 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .modal-backdrop.open>* {
+        animation: sheet-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .modal-backdrop.closing>* {
+        animation: sheet-out 0.2s ease both;
     }
 
     .topbar {
@@ -2338,7 +2430,7 @@ html.theme-anim #themeToggle .icon {
     .toolbar .btn {
         width: 100%;
         min-width: 0;
-        min-height: 36px;
+        min-height: 44px;
         padding-inline: 7px;
         flex: initial;
         font-size: 13px;
@@ -2396,51 +2488,66 @@ html.theme-anim #themeToggle .icon {
         padding: 10px;
     }
 
-    .calendar-panel {
-        overflow-x: auto;
-    }
-
-    .weekday-row,
-    .calendar-grid,
-    .calendar-footer {
-        min-width: 640px;
-    }
-
+    /* 窄屏放弃横向滚动，7 列压缩进屏宽：
+       状态靠卡片背景色 + 迷你彩色文字表达，详情点击查看 */
     .weekday {
-        padding: 10px 4px;
-        font-size: 12px;
-    }
-
-    .day-card {
-        min-height: 94px;
-        padding: 8px;
-        gap: 5px;
-    }
-
-    .solar {
-        font-size: 18px;
-    }
-
-    .lunar,
-    .tag,
-    .reason {
+        padding: 8px 2px;
         font-size: 11px;
     }
 
+    .day-card {
+        min-height: 62px;
+        padding: 6px 4px 5px;
+        gap: 2px;
+    }
+
+    .date-line {
+        gap: 4px;
+    }
+
+    .solar {
+        font-size: 15px;
+    }
+
+    /* “今天”文字徽标缩成圆点，今天卡片本身保留描边 */
+    .today-dot {
+        width: 7px;
+        height: 7px;
+        min-height: 0;
+        padding: 0;
+        font-size: 0;
+        line-height: 0;
+        overflow: hidden;
+    }
+
     .lunar {
-        min-height: 15px;
+        font-size: 10px;
+        min-height: 13px;
     }
 
     .tags {
-        gap: 4px;
-        min-height: 20px;
+        gap: 3px;
+        min-height: 14px;
+        flex-wrap: nowrap;
+        overflow: hidden;
     }
 
-    .tag {
-        min-height: 20px;
-        padding: 1px 6px;
+    /* 标签退化为无边框迷你文字，颜色沿用各状态文字色 */
+    .day-card .tag {
+        min-height: 0;
+        max-width: 100%;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        font-size: 10px;
+        line-height: 1.3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
+    .day-card .tag.aux-state,
     .reason {
         display: none;
     }
@@ -2494,6 +2601,7 @@ html.theme-anim #themeToggle .icon {
 
     .seg-btn {
         flex: 1;
+        min-height: 38px;
     }
 
     .heatmap.month {
@@ -2530,11 +2638,13 @@ html.theme-anim #themeToggle .icon {
         font-size: 10px;
     }
 
-        .field input,
-        .field select,
-        .field textarea {
-            min-height: 36px;
-        }
+    /* 44px 触控目标；16px 字号避免 iOS 聚焦输入框时整页放大 */
+    .field input,
+    .field select,
+    .field textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
 
         .leave-generator-body {
             grid-template-columns: 1fr;
@@ -2566,6 +2676,9 @@ html.theme-anim #themeToggle .icon {
 @media (max-width: 420px) {
     .app {
         padding: 12px;
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
     }
 
     .calendar-grid {
@@ -2573,24 +2686,21 @@ html.theme-anim #themeToggle .icon {
     }
 
     .day-card {
-        min-height: 84px;
-        padding: 7px;
+        min-height: 56px;
+        padding: 5px 3px 4px;
     }
 
     .solar {
-        font-size: 17px;
+        font-size: 14px;
     }
 
     .lunar {
-        font-size: 10px;
+        font-size: 9px;
+        min-height: 12px;
     }
 
-    .tag {
-        max-width: 100%;
-        padding-inline: 4px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .day-card .tag {
+        font-size: 9px;
     }
 
     .summary-chip {
