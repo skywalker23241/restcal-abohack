@@ -1,0 +1,2430 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="休历：管理请假、出勤、工资扣除和节假日火车票购票提醒的单页面工具，数据保存在本机浏览器。">
+    <meta name="theme-color" content="#f6f3ed">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b4382a'/%3E%3Crect x='4' y='4' width='56' height='56' rx='10' fill='none' stroke='%23fdf3ee' stroke-opacity='0.45' stroke-width='2.5'/%3E%3Ctext x='32' y='46' font-size='38' font-family='Georgia, Songti SC, SimSun, serif' font-weight='700' fill='%23fdf3ee' text-anchor='middle'%3E休%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-600.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-700.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/700.css">
+    <title>休历 - 请假、出勤与购票提醒</title>
+    <script>
+        (function () {
+            var pref = "auto";
+            try {pref = localStorage.getItem("xiuli-theme") || "auto";} catch { }
+            var dark = pref === "dark" || (pref === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+            document.documentElement.dataset.theme = dark ? "dark" : "light";
+        })();
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="i-theme-auto" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path class="icon-fill" d="M12 3a9 9 0 0 1 0 18Z" />
+        </symbol>
+        <symbol id="i-theme-light" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </symbol>
+        <symbol id="i-theme-dark" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </symbol>
+        <symbol id="i-settings" viewBox="0 0 24 24">
+            <path d="M20 7h-9M14 17H5" />
+            <circle cx="17" cy="17" r="3" />
+            <circle cx="7" cy="7" r="3" />
+        </symbol>
+        <symbol id="i-guide" viewBox="0 0 24 24">
+            <path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z" />
+            <path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z" />
+        </symbol>
+        <symbol id="i-csv" viewBox="0 0 24 24">
+            <path d="m3 16 4 4 4-4M7 20V4" />
+            <path d="m21 8-4-4-4 4M17 4v16" />
+        </symbol>
+        <symbol id="i-ticket" viewBox="0 0 24 24">
+            <path
+                d="M2 9V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z" />
+            <path d="M13 5v2M13 11v2M13 17v2" />
+        </symbol>
+        <symbol id="i-month-prev" viewBox="0 0 24 24">
+            <path d="M14.5 6 8.5 12l6 6" />
+            <path d="M19 12H9" />
+        </symbol>
+        <symbol id="i-month-next" viewBox="0 0 24 24">
+            <path d="M9.5 6 15.5 12l-6 6" />
+            <path d="M5 12h10" />
+        </symbol>
+        <symbol id="i-salary-slip" viewBox="0 0 24 24">
+            <path d="M7 3h10l2 2v16l-2-1-2 1-2-1-2 1-2-1-2 1-2-1V5l2-2Z" />
+            <path d="M9 8h6M9 16h6" />
+            <path d="M12 13V9M10 10.5l2 2 2-2" />
+        </symbol>
+        <symbol id="i-leave-slip" viewBox="0 0 24 24">
+            <path d="M6 3h9l3 3v15H6z" />
+            <path d="M15 3v4h4" />
+            <path d="M9 11h6M9 15h3" />
+            <path d="M16 14.5 18 16.5 22 12.5" />
+        </symbol>
+    </svg>
+    <main class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">休</div>
+                <div>
+                    <h1>休历</h1>
+                    <div class="subtitle">请假、出行日程规划 & 工资核算 <span class="api-state" id="calendarSource">正在加载日历数据</span>
+                    </div>
+                </div>
+            </div>
+            <div class="toolbar" aria-label="月份切换">
+                <div class="toolbar-group nav-group" aria-label="月份导航">
+                    <button class="btn ghost month-nav-btn" id="prevMonth" type="button" title="上月" aria-label="上月"><svg
+                            class="icon">
+                            <use href="#i-month-prev" />
+                        </svg></button>
+                    <button class="btn ghost month-nav-btn" id="nextMonth" type="button" title="下月" aria-label="下月"><svg
+                            class="icon">
+                            <use href="#i-month-next" />
+                        </svg></button>
+                </div>
+                <div class="toolbar-group picker-group" aria-label="年月选择">
+                    <select class="control" id="yearSelect" aria-label="年份"></select>
+                    <select class="control" id="monthSelect" aria-label="月份"></select>
+                </div>
+                <div class="toolbar-group tool-group" aria-label="工具操作">
+                    <button class="btn primary" id="todayBtn" type="button">今天</button>
+                    <button class="btn icon-btn" id="themeToggle" type="button" title="主题：跟随系统" aria-label="切换主题"><svg
+                            class="icon">
+                            <use href="#i-theme-auto" />
+                        </svg></button>
+                    <button class="btn icon-btn" id="settingsToggle" type="button" title="设置" aria-label="设置"><svg
+                            class="icon">
+                            <use href="#i-settings" />
+                        </svg></button>
+                    <button class="btn icon-btn" id="guideToggle" type="button" title="使用说明" aria-label="使用说明"><svg
+                            class="icon">
+                            <use href="#i-guide" />
+                        </svg></button>
+                    <button class="btn icon-btn" id="csvToggle" type="button" title="CSV 备份与导入" aria-label="CSV 备份与导入"
+                        aria-expanded="false"><svg class="icon">
+                            <use href="#i-csv" />
+                        </svg></button>
+                </div>
+                <div class="csv-menu" id="csvMenu" aria-label="CSV 备份与导入">
+                    <div class="csv-menu-title">CSV 数据</div>
+                    <div class="csv-actions">
+                        <button class="btn primary" id="exportCsv" type="button">导出 CSV</button>
+                        <label class="btn" for="importCsv">导入 CSV</label>
+                        <input id="importCsv" type="file" accept=".csv,text/csv" hidden>
+                    </div>
+                    <p class="notice" id="csvNotice">导入前会校验字段和日期格式，校验失败不会覆盖现有数据。</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="layout">
+            <aside class="side left-side">
+                <section class="panel section">
+                    <h2>本月统计</h2>
+                    <div class="stats-grid" id="monthStats"></div>
+                </section>
+
+                <section class="panel section ticket-strip" aria-label="购票提醒">
+                    <div class="ticket-head">
+                        <span class="ticket-icon"><svg class="icon">
+                                <use href="#i-ticket" />
+                            </svg></span>
+                        <h2>购票提醒</h2>
+                    </div>
+                    <div class="reminder-list" id="ticketReminders"></div>
+                </section>
+
+                <section class="panel section">
+                    <div class="section-head">
+                        <h2>假期额度</h2>
+                        <button class="btn ghost compact-btn" data-open-settings="quota" type="button">设置</button>
+                    </div>
+                    <div class="quota-line" id="quotaSummary"></div>
+                </section>
+
+            </aside>
+
+            <section class="center-column">
+                <div class="month-summary" id="monthSummary" aria-label="本月关键状态" hidden></div>
+                <div class="panel calendar-panel">
+                    <div class="weekday-row" aria-hidden="true">
+                        <div class="weekday">周一</div>
+                        <div class="weekday">周二</div>
+                        <div class="weekday">周三</div>
+                        <div class="weekday">周四</div>
+                        <div class="weekday">周五</div>
+                        <div class="weekday">周六</div>
+                        <div class="weekday">周日</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                    <div class="calendar-footer" id="calendarFooter"></div>
+                </div>
+            </section>
+
+            <aside class="side right-side">
+                <section class="panel section">
+                    <div class="section-head">
+                        <h2>年度统计</h2>
+                        <div class="segmented" id="yearStatsMode" aria-label="年度统计显示方式">
+                            <button class="seg-btn active" type="button" data-year-mode="months">月</button>
+                            <button class="seg-btn" type="button" data-year-mode="days">天</button>
+                        </div>
+                    </div>
+                    <div class="stats-grid" id="yearStats"></div>
+                </section>
+
+                <section class="tools-panel">
+                    <button class="panel section tool-row salary-generate-button" data-open-receipt="salary"
+                        type="button">
+                        <span class="tool-icon"><svg class="icon">
+                                <use href="#i-salary-slip" />
+                            </svg></span>
+                        <span><strong id="salaryReceiptLabel">生成工资条</strong><small>按当前月份居中预览，并下载为图片</small></span>
+                        <span class="tool-chevron">›</span>
+                    </button>
+                    <button class="panel section tool-row leave-generate-button" data-generate-leave-receipt
+                        type="button">
+                        <span class="tool-icon"><svg class="icon">
+                                <use href="#i-leave-slip" />
+                            </svg></span>
+                        <span><strong>生成请假条</strong><small>填写请假时间和理由，预览并下载为图片</small></span>
+                        <span class="tool-chevron">›</span>
+                    </button>
+                    <div class="salary-snapshot" id="salaryResult"></div>
+                </section>
+
+            </aside>
+        </section>
+    </main>
+
+    <div class="modal-backdrop" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+        <div class="modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="guideTitle">使用说明</h2>
+                    <div class="subtitle">按下面步骤完成月份查看、请假管理、工资计算和数据备份。</div>
+                </div>
+                <button class="btn ghost" id="closeGuide" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body">
+                <div class="guide-list">
+                    <div class="guide-step">
+                        <strong>切换月份</strong>
+                        <span>使用顶部的年份、月份、上月、下月按钮查看不同月份。日历会自动标记周末、法定节假日、调休和农历信息。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>标记单日状态</strong>
+                        <span>点击任意工作日，在弹窗中选择出勤、事假、病假、年假或调休。填写理由和备注后保存。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>批量请假或清除</strong>
+                        <span>在日期弹窗中设置开始日期和结束日期，再选择状态并保存。系统只会应用到工作日，自动跳过周末和法定节假日。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>查看统计</strong>
+                        <span>左侧月度统计展示本月热力图和请假天数。右侧年度统计默认显示每月请假天数柱状图，也可以切换到全年每日热力图。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>设置额度和工资</strong>
+                        <span>点击右上角设置按钮，统一填写年假、调休额度、月薪、固定扣除和各类请假扣款比例，即可得到请假扣款和实际收入。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>生成请假条</strong>
+                        <span>在设置里维护申请人、称呼、默认理由和工作安排说明。点击日期后选择事假或病假，即可在弹窗里生成请假条。</span>
+                    </div>
+                    <div class="guide-step">
+                        <strong>备份和恢复</strong>
+                        <span>点击右上角的双向箭头图标导出 CSV 备份。更换浏览器或设备前建议先导出，之后可通过导入 CSV 恢复数据。</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn primary" id="guideDone" type="button">知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal settings-modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="settingsTitle">设置</h2>
+                    <div class="subtitle">工资、假期额度和请假条默认内容会自动保存在本机浏览器。</div>
+                </div>
+                <button class="btn ghost" id="closeSettings" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body settings-body">
+                <section class="settings-group" data-settings-group="salary">
+                    <h3>工资与扣款</h3>
+                    <div class="settings-grid">
+                        <div class="field">
+                            <label for="salaryInput">月薪</label>
+                            <input id="salaryInput" inputmode="decimal" type="number" min="0" step="100"
+                                placeholder="例如 12000">
+                        </div>
+                        <div class="field">
+                            <label for="deductionInput">五险一金或固定扣除</label>
+                            <input id="deductionInput" inputmode="decimal" type="number" min="0" step="50"
+                                placeholder="例如 1800">
+                        </div>
+                        <div class="field">
+                            <label for="personalRateInput">事假扣款比例</label>
+                            <input id="personalRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
+                                placeholder="100">
+                        </div>
+                        <div class="field">
+                            <label for="sickRateInput">病假扣款比例</label>
+                            <input id="sickRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
+                                placeholder="50">
+                        </div>
+                        <div class="field">
+                            <label for="annualRateInput">年假扣款比例</label>
+                            <input id="annualRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
+                                placeholder="0">
+                        </div>
+                        <div class="field">
+                            <label for="compRateInput">调休扣款比例</label>
+                            <input id="compRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
+                                placeholder="0">
+                        </div>
+                    </div>
+                </section>
+                <section class="settings-group" data-settings-group="quota">
+                    <h3>假期额度</h3>
+                    <div class="settings-grid">
+                        <div class="field">
+                            <label for="annualQuotaInput">年假额度</label>
+                            <input id="annualQuotaInput" inputmode="decimal" type="number" min="0" step="0.5"
+                                placeholder="例如 5">
+                        </div>
+                        <div class="field">
+                            <label for="compQuotaInput">调休额度</label>
+                            <input id="compQuotaInput" inputmode="decimal" type="number" min="0" step="0.5"
+                                placeholder="例如 2">
+                        </div>
+                    </div>
+                </section>
+                <section class="settings-group" data-settings-group="leave-doc">
+                    <h3>请假条默认值</h3>
+                    <div class="settings-grid">
+                        <div class="field">
+                            <label for="applicantName">申请人</label>
+                            <input id="applicantName" placeholder="请输入姓名">
+                        </div>
+                        <div class="field">
+                            <label for="leaveRecipientInput">称呼</label>
+                            <input id="leaveRecipientInput" placeholder="尊敬的领导">
+                        </div>
+                        <div class="field">
+                            <label for="personalReasonInput">事假默认理由</label>
+                            <input id="personalReasonInput" placeholder="个人事务">
+                        </div>
+                        <div class="field">
+                            <label for="sickReasonInput">病假默认理由</label>
+                            <input id="sickReasonInput" placeholder="身体不适">
+                        </div>
+                        <div class="field wide-field">
+                            <label for="leaveHandoffInput">工作安排说明</label>
+                            <textarea id="leaveHandoffInput" placeholder="请假期间我会提前安排好相关工作，确保不影响团队正常进度。"></textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-foot">
+                <button class="btn primary" id="settingsDone" type="button">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptModalTitle">
+        <div class="receipt-window">
+            <div class="modal-head">
+                <div>
+                    <h2 id="receiptModalTitle">票据预览</h2>
+                    <div class="subtitle" id="receiptModalSubtitle">可下载为 PNG 图片</div>
+                </div>
+                <button class="btn ghost" id="closeReceipt" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body" id="receiptModalBody"></div>
+            <div class="modal-foot">
+                <button class="btn" id="downloadReceipt" type="button">打印/下载图片</button>
+                <button class="btn primary" id="receiptDone" type="button">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="leaveGeneratorModal" role="dialog" aria-modal="true"
+        aria-labelledby="leaveGeneratorTitle">
+        <div class="leave-generator-window">
+            <div class="modal-head">
+                <div>
+                    <h2 id="leaveGeneratorTitle">生成请假条</h2>
+                    <div class="subtitle">填写请假信息，右侧实时预览小票。</div>
+                </div>
+                <button class="btn ghost" id="closeLeaveGenerator" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body leave-generator-body">
+                <section class="leave-form-panel" aria-label="请假条信息">
+                    <div class="settings-grid">
+                        <div class="field">
+                            <label for="leaveApplicantDoc">申请人</label>
+                            <input id="leaveApplicantDoc" placeholder="请输入姓名">
+                        </div>
+                        <div class="field">
+                            <label for="leaveRecipientDoc">称呼</label>
+                            <input id="leaveRecipientDoc" placeholder="尊敬的领导">
+                        </div>
+                        <div class="field">
+                            <label for="leaveTypeForDoc">请假类型</label>
+                            <select id="leaveTypeForDoc">
+                                <option value="personal">事假</option>
+                                <option value="sick">病假</option>
+                                <option value="annual">年假</option>
+                                <option value="comp">调休</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="leaveStart">开始日期</label>
+                            <input id="leaveStart" type="date">
+                        </div>
+                        <div class="field">
+                            <label for="leaveEnd">结束日期</label>
+                            <input id="leaveEnd" type="date">
+                        </div>
+                        <div class="field wide-field">
+                            <label for="leaveReasonDoc">请假理由</label>
+                            <textarea id="leaveReasonDoc" placeholder="例如：个人事务、身体不适"></textarea>
+                        </div>
+                        <div class="field wide-field">
+                            <label for="leaveHandoffDoc">工作安排</label>
+                            <textarea id="leaveHandoffDoc" placeholder="请假期间我会提前安排好相关工作，确保不影响团队正常进度。"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn primary" id="generateDoc" type="button">生成请假条</button>
+                    <textarea class="leave-output" id="leaveOutput" readonly></textarea>
+                </section>
+                <section class="leave-preview-panel" aria-label="请假条小票预览">
+                    <div class="receipt-preview empty" id="leaveReceipt">
+                        <div class="receipt-empty">填写左侧信息后点击生成</div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" id="downloadLeaveReceipt" type="button">下载小票图片</button>
+                <button class="btn primary" id="leaveGeneratorDone" type="button">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="dayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="modalTitle">选择日期状态</h2>
+                    <div class="subtitle" id="modalSubtitle"></div>
+                </div>
+                <button class="btn ghost" id="closeModal" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body">
+                <div class="action-grid">
+                    <button class="action-btn work" data-action="work" type="button">出勤</button>
+                    <button class="action-btn personal" data-action="personal" type="button">事假</button>
+                    <button class="action-btn sick" data-action="sick" type="button">病假</button>
+                    <button class="action-btn annual" data-action="annual" type="button">年假</button>
+                    <button class="action-btn comp" data-action="comp" type="button">调休</button>
+                    <button class="action-btn" data-action="clear" type="button">清除状态</button>
+                </div>
+                <div class="range-grid">
+                    <div class="field">
+                        <label for="modalStartDate">开始日期</label>
+                        <input id="modalStartDate" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="modalEndDate">结束日期</label>
+                        <input id="modalEndDate" type="date">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="modalReason">请假理由</label>
+                    <textarea id="modalReason" placeholder="选择请假类型时填写"></textarea>
+                </div>
+                <div class="field">
+                    <label for="modalNote">备注</label>
+                    <input id="modalNote" placeholder="可选">
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" id="modalCancel" type="button">取消</button>
+                <button class="btn" id="modalGenerateDoc" type="button" hidden>生成请假条</button>
+                <button class="btn primary" id="modalSave" type="button">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chinese-days@1.5.9/dist/index.min.js"></script>
+    <script>
+        const STORAGE_KEY = "xiuli-state-v1";
+        const THEME_KEY = "xiuli-theme";
+        const THEME_SEQUENCE = ["auto", "light", "dark"];
+        const THEME_META = {
+            auto: {icon: "i-theme-auto", label: "主题：跟随系统"},
+            light: {icon: "i-theme-light", label: "主题：浅色"},
+            dark: {icon: "i-theme-dark", label: "主题：深色"}
+        };
+        const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const CALENDAR_API = {
+            sourceName: "Chinese Days",
+            yearJson: year => `https://cdn.jsdelivr.net/npm/chinese-days@1.5.9/dist/years/${year}.json`
+        };
+        const CSV_HEADERS = ["日期", "状态", "请假类型", "请假理由", "是否节假日", "是否周末", "备注"];
+        const STATUS_LABELS = {
+            work: "出勤",
+            personal: "事假",
+            sick: "病假",
+            annual: "年假",
+            comp: "调休"
+        };
+        const LEAVE_STATUSES = ["personal", "sick", "annual", "comp"];
+        const DEFAULT_RATES = {
+            personal: 100,
+            sick: 50,
+            annual: 0,
+            comp: 0
+        };
+
+        const HOLIDAY_DATA = {
+            2026: {
+                holidays: [
+                    ...rangeDates("2026-01-01", "2026-01-03").map(date => ({date, name: "元旦"})),
+                    ...rangeDates("2026-02-15", "2026-02-23").map(date => ({date, name: "春节"})),
+                    ...rangeDates("2026-04-04", "2026-04-06").map(date => ({date, name: "清明节"})),
+                    ...rangeDates("2026-05-01", "2026-05-05").map(date => ({date, name: "劳动节"})),
+                    ...rangeDates("2026-06-19", "2026-06-21").map(date => ({date, name: "端午节"})),
+                    ...rangeDates("2026-09-25", "2026-09-27").map(date => ({date, name: "中秋节"})),
+                    ...rangeDates("2026-10-01", "2026-10-07").map(date => ({date, name: "国庆节"}))
+                ],
+                makeupWorkdays: [
+                    {date: "2026-01-04", name: "元旦调休上班"},
+                    {date: "2026-02-14", name: "春节调休上班"},
+                    {date: "2026-02-28", name: "春节调休上班"},
+                    {date: "2026-05-09", name: "劳动节调休上班"},
+                    {date: "2026-09-20", name: "国庆节调休上班"},
+                    {date: "2026-10-10", name: "国庆节调休上班"}
+                ]
+            }
+        };
+
+        const state = loadState();
+        const calendarApi = {
+            years: new Map(),
+            failedYears: new Set(),
+            status: "loading",
+            message: "正在加载日历数据"
+        };
+        const today = new Date();
+        let currentYear = today.getFullYear();
+        let currentMonth = today.getMonth() + 1;
+        let activeDate = null;
+        let selectedDate = null;
+        let pendingStatus = null;
+        let renderVersion = 0;
+        let settingsRenderTimer = 0;
+        let yearStatsMode = "months";
+        let currentReceipt = null;
+        let currentSalaryReceipt = null;
+        let currentLeaveReceipt = null;
+        const enhancedSelects = new Map();
+        let enhancedSelectEventsBound = false;
+
+        const els = {
+            yearSelect: document.getElementById("yearSelect"),
+            monthSelect: document.getElementById("monthSelect"),
+            prevMonth: document.getElementById("prevMonth"),
+            nextMonth: document.getElementById("nextMonth"),
+            todayBtn: document.getElementById("todayBtn"),
+            settingsToggle: document.getElementById("settingsToggle"),
+            themeToggle: document.getElementById("themeToggle"),
+            guideToggle: document.getElementById("guideToggle"),
+            calendarSource: document.getElementById("calendarSource"),
+            calendarGrid: document.getElementById("calendarGrid"),
+            calendarFooter: document.getElementById("calendarFooter"),
+            monthStats: document.getElementById("monthStats"),
+            yearStats: document.getElementById("yearStats"),
+            yearStatsMode: document.getElementById("yearStatsMode"),
+            monthSummary: document.getElementById("monthSummary"),
+            salaryInput: document.getElementById("salaryInput"),
+            deductionInput: document.getElementById("deductionInput"),
+            personalRateInput: document.getElementById("personalRateInput"),
+            sickRateInput: document.getElementById("sickRateInput"),
+            annualRateInput: document.getElementById("annualRateInput"),
+            compRateInput: document.getElementById("compRateInput"),
+            salaryResult: document.getElementById("salaryResult"),
+            salaryReceiptLabel: document.getElementById("salaryReceiptLabel"),
+            annualQuotaInput: document.getElementById("annualQuotaInput"),
+            compQuotaInput: document.getElementById("compQuotaInput"),
+            quotaSummary: document.getElementById("quotaSummary"),
+            csvToggle: document.getElementById("csvToggle"),
+            csvMenu: document.getElementById("csvMenu"),
+            exportCsv: document.getElementById("exportCsv"),
+            importCsv: document.getElementById("importCsv"),
+            csvNotice: document.getElementById("csvNotice"),
+            ticketReminders: document.getElementById("ticketReminders"),
+            applicantName: document.getElementById("applicantName"),
+            leaveGeneratorModal: document.getElementById("leaveGeneratorModal"),
+            closeLeaveGenerator: document.getElementById("closeLeaveGenerator"),
+            leaveGeneratorDone: document.getElementById("leaveGeneratorDone"),
+            downloadLeaveReceipt: document.getElementById("downloadLeaveReceipt"),
+            leaveApplicantDoc: document.getElementById("leaveApplicantDoc"),
+            leaveRecipientDoc: document.getElementById("leaveRecipientDoc"),
+            leaveTypeForDoc: document.getElementById("leaveTypeForDoc"),
+            leaveStart: document.getElementById("leaveStart"),
+            leaveEnd: document.getElementById("leaveEnd"),
+            leaveReasonDoc: document.getElementById("leaveReasonDoc"),
+            leaveHandoffDoc: document.getElementById("leaveHandoffDoc"),
+            leaveRecipientInput: document.getElementById("leaveRecipientInput"),
+            personalReasonInput: document.getElementById("personalReasonInput"),
+            sickReasonInput: document.getElementById("sickReasonInput"),
+            leaveHandoffInput: document.getElementById("leaveHandoffInput"),
+            generateDoc: document.getElementById("generateDoc"),
+            leaveReceipt: document.getElementById("leaveReceipt"),
+            leaveOutput: document.getElementById("leaveOutput"),
+            settingsModal: document.getElementById("settingsModal"),
+            closeSettings: document.getElementById("closeSettings"),
+            settingsDone: document.getElementById("settingsDone"),
+            receiptModal: document.getElementById("receiptModal"),
+            receiptModalTitle: document.getElementById("receiptModalTitle"),
+            receiptModalSubtitle: document.getElementById("receiptModalSubtitle"),
+            receiptModalBody: document.getElementById("receiptModalBody"),
+            closeReceipt: document.getElementById("closeReceipt"),
+            receiptDone: document.getElementById("receiptDone"),
+            downloadReceipt: document.getElementById("downloadReceipt"),
+            guideModal: document.getElementById("guideModal"),
+            closeGuide: document.getElementById("closeGuide"),
+            guideDone: document.getElementById("guideDone"),
+            dayModal: document.getElementById("dayModal"),
+            modalTitle: document.getElementById("modalTitle"),
+            modalSubtitle: document.getElementById("modalSubtitle"),
+            modalStartDate: document.getElementById("modalStartDate"),
+            modalEndDate: document.getElementById("modalEndDate"),
+            modalReason: document.getElementById("modalReason"),
+            modalNote: document.getElementById("modalNote"),
+            modalGenerateDoc: document.getElementById("modalGenerateDoc"),
+            modalSave: document.getElementById("modalSave"),
+            closeModal: document.getElementById("closeModal"),
+            modalCancel: document.getElementById("modalCancel")
+        };
+
+        init().catch(error => {
+            calendarApi.status = "fallback";
+            calendarApi.message = `日历数据加载异常，已使用本地备用数据：${error.message}`;
+            renderStaticError(error);
+        });
+
+        async function init() {
+            applyTheme(getThemePreference());
+            initSelectors();
+            initEnhancedSelects();
+            bindEvents();
+            els.salaryInput.value = state.settings.salary || "";
+            els.deductionInput.value = state.settings.deduction || "";
+            els.personalRateInput.value = settingNumber("personalRate", DEFAULT_RATES.personal);
+            els.sickRateInput.value = settingNumber("sickRate", DEFAULT_RATES.sick);
+            els.annualRateInput.value = settingNumber("annualRate", DEFAULT_RATES.annual);
+            els.compRateInput.value = settingNumber("compRate", DEFAULT_RATES.comp);
+            els.annualQuotaInput.value = state.settings.annualQuota || "";
+            els.compQuotaInput.value = state.settings.compQuota || "";
+            els.applicantName.value = state.settings.applicantName || "";
+            els.leaveRecipientInput.value = state.settings.leaveRecipient || "";
+            els.personalReasonInput.value = state.settings.personalReason || "";
+            els.sickReasonInput.value = state.settings.sickReason || "";
+            els.leaveHandoffInput.value = state.settings.leaveHandoff || "";
+            resetLeaveGeneratorForm();
+            await render();
+        }
+
+        const backdropTimers = new WeakMap();
+
+        function openBackdrop(el) {
+            window.clearTimeout(backdropTimers.get(el));
+            el.classList.remove("closing");
+            el.classList.add("open");
+        }
+
+        function closeBackdrop(el) {
+            if (!el.classList.contains("open") || el.classList.contains("closing")) return;
+            el.classList.add("closing");
+            window.clearTimeout(backdropTimers.get(el));
+            backdropTimers.set(el, window.setTimeout(() => {
+                el.classList.remove("open", "closing");
+            }, 200));
+        }
+
+        function getThemePreference() {
+            try {
+                const stored = localStorage.getItem(THEME_KEY);
+                return THEME_SEQUENCE.includes(stored) ? stored : "auto";
+            } catch {
+                return "auto";
+            }
+        }
+
+        let themeAnimTimer = 0;
+
+        function applyTheme(pref, animate = false) {
+            if (animate) return animateThemeChange(() => setTheme(pref));
+            setTheme(pref);
+        }
+
+        function setTheme(pref) {
+            const dark = pref === "dark" || (pref === "auto" && darkSchemeQuery.matches);
+            document.documentElement.dataset.theme = dark ? "dark" : "light";
+            const meta = THEME_META[pref] || THEME_META.auto;
+            els.themeToggle.innerHTML = `<svg class="icon"><use href="#${meta.icon}"/></svg>`;
+            els.themeToggle.title = meta.label;
+            document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#171411" : "#f6f3ed");
+        }
+
+        function animateThemeChange(update) {
+            const root = document.documentElement;
+            window.clearTimeout(themeAnimTimer);
+            if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                root.classList.add("theme-anim", "theme-view-transition");
+                const transition = document.startViewTransition(update);
+                transition.finished.finally(() => root.classList.remove("theme-anim", "theme-view-transition"));
+                return;
+            }
+
+            root.classList.add("theme-anim");
+            root.offsetWidth;
+            update();
+            themeAnimTimer = window.setTimeout(() => root.classList.remove("theme-anim"), 460);
+        }
+
+        function cycleTheme() {
+            const next = THEME_SEQUENCE[(THEME_SEQUENCE.indexOf(getThemePreference()) + 1) % THEME_SEQUENCE.length];
+            try {
+                localStorage.setItem(THEME_KEY, next);
+            } catch {
+                // localStorage 不可用时主题仅在当前会话生效
+            }
+            applyTheme(next, true);
+        }
+
+        function initSelectors() {
+            const years = new Set([2024, 2025, 2026, 2027, currentYear - 1, currentYear, currentYear + 1]);
+            [...years].sort((a, b) => a - b).forEach(year => {
+                const opt = document.createElement("option");
+                opt.value = String(year);
+                opt.textContent = `${year} 年`;
+                els.yearSelect.appendChild(opt);
+            });
+
+            for (let month = 1; month <= 12; month++) {
+                const opt = document.createElement("option");
+                opt.value = String(month);
+                opt.textContent = `${month} 月`;
+                els.monthSelect.appendChild(opt);
+            }
+        }
+
+        function initEnhancedSelects() {
+            [els.yearSelect, els.monthSelect].forEach(enhanceSelect);
+            if (enhancedSelectEventsBound) return;
+            enhancedSelectEventsBound = true;
+            document.addEventListener("click", event => {
+                const clickedInside = [...enhancedSelects.values()].some(view => view.box.contains(event.target));
+                if (!clickedInside) closeAllEnhancedSelects();
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") closeAllEnhancedSelects();
+            });
+        }
+
+        function enhanceSelect(select) {
+            if (!select || enhancedSelects.has(select)) return;
+
+            const box = document.createElement("div");
+            box.className = `selectbox ${select.id === "monthSelect" ? "selectbox-month" : "selectbox-year"}`;
+
+            const trigger = document.createElement("button");
+            trigger.type = "button";
+            trigger.className = "select-trigger control";
+            trigger.setAttribute("aria-haspopup", "listbox");
+            trigger.setAttribute("aria-expanded", "false");
+            trigger.setAttribute("aria-label", select.getAttribute("aria-label") || "选择");
+
+            const label = document.createElement("span");
+            label.className = "select-trigger-label";
+            trigger.appendChild(label);
+
+            const menu = document.createElement("div");
+            menu.className = "select-menu";
+            menu.id = `${select.id}Menu`;
+            menu.setAttribute("role", "listbox");
+            menu.setAttribute("aria-label", select.getAttribute("aria-label") || "选择");
+
+            box.append(trigger, menu);
+            select.after(box);
+            select.classList.add("select-native");
+            select.tabIndex = -1;
+            select.setAttribute("aria-hidden", "true");
+
+            const view = {box, trigger, label, menu, optionCount: 0};
+            enhancedSelects.set(select, view);
+            rebuildEnhancedSelect(select, view);
+            syncEnhancedSelect(select);
+
+            select.addEventListener("change", () => syncEnhancedSelect(select));
+            trigger.addEventListener("click", () => toggleEnhancedSelect(select));
+            trigger.addEventListener("keydown", event => handleSelectTriggerKeydown(event, select));
+        }
+
+        function rebuildEnhancedSelect(select, view) {
+            view.menu.textContent = "";
+            [...select.options].forEach((option, index) => {
+                const item = document.createElement("button");
+                item.type = "button";
+                item.className = "select-option";
+                item.id = `${select.id}Option${index}`;
+                item.dataset.value = option.value;
+                item.setAttribute("role", "option");
+                item.textContent = option.textContent;
+                item.disabled = option.disabled;
+                item.addEventListener("click", () => {
+                    if (item.disabled) return;
+                    select.value = option.value;
+                    select.dispatchEvent(new Event("change", {bubbles: true}));
+                    closeEnhancedSelect(select, true);
+                });
+                item.addEventListener("keydown", event => handleSelectOptionKeydown(event, select));
+                view.menu.appendChild(item);
+            });
+            view.optionCount = select.options.length;
+        }
+
+        function syncEnhancedSelects(rebuild = false) {
+            enhancedSelects.forEach((_, select) => syncEnhancedSelect(select, rebuild));
+        }
+
+        function syncEnhancedSelect(select, rebuild = false) {
+            const view = enhancedSelects.get(select);
+            if (!view) return;
+            if (rebuild || view.optionCount !== select.options.length) {
+                rebuildEnhancedSelect(select, view);
+            }
+
+            const selectedOption = select.selectedOptions[0] || select.options[0];
+            view.label.textContent = selectedOption ? selectedOption.textContent : "";
+            [...view.menu.children].forEach(item => {
+                const selected = item.dataset.value === select.value;
+                item.classList.toggle("is-selected", selected);
+                item.setAttribute("aria-selected", String(selected));
+            });
+        }
+
+        function toggleEnhancedSelect(select) {
+            const view = enhancedSelects.get(select);
+            if (!view) return;
+            if (view.box.classList.contains("open")) {
+                closeEnhancedSelect(select);
+            } else {
+                openEnhancedSelect(select);
+            }
+        }
+
+        function openEnhancedSelect(select, focusSelected = false) {
+            const view = enhancedSelects.get(select);
+            if (!view) return;
+            closeAllEnhancedSelects(select);
+            view.box.classList.add("open");
+            view.trigger.setAttribute("aria-expanded", "true");
+            if (focusSelected) {
+                (view.menu.querySelector(".select-option.is-selected") || view.menu.querySelector(".select-option"))?.focus();
+            }
+        }
+
+        function closeEnhancedSelect(select, returnFocus = false) {
+            const view = enhancedSelects.get(select);
+            if (!view) return;
+            view.box.classList.remove("open");
+            view.trigger.setAttribute("aria-expanded", "false");
+            if (returnFocus) view.trigger.focus();
+        }
+
+        function closeAllEnhancedSelects(exceptSelect = null) {
+            enhancedSelects.forEach((_, select) => {
+                if (select !== exceptSelect) closeEnhancedSelect(select);
+            });
+        }
+
+        function handleSelectTriggerKeydown(event, select) {
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+                event.preventDefault();
+                openEnhancedSelect(select, true);
+                return;
+            }
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggleEnhancedSelect(select);
+            }
+        }
+
+        function handleSelectOptionKeydown(event, select) {
+            const view = enhancedSelects.get(select);
+            if (!view) return;
+            const options = [...view.menu.querySelectorAll(".select-option:not(:disabled)")];
+            const index = options.indexOf(document.activeElement);
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+                event.preventDefault();
+                const step = event.key === "ArrowDown" ? 1 : -1;
+                options[(index + step + options.length) % options.length]?.focus();
+            } else if (event.key === "Home") {
+                event.preventDefault();
+                options[0]?.focus();
+            } else if (event.key === "End") {
+                event.preventDefault();
+                options.at(-1)?.focus();
+            } else if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                document.activeElement?.click();
+            } else if (event.key === "Escape") {
+                event.preventDefault();
+                closeEnhancedSelect(select, true);
+            }
+        }
+
+        function bindEvents() {
+            els.yearSelect.addEventListener("change", () => {
+                currentYear = Number(els.yearSelect.value);
+                render();
+            });
+
+            els.monthSelect.addEventListener("change", () => {
+                currentMonth = Number(els.monthSelect.value);
+                render();
+            });
+
+            els.prevMonth.addEventListener("click", () => shiftMonth(-1));
+            els.nextMonth.addEventListener("click", () => shiftMonth(1));
+            els.todayBtn.addEventListener("click", () => {
+                currentYear = today.getFullYear();
+                currentMonth = today.getMonth() + 1;
+                render();
+            });
+
+            [
+                els.salaryInput,
+                els.deductionInput,
+                els.personalRateInput,
+                els.sickRateInput,
+                els.annualRateInput,
+                els.compRateInput,
+                els.annualQuotaInput,
+                els.compQuotaInput,
+                els.applicantName,
+                els.leaveRecipientInput,
+                els.personalReasonInput,
+                els.sickReasonInput,
+                els.leaveHandoffInput
+            ].forEach(input => {
+                input.addEventListener("input", () => {
+                    syncSettingsFromInputs();
+                    saveState();
+                    window.clearTimeout(settingsRenderTimer);
+                    settingsRenderTimer = window.setTimeout(() => {
+                        renderStats();
+                        renderSalary();
+                    }, 150);
+                });
+            });
+
+            els.settingsToggle.addEventListener("click", event => {
+                event.stopPropagation();
+                closeCsvMenu();
+                openSettings();
+            });
+            els.themeToggle.addEventListener("click", cycleTheme);
+            darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
+            els.closeSettings.addEventListener("click", closeSettings);
+            els.settingsDone.addEventListener("click", closeSettings);
+            els.settingsModal.addEventListener("click", event => {
+                if (event.target === els.settingsModal) closeSettings();
+            });
+            document.querySelectorAll("[data-open-settings]").forEach(button => {
+                button.addEventListener("click", () => openSettings(button.dataset.openSettings));
+            });
+            document.querySelectorAll("[data-open-receipt]").forEach(button => {
+                button.addEventListener("click", () => openReceiptModal(button.dataset.openReceipt));
+            });
+            document.querySelectorAll("[data-generate-leave-receipt]").forEach(button => {
+                button.addEventListener("click", () => openLeaveGenerator());
+            });
+            document.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-open-settings-dynamic]") : null;
+                if (button) openSettings(button.dataset.openSettingsDynamic);
+            });
+
+            els.guideToggle.addEventListener("click", event => {
+                event.stopPropagation();
+                closeCsvMenu();
+                openGuide();
+            });
+            els.closeReceipt.addEventListener("click", closeReceiptModal);
+            els.receiptDone.addEventListener("click", closeReceiptModal);
+            els.downloadReceipt.addEventListener("click", downloadCurrentReceiptImage);
+            els.receiptModal.addEventListener("click", event => {
+                if (event.target === els.receiptModal) closeReceiptModal();
+            });
+            els.closeLeaveGenerator.addEventListener("click", closeLeaveGenerator);
+            els.leaveGeneratorDone.addEventListener("click", closeLeaveGenerator);
+            els.downloadLeaveReceipt.addEventListener("click", downloadLeaveReceiptImage);
+            els.leaveGeneratorModal.addEventListener("click", event => {
+                if (event.target === els.leaveGeneratorModal) closeLeaveGenerator();
+            });
+            els.closeGuide.addEventListener("click", closeGuide);
+            els.guideDone.addEventListener("click", closeGuide);
+            els.guideModal.addEventListener("click", event => {
+                if (event.target === els.guideModal) closeGuide();
+            });
+
+            els.csvToggle.addEventListener("click", event => {
+                event.stopPropagation();
+                const open = els.csvMenu.classList.toggle("open");
+                els.csvToggle.setAttribute("aria-expanded", String(open));
+            });
+            els.csvMenu.addEventListener("click", event => event.stopPropagation());
+            document.addEventListener("click", () => closeCsvMenu());
+            els.exportCsv.addEventListener("click", exportCsv);
+            els.importCsv.addEventListener("change", importCsv);
+            els.generateDoc.addEventListener("click", generateLeaveDoc);
+            [els.leaveTypeForDoc, els.leaveStart, els.leaveEnd, els.leaveReasonDoc, els.leaveApplicantDoc, els.leaveRecipientDoc, els.leaveHandoffDoc].forEach(input => {
+                input.addEventListener("input", clearLeaveReceiptPreview);
+                input.addEventListener("change", clearLeaveReceiptPreview);
+            });
+            els.yearStatsMode.addEventListener("click", event => {
+                const button = event.target.closest("[data-year-mode]");
+                if (!button) return;
+                yearStatsMode = button.dataset.yearMode;
+                els.yearStatsMode.querySelectorAll(".seg-btn").forEach(item => {
+                    item.classList.toggle("active", item.dataset.yearMode === yearStatsMode);
+                });
+                renderStats();
+            });
+
+            els.closeModal.addEventListener("click", closeModal);
+            els.modalCancel.addEventListener("click", closeModal);
+            els.calendarGrid.addEventListener("click", event => {
+                const card = event.target instanceof Element ? event.target.closest(".day-card.clickable") : null;
+                if (card?.dataset.date) openModal(card.dataset.date);
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key !== "Escape") return;
+                if (els.dayModal.classList.contains("open")) return closeModal();
+                if (els.receiptModal.classList.contains("open")) return closeReceiptModal();
+                if (els.leaveGeneratorModal.classList.contains("open")) return closeLeaveGenerator();
+                if (els.settingsModal.classList.contains("open")) return closeSettings();
+                if (els.guideModal.classList.contains("open")) return closeGuide();
+                closeCsvMenu();
+            });
+            els.dayModal.addEventListener("click", event => {
+                if (event.target === els.dayModal) closeModal();
+            });
+            document.querySelectorAll("[data-action]").forEach(button => {
+                button.addEventListener("click", () => chooseStatus(button.dataset.action));
+            });
+            els.modalGenerateDoc.addEventListener("click", generateLeaveDocFromModal);
+            els.modalSave.addEventListener("click", saveModalRecord);
+        }
+
+        async function render() {
+            const version = ++renderVersion;
+            els.yearSelect.value = String(currentYear);
+            els.monthSelect.value = String(currentMonth);
+            syncEnhancedSelects();
+            updateCalendarSource();
+            if (!isCalendarDataReady()) {
+                renderCalendarLoading("正在获取节假日、调休和农历数据...");
+                await ensureCalendarDataForView();
+                if (version !== renderVersion) return;
+            }
+            renderCalendar();
+            renderCalendarFooter();
+            renderStats();
+            renderSalary();
+            updateSalaryReceiptButton();
+            renderTicketReminders();
+            updateCalendarSource();
+        }
+
+        function updateSalaryReceiptButton() {
+            els.salaryReceiptLabel.textContent = `生成 ${currentMonth} 月工资条`;
+        }
+
+        let lastCalendarKey = "";
+
+        function renderCalendar() {
+            const days = getCalendarDays(currentYear, currentMonth);
+            const fragment = document.createDocumentFragment();
+            const calendarKey = `${currentYear}-${currentMonth}`;
+            els.calendarGrid.classList.toggle("animate", calendarKey !== lastCalendarKey);
+            lastCalendarKey = calendarKey;
+
+            days.forEach((date, index) => {
+                const iso = toISO(date);
+                const info = getDayInfo(date);
+                const record = state.records[iso];
+                const inMonth = date.getFullYear() === currentYear && date.getMonth() + 1 === currentMonth;
+                const card = document.createElement(info.isWorkday ? "button" : "div");
+                card.style.setProperty("--i", index);
+                card.className = [
+                    "day-card",
+                    inMonth ? "" : "outside",
+                    isSameDate(date, today) ? "today" : "",
+                    info.isHoliday ? "is-holiday" : "",
+                    info.isWeekend ? "is-weekend" : "",
+                    iso === selectedDate ? "selected" : "",
+                    record?.status ? `status-${record.status}` : "",
+                    info.isWorkday ? "clickable" : ""
+                ].filter(Boolean).join(" ");
+                card.dataset.date = iso;
+
+                if (info.isWorkday) card.type = "button";
+
+                const primaryTags = [];
+                const auxTags = [];
+                if (record?.status) primaryTags.push(tag(STATUS_LABELS[record.status], `${record.status} primary-state`));
+                else if (info.isHoliday) primaryTags.push(tag(info.holidayName || "节假日", "holiday primary-state"));
+                else if (info.isWeekend) primaryTags.push(tag("周末", "aux-state"));
+                if (info.makeupName) primaryTags.push(tag("调休上班", "makeup primary-state"));
+                const solarTerm = getSolarTermText(date);
+                if (solarTerm) auxTags.push(tag(solarTerm, "term aux-state"));
+
+                card.innerHTML = `
+          <div class="date-line">
+            <div class="solar">${date.getDate()}</div>
+            <span class="today-dot" aria-label="今天"></span>
+          </div>
+          <div class="lunar">${getLunarText(date)}</div>
+          <div class="tags">${primaryTags.concat(auxTags).join("")}</div>
+          ${record?.reason ? `<div class="reason">${escapeHtml(record.reason)}</div>` : ""}
+        `;
+                fragment.appendChild(card);
+            });
+            els.calendarGrid.replaceChildren(fragment);
+        }
+
+        function renderCalendarLoading(text) {
+            els.calendarGrid.innerHTML = `<div class="calendar-loading">${escapeHtml(text)}<br>如果网络不可用，将自动使用本地备用数据。</div>`;
+        }
+
+        function renderCalendarFooter() {
+            els.calendarFooter.innerHTML = `
+        ${heatLegend()}
+        <span class="calendar-tip">点击日期可查看或编辑当天记录</span>
+      `;
+        }
+
+        function renderStaticError(error) {
+            els.calendarGrid.innerHTML = `<div class="calendar-loading">页面初始化异常：${escapeHtml(error.message)}<br>请刷新页面重试。</div>`;
+            updateCalendarSource();
+        }
+
+        function renderStats() {
+            const monthStats = calculateStats(currentYear, currentMonth);
+            const yearStats = calculateStats(currentYear);
+            renderMonthSummary(monthStats, yearStats);
+            els.monthStats.innerHTML = statsHeatmapHtml("month", getMonthDates(currentYear, currentMonth), monthStats);
+            els.yearStats.innerHTML = yearStatsMode === "months"
+                ? yearLeaveChartHtml(yearStats)
+                : statsHeatmapHtml("year", getYearDates(currentYear), yearStats);
+            renderQuotaSummary(yearStats);
+        }
+
+        function renderMonthSummary(monthStats, yearStats) {
+            const annualQuota = cleanNumber(els.annualQuotaInput.value);
+            const annualRemaining = annualQuota > 0 ? Math.max(0, annualQuota - yearStats.annualLeave) : null;
+            const holidayText = monthHolidaySummary(currentYear, currentMonth, monthStats.holidayDays);
+            const leavePills = LEAVE_STATUSES
+                .filter(status => monthStats.leaveByStatus[status] > 0)
+                .map(status => summaryPill(STATUS_LABELS[status], monthStats.leaveByStatus[status], "alert"))
+                .join("");
+            els.monthSummary.innerHTML = `
+        <div class="month-summary-title">${currentMonth}月关键状态</div>
+        ${summaryPill("应出勤", monthStats.expectedWorkdays)}
+        ${summaryPill("已出勤", monthStats.actualWorkdays, monthStats.actualWorkdays ? "good" : "")}
+        ${leavePills || summaryPill("请假", 0, "good")}
+        ${summaryPill(holidayText.label, holidayText.days)}
+        <span class="summary-pill ${annualRemaining === 0 ? "alert" : ""}">剩余年假 <strong>${annualRemaining === null ? "未设置" : `${annualRemaining} 天`}</strong></span>
+      `;
+        }
+
+        function summaryPill(label, value, tone = "") {
+            return `<span class="summary-pill ${tone}">${escapeHtml(label)} <strong>${value} 天</strong></span>`;
+        }
+
+        function monthHolidaySummary(year, month, fallbackDays) {
+            const holidays = getMonthDates(year, month)
+                .map(date => getDayInfo(date).holidayName)
+                .filter(Boolean);
+            const unique = [...new Set(holidays)];
+            const label = unique.length === 1 ? unique[0] : "节假日";
+            return {label, days: fallbackDays};
+        }
+
+        function renderSalary() {
+            const stats = calculateStats(currentYear, currentMonth);
+            const salary = cleanNumber(els.salaryInput.value);
+            const deduction = cleanNumber(els.deductionInput.value);
+            const daily = stats.expectedWorkdays > 0 ? salary / stats.expectedWorkdays : 0;
+            const rates = getSalaryRates();
+            const leaveDeduction = LEAVE_STATUSES.reduce((sum, status) => {
+                return sum + daily * stats.leaveByStatus[status] * (rates[status] / 100);
+            }, 0);
+            const actual = Math.max(0, salary - leaveDeduction - deduction);
+            currentSalaryReceipt = buildSalaryReceipt({stats, salary, deduction, daily, leaveDeduction, actual});
+            els.salaryResult.innerHTML = receiptHtml(currentSalaryReceipt);
+        }
+
+        function buildSalaryReceipt({stats, salary, deduction, daily, leaveDeduction, actual}) {
+            const monthText = `${currentYear}-${String(currentMonth).padStart(2, "0")}`;
+            return {
+                kind: "salary",
+                title: "工资条",
+                subtitle: `${monthText} · THERMAL PRINT`,
+                filename: `工资条-${monthText}`,
+                sections: [
+                    [
+                        {label: "月薪", value: formatMoney(salary)},
+                        {label: "五险一金", value: formatMoney(deduction)},
+                        {label: "日薪", value: formatMoney(daily)}
+                    ],
+                    [
+                        {label: "应出勤", value: `${stats.expectedWorkdays} 天`},
+                        {label: "已出勤", value: `${stats.actualWorkdays} 天`},
+                        {label: "请假合计", value: `${stats.totalLeave} 天`},
+                        {label: "事假 / 病假", value: `${stats.personalLeave} / ${stats.sickLeave} 天`},
+                        {label: "年假 / 调休", value: `${stats.annualLeave} / ${stats.compLeave} 天`}
+                    ],
+                    [
+                        {label: "请假扣款", value: formatMoney(leaveDeduction)},
+                        {label: "固定扣除", value: formatMoney(deduction)},
+                        {label: "实际到手", value: formatMoney(actual), strong: true}
+                    ]
+                ],
+                footer: [toISO(new Date()), "仅供个人核算"]
+            };
+        }
+
+        function renderQuotaSummary(yearStats) {
+            const annualQuota = cleanNumber(els.annualQuotaInput.value);
+            const compQuota = cleanNumber(els.compQuotaInput.value);
+            els.quotaSummary.innerHTML = [
+                quotaLine("年假", yearStats.annualLeave, annualQuota),
+                quotaLine("调休", yearStats.compLeave, compQuota)
+            ].join("");
+        }
+
+        function quotaLine(label, used, quota) {
+            if (quota <= 0) {
+                return `
+          <div class="quota-item quota-empty">
+            <div class="quota-text"><strong>${label}额度未设置</strong></div>
+            <div class="quota-help">设置后可自动计算已用和剩余额度。</div>
+            <button class="btn ghost compact-btn" data-open-settings-dynamic="quota" type="button">设置${label}额度</button>
+          </div>
+        `;
+            }
+            const remaining = Math.max(0, quota - used);
+            const percent = quota > 0 ? Math.min(100, (used / quota) * 100) : 0;
+            return `
+        <div class="quota-item">
+          <div class="quota-text"><strong>${label}</strong>：已用 ${used} 天 / 额度 ${quota} 天 / 剩余 ${remaining} 天</div>
+          <div class="quota-meter"><span style="width:${percent}%"></span></div>
+        </div>
+      `;
+        }
+
+        function renderTicketReminders() {
+            const monthStart = startOfMonth(currentYear, currentMonth);
+            const monthEnd = new Date(currentYear, currentMonth, 0);
+            const reminders = getTicketReminders(currentYear)
+                .filter(item => item.saleDate >= monthStart && item.saleDate <= monthEnd);
+
+            if (!reminders.length) {
+                els.ticketReminders.innerHTML = `<div class="ticket-card"><div class="ticket-card-title">暂无购票提醒</div><div class="ticket-meta">本月没有节假日火车票开售节点。</div></div>`;
+                return;
+            }
+
+            els.ticketReminders.innerHTML = reminders.map(item => {
+                const diff = diffDays(today, item.saleDate);
+                const status = diff > 0 ? `还有 ${diff} 天` : "已开始";
+                return `
+          <div class="ticket-card">
+            <div class="ticket-card-title">
+              <span>${escapeHtml(item.name)}</span>
+              <span class="ticket-status">${status}</span>
+            </div>
+            <div class="ticket-meta">
+              <span>开售日：${formatMonthDay(item.saleDate)}</span>
+              <span>假期首日：${formatMonthDay(item.departure)}</span>
+            </div>
+          </div>
+        `;
+            }).join("");
+        }
+
+        function openModal(iso) {
+            const date = fromISO(iso);
+            const info = getDayInfo(date);
+            const record = state.records[iso] || {};
+            activeDate = iso;
+            selectedDate = iso;
+            pendingStatus = record.status || "work";
+            document.querySelectorAll(".day-card.selected").forEach(card => card.classList.remove("selected"));
+            document.querySelector(`[data-date="${iso}"]`)?.classList.add("selected");
+            els.modalTitle.textContent = `${iso} ${weekdayName(date)}`;
+            els.modalSubtitle.textContent = [info.makeupName, info.holidayName].filter(Boolean).join(" · ") || "工作日";
+            els.modalStartDate.value = iso;
+            els.modalEndDate.value = iso;
+            els.modalReason.value = record.reason || "";
+            els.modalNote.value = record.note || "";
+            document.querySelectorAll("[data-action]").forEach(button => {
+                button.classList.toggle("active", button.dataset.action === pendingStatus);
+            });
+            updateModalDocButton();
+            openBackdrop(els.dayModal);
+            els.dayModal.querySelector(".action-btn")?.focus({preventScroll: true});
+        }
+
+        function closeModal() {
+            activeDate = null;
+            pendingStatus = null;
+            closeBackdrop(els.dayModal);
+        }
+
+        function closeCsvMenu() {
+            els.csvMenu.classList.remove("open");
+            els.csvToggle.setAttribute("aria-expanded", "false");
+        }
+
+        function syncSettingsFromInputs() {
+            state.settings.salary = cleanNumber(els.salaryInput.value);
+            state.settings.deduction = cleanNumber(els.deductionInput.value);
+            state.settings.personalRate = cleanPercent(els.personalRateInput.value, DEFAULT_RATES.personal);
+            state.settings.sickRate = cleanPercent(els.sickRateInput.value, DEFAULT_RATES.sick);
+            state.settings.annualRate = cleanPercent(els.annualRateInput.value, DEFAULT_RATES.annual);
+            state.settings.compRate = cleanPercent(els.compRateInput.value, DEFAULT_RATES.comp);
+            state.settings.annualQuota = cleanNumber(els.annualQuotaInput.value);
+            state.settings.compQuota = cleanNumber(els.compQuotaInput.value);
+            state.settings.applicantName = els.applicantName.value.trim();
+            state.settings.leaveRecipient = els.leaveRecipientInput.value.trim();
+            state.settings.personalReason = els.personalReasonInput.value.trim();
+            state.settings.sickReason = els.sickReasonInput.value.trim();
+            state.settings.leaveHandoff = els.leaveHandoffInput.value.trim();
+        }
+
+        function openSettings(group) {
+            openBackdrop(els.settingsModal);
+            document.querySelectorAll("[data-settings-group]").forEach(section => {
+                section.classList.toggle("highlight", Boolean(group) && section.dataset.settingsGroup === group);
+            });
+            if (group) {
+                document.querySelector(`[data-settings-group="${group}"]`)?.scrollIntoView({block: "nearest"});
+            }
+        }
+
+        function closeSettings() {
+            closeBackdrop(els.settingsModal);
+            document.querySelectorAll("[data-settings-group]").forEach(section => section.classList.remove("highlight"));
+        }
+
+        function openGuide() {
+            openBackdrop(els.guideModal);
+        }
+
+        function closeGuide() {
+            closeBackdrop(els.guideModal);
+        }
+
+        function resetLeaveGeneratorForm(preset = {}) {
+            const defaultType = preset.type || preset.status || "personal";
+            els.leaveApplicantDoc.value = preset.applicant ?? state.settings.applicantName ?? "";
+            els.leaveRecipientDoc.value = preset.recipient ?? state.settings.leaveRecipient ?? "";
+            els.leaveTypeForDoc.value = defaultType;
+            els.leaveStart.value = preset.start || toISO(new Date(currentYear, currentMonth - 1, 1));
+            els.leaveEnd.value = preset.end || els.leaveStart.value;
+            els.leaveReasonDoc.value = preset.reason ?? defaultLeaveReason(defaultType);
+            els.leaveHandoffDoc.value = preset.handoff ?? state.settings.leaveHandoff ?? "";
+            clearLeaveReceiptPreview();
+        }
+
+        function openLeaveGenerator(preset = {}) {
+            resetLeaveGeneratorForm(preset);
+            openBackdrop(els.leaveGeneratorModal);
+            els.leaveStart.focus({preventScroll: true});
+        }
+
+        function closeLeaveGenerator() {
+            closeBackdrop(els.leaveGeneratorModal);
+        }
+
+        function clearLeaveReceiptPreview() {
+            currentLeaveReceipt = null;
+            if (!els.leaveReceipt) return;
+            els.leaveReceipt.classList.add("empty");
+            els.leaveReceipt.innerHTML = `<div class="receipt-empty">填写左侧信息后点击生成</div>`;
+            els.leaveOutput.value = "";
+        }
+
+        function downloadLeaveReceiptImage() {
+            if (!currentLeaveReceipt) {
+                generateLeaveDoc();
+            }
+            if (!currentLeaveReceipt) return;
+            currentReceipt = currentLeaveReceipt;
+            downloadCurrentReceiptImage();
+        }
+
+        function chooseStatus(status) {
+            if (!activeDate) return;
+            pendingStatus = status;
+            document.querySelectorAll("[data-action]").forEach(button => {
+                button.classList.toggle("active", button.dataset.action === status);
+            });
+            updateModalDocButton();
+            if (status === "clear") {
+                const start = els.modalStartDate.value || activeDate;
+                const end = els.modalEndDate.value || start;
+                if (isValidISODate(start) && isValidISODate(end) && start <= end) {
+                    rangeDates(start, end).forEach(iso => delete state.records[iso]);
+                } else {
+                    delete state.records[activeDate];
+                }
+                saveState();
+                closeModal();
+                render();
+                return;
+            }
+            if (LEAVE_STATUSES.includes(status)) {
+                const existingReason = els.modalReason.value.trim();
+                els.leaveStart.value = activeDate;
+                els.leaveEnd.value = activeDate;
+                els.leaveTypeForDoc.value = status;
+                if (existingReason) els.leaveReasonDoc.value = existingReason;
+            }
+        }
+
+        function updateModalDocButton() {
+            els.modalGenerateDoc.hidden = !["personal", "sick"].includes(pendingStatus);
+        }
+
+        function generateLeaveDocFromModal() {
+            if (!["personal", "sick"].includes(pendingStatus)) return;
+            const start = els.modalStartDate.value || activeDate;
+            const end = els.modalEndDate.value || start;
+            if (!isValidISODate(start) || !isValidISODate(end) || start > end) {
+                els.modalSubtitle.textContent = "请选择有效的日期范围";
+                return;
+            }
+
+            const reason = els.modalReason.value.trim();
+            els.leaveStart.value = start;
+            els.leaveEnd.value = end;
+            els.leaveTypeForDoc.value = pendingStatus;
+            els.leaveReasonDoc.value = reason;
+            saveModalRecord({keepOpen: true});
+            openLeaveGenerator({
+                type: pendingStatus,
+                start,
+                end,
+                reason
+            });
+            generateLeaveDoc();
+            closeModal();
+        }
+
+        function saveModalRecord(options = {}) {
+            if (!activeDate || !pendingStatus || pendingStatus === "clear") return;
+            const start = els.modalStartDate.value || activeDate;
+            const end = els.modalEndDate.value || start;
+            if (!isValidISODate(start) || !isValidISODate(end) || start > end) {
+                els.modalSubtitle.textContent = "请选择有效的日期范围";
+                return;
+            }
+            const reason = els.modalReason.value.trim();
+            const note = els.modalNote.value.trim();
+            const dates = rangeDates(start, end).filter(iso => getDayInfo(fromISO(iso)).isWorkday);
+            dates.forEach(iso => {
+                state.records[iso] = {
+                    status: pendingStatus,
+                    leaveType: LEAVE_STATUSES.includes(pendingStatus) ? STATUS_LABELS[pendingStatus] : "",
+                    reason,
+                    note,
+                    updatedAt: new Date().toISOString()
+                };
+            });
+
+            if (LEAVE_STATUSES.includes(pendingStatus)) {
+                els.leaveStart.value = start;
+                els.leaveEnd.value = end;
+                els.leaveTypeForDoc.value = pendingStatus;
+                if (reason) els.leaveReasonDoc.value = reason;
+            }
+
+            saveState();
+            if (!options.keepOpen) closeModal();
+            render();
+        }
+
+        function calculateStats(year, month) {
+            const dates = month ? getMonthDates(year, month) : getYearDates(year);
+            const stats = {
+                expectedWorkdays: 0,
+                actualWorkdays: 0,
+                personalLeave: 0,
+                sickLeave: 0,
+                annualLeave: 0,
+                compLeave: 0,
+                totalLeave: 0,
+                holidayDays: 0,
+                weekendDays: 0,
+                attendedMarked: 0,
+                leaveByStatus: {
+                    personal: 0,
+                    sick: 0,
+                    annual: 0,
+                    comp: 0
+                }
+            };
+
+            dates.forEach(date => {
+                const iso = toISO(date);
+                const info = getDayInfo(date);
+                const record = state.records[iso];
+                if (info.isHoliday) stats.holidayDays += 1;
+                if (info.isWeekend) stats.weekendDays += 1;
+                if (info.isWorkday) {
+                    stats.expectedWorkdays += 1;
+                    if (LEAVE_STATUSES.includes(record?.status)) {
+                        stats.leaveByStatus[record.status] += 1;
+                    }
+                    if (record?.status === "work") stats.attendedMarked += 1;
+                }
+            });
+
+            stats.personalLeave = stats.leaveByStatus.personal;
+            stats.sickLeave = stats.leaveByStatus.sick;
+            stats.annualLeave = stats.leaveByStatus.annual;
+            stats.compLeave = stats.leaveByStatus.comp;
+            stats.totalLeave = LEAVE_STATUSES.reduce((sum, status) => sum + stats.leaveByStatus[status], 0);
+            stats.actualWorkdays = stats.attendedMarked;
+            return stats;
+        }
+
+        function statsHeatmapHtml(scope, dates, stats) {
+            const cells = buildHeatCells(dates, scope === "year" || scope === "month");
+            const annualQuota = cleanNumber(els.annualQuotaInput.value);
+            const annualRemaining = annualQuota > 0 ? Math.max(0, annualQuota - calculateStats(currentYear).annualLeave) : 0;
+            const primary = scope === "month"
+                ? [
+                    ["应出勤", stats.expectedWorkdays],
+                    ["已出勤", stats.actualWorkdays],
+                    ["事假", stats.personalLeave],
+                    ["病假", stats.sickLeave],
+                    ["调休", stats.compLeave],
+                    ["年假", stats.annualLeave],
+                    ["周末", stats.weekendDays],
+                    ["节假日", stats.holidayDays],
+                    ["剩余年假", annualRemaining]
+                ]
+                : [
+                    ["总请假", stats.totalLeave],
+                    ["事假", stats.personalLeave],
+                    ["病假", stats.sickLeave],
+                    ["年假", stats.annualLeave],
+                    ["调休", stats.compLeave],
+                    ["节假日", stats.holidayDays]
+                ];
+
+            const caption = scope === "month"
+                ? "每个方块代表本月一天，按周排列完整展示。"
+                : "每个方块代表全年一天，按周从左到右排列。";
+
+            return `
+        <div class="summary-row ${scope}-summary-row">${primary.map(([label, value]) => summaryChip(label, value)).join("")}</div>
+        ${scope === "month" ? statusDistributionHtml(stats) : ""}
+          <div class="heat-shell ${scope}-shell">
+            <div class="heatmap ${scope}" aria-label="${scope === "month" ? "月度" : "年度"}每日状态热力图">${cells}</div>
+          </div>
+        ${heatLegend()}
+        <div class="heat-caption">${caption}</div>
+      `;
+        }
+
+        function statusDistributionHtml(stats) {
+            const items = [
+                {label: "已出勤", value: stats.actualWorkdays, color: "var(--heat-work)"},
+                {label: "事假", value: stats.personalLeave, color: "var(--heat-personal)"},
+                {label: "病假", value: stats.sickLeave, color: "var(--heat-sick)"},
+                {label: "年假", value: stats.annualLeave, color: "var(--heat-annual)"},
+                {label: "调休", value: stats.compLeave, color: "var(--heat-comp)"},
+                {label: "周末", value: stats.weekendDays, color: "var(--heat-weekend)"},
+                {label: "节假日", value: stats.holidayDays, color: "var(--heat-holiday)"}
+            ].filter(item => item.value > 0);
+            const total = Math.max(1, items.reduce((sum, item) => sum + item.value, 0));
+            return `
+        <div class="status-distribution" aria-label="本月状态分布">
+          <div class="distribution-bar">
+            ${items.map(item => `<span class="distribution-segment" style="width:${(item.value / total) * 100}%;background:${item.color}" title="${item.label} ${item.value} 天"></span>`).join("")}
+          </div>
+          <div class="distribution-items">
+            ${items.map(item => `<span class="distribution-item"><span class="distribution-dot" style="background:${item.color}"></span>${item.label} ${item.value}</span>`).join("")}
+          </div>
+        </div>
+      `;
+        }
+
+        function yearLeaveChartHtml(yearStats) {
+            const monthly = [];
+            for (let month = 1; month <= 12; month++) {
+                const stats = calculateStats(currentYear, month);
+                monthly.push({
+                    month,
+                    leave: stats.totalLeave,
+                    personal: stats.personalLeave,
+                    sick: stats.sickLeave,
+                    annual: stats.annualLeave,
+                    comp: stats.compLeave
+                });
+            }
+            const maxLeave = Math.max(1, ...monthly.map(item => item.leave));
+            const bars = monthly.map((item, index) => {
+                const height = Math.max(4, Math.round((item.leave / maxLeave) * 100));
+                const title = `${currentYear}-${String(item.month).padStart(2, "0")} 请假 ${item.leave} 天，事假 ${item.personal} 天，病假 ${item.sick} 天，年假 ${item.annual} 天，调休 ${item.comp} 天`;
+                const barClass = ["bar", item.leave === 0 ? "zero" : "", item.month === currentMonth ? "current" : ""].filter(Boolean).join(" ");
+                const valueClass = ["bar-value", item.leave === 0 ? "zero" : ""].filter(Boolean).join(" ");
+                return `
+          <div class="bar-wrap" style="--i:${index}" title="${escapeHtml(title)}">
+            <div class="${barClass}" style="height:${height}%">
+              <span class="${valueClass}">${item.leave}</span>
+            </div>
+          </div>
+        `;
+            }).join("");
+            const labels = monthly.map(item => `<span>${item.month}月</span>`).join("");
+
+            return `
+        <div class="summary-row months-summary-row">
+          ${summaryChip("总请假", yearStats.totalLeave)}
+          ${summaryChip("已出勤", yearStats.actualWorkdays)}
+          ${summaryChip("节假日", yearStats.holidayDays)}
+          ${summaryChip("周末", yearStats.weekendDays)}
+        </div>
+        <div class="year-chart">
+          <div class="chart-title">每月请假天数 <span>当前查看：${currentMonth}月</span></div>
+          <div class="bar-area">${bars}</div>
+          <div class="x-axis">${labels}</div>
+          <div class="chart-note">横轴为月份，柱高表示当月请假天数；切换到“每一天”可查看全年每日状态热力图。</div>
+        </div>
+      `;
+        }
+
+        function buildHeatCells(dates, alignByWeek) {
+            if (!dates.length) return "";
+            const cells = [];
+            if (alignByWeek) {
+                const offset = (dates[0].getDay() + 6) % 7;
+                for (let i = 0; i < offset; i++) {
+                    cells.push(`<span class="heat-cell empty" aria-hidden="true"></span>`);
+                }
+            }
+
+            dates.forEach(date => {
+                const iso = toISO(date);
+                const {cls, label} = getHeatCellState(date);
+                cells.push(`<span class="heat-cell ${cls}" title="${escapeHtml(`${iso} ${label}`)}" aria-label="${escapeHtml(`${iso} ${label}`)}"></span>`);
+            });
+            return cells.join("");
+        }
+
+        function getHeatCellState(date) {
+            const iso = toISO(date);
+            const record = state.records[iso];
+            const info = getDayInfo(date);
+            if (record?.status) return {cls: record.status, label: STATUS_LABELS[record.status]};
+            if (info.isHoliday) return {cls: "holiday", label: info.holidayName || "节假日"};
+            if (info.makeupName) return {cls: "makeup", label: "调休上班"};
+            if (info.isWeekend) return {cls: "weekend", label: "周末"};
+            return {cls: "default", label: "工作日"};
+        }
+
+        function summaryChip(label, value) {
+            return `<div class="summary-chip"><span>${label}</span><strong>${value}</strong></div>`;
+        }
+
+        function heatLegend() {
+            return `
+        <div class="heat-legend">
+          ${legendItem("default", "工作日")}
+          ${legendItem("work", "出勤")}
+          ${legendItem("personal", "事假")}
+          ${legendItem("sick", "病假")}
+          ${legendItem("annual", "年假")}
+          ${legendItem("comp", "调休")}
+          ${legendItem("holiday", "节假日")}
+          ${legendItem("weekend", "周末")}
+          ${legendItem("makeup", "调休")}
+        </div>
+      `;
+        }
+
+        function legendItem(cls, label) {
+            return `<span class="legend-item"><span class="legend-dot heat-cell ${cls}"></span>${label}</span>`;
+        }
+
+        function moneyRow(label, value, strong = false) {
+            const amount = formatMoney(value);
+            return `<div class="money-row"><span>${label}</span><${strong ? "strong" : "span"}>${amount}</${strong ? "strong" : "span"}></div>`;
+        }
+
+        function numberRow(label, value) {
+            return `<div class="money-row"><span>${label}</span><span>${value} 天</span></div>`;
+        }
+
+        function receiptRow(label, value, strong = false) {
+            const safeLabel = escapeHtml(label);
+            const safeValue = escapeHtml(value);
+            return `<div class="receipt-row ${strong ? "receipt-total" : ""}"><span>${safeLabel}</span><${strong ? "strong" : "span"}>${safeValue}</${strong ? "strong" : "span"}></div>`;
+        }
+
+        function receiptHtml(data) {
+            return `<div class="receipt-preview ${data.kind}-receipt">${receiptInnerHtml(data)}</div>`;
+        }
+
+        function receiptInnerHtml(data) {
+            return `
+        <div class="receipt-head">
+          <div class="receipt-title">${escapeHtml(data.title)}</div>
+          <div class="receipt-subtitle">${escapeHtml(data.subtitle)}</div>
+        </div>
+        ${data.sections.map(section => `
+          <div class="receipt-section">
+            ${section.map(item => receiptRow(item.label, item.value, item.strong)).join("")}
+          </div>
+        `).join("")}
+        ${data.body ? `<div class="receipt-body">${escapeHtml(data.body)}</div>` : ""}
+        <div class="receipt-foot">
+          <span>${escapeHtml(data.footer[0])}</span>
+          <span>${escapeHtml(data.footer[1])}</span>
+        </div>
+      `;
+        }
+
+        function openReceiptModal(type) {
+            const data = type === "leave" ? currentLeaveReceipt : currentSalaryReceipt;
+            if (!data) return;
+            currentReceipt = data;
+            els.receiptModalTitle.textContent = data.title;
+            els.receiptModalSubtitle.textContent = "热敏小票预览，可下载为 PNG 图片";
+            els.receiptModalBody.innerHTML = receiptHtml(data);
+            openBackdrop(els.receiptModal);
+        }
+
+        function closeReceiptModal() {
+            closeBackdrop(els.receiptModal);
+        }
+
+        function downloadCurrentReceiptImage() {
+            if (!currentReceipt) return;
+            const canvas = receiptCanvas(currentReceipt);
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = `${currentReceipt.filename}.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        function receiptCanvas(data) {
+            const width = 720;
+            const padding = 54;
+            const contentWidth = width - padding * 2;
+            const probe = document.createElement("canvas");
+            const ctx = probe.getContext("2d");
+            ctx.font = "24px sans-serif";
+            const bodyLines = data.body ? wrapCanvasText(ctx, data.body, contentWidth) : [];
+            const rowCount = data.sections.reduce((sum, section) => sum + section.length, 0);
+            const height = 96 + data.sections.length * 36 + rowCount * 34 + bodyLines.length * 34 + 110;
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const c = canvas.getContext("2d");
+
+            c.fillStyle = "#f8fafc";
+            c.fillRect(0, 0, width, height);
+            c.fillStyle = "#ffffff";
+            c.fillRect(22, 16, width - 44, height - 32);
+            drawReceiptTear(c, 22, 16, width - 44, true);
+            drawReceiptTear(c, 22, height - 16, width - 44, false);
+
+            c.save();
+            c.globalAlpha = 0.08;
+            c.fillStyle = "#09090b";
+            for (let y = 30; y < height - 30; y += 7) {
+                c.fillRect(34, y, width - 68, 1);
+            }
+            c.restore();
+
+            let y = 72;
+            c.fillStyle = "#09090b";
+            c.textAlign = "center";
+            c.font = "700 32px sans-serif";
+            c.fillText(data.title, width / 2, y);
+            y += 32;
+            c.fillStyle = "#71717a";
+            c.font = "20px sans-serif";
+            c.fillText(data.subtitle, width / 2, y);
+            y += 28;
+            drawDash(c, padding, y, contentWidth);
+            y += 34;
+
+            data.sections.forEach(section => {
+                c.textAlign = "left";
+                section.forEach(item => {
+                    c.fillStyle = "#71717a";
+                    c.font = "22px sans-serif";
+                    c.fillText(item.label, padding, y);
+                    c.fillStyle = "#09090b";
+                    c.textAlign = "right";
+                    c.font = `${item.strong ? "700 " : ""}22px sans-serif`;
+                    c.fillText(String(item.value), width - padding, y);
+                    c.textAlign = "left";
+                    y += item.strong ? 38 : 34;
+                });
+                drawDash(c, padding, y - 12, contentWidth);
+                y += 22;
+            });
+
+            if (bodyLines.length) {
+                c.fillStyle = "#27272a";
+                c.font = "22px sans-serif";
+                c.textAlign = "left";
+                bodyLines.forEach(line => {
+                    c.fillText(line, padding, y);
+                    y += 34;
+                });
+                drawDash(c, padding, y - 12, contentWidth);
+                y += 22;
+            }
+
+            c.fillStyle = "#71717a";
+            c.font = "19px sans-serif";
+            c.textAlign = "left";
+            c.fillText(data.footer[0], padding, y);
+            c.textAlign = "right";
+            c.fillText(data.footer[1], width - padding, y);
+            return canvas;
+        }
+
+        function drawDash(ctx, x, y, width) {
+            ctx.save();
+            ctx.strokeStyle = "#d4d4d8";
+            ctx.setLineDash([10, 8]);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawReceiptTear(ctx, x, y, width, top) {
+            ctx.save();
+            ctx.fillStyle = "#f8fafc";
+            const teeth = 28;
+            const step = width / teeth;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            for (let i = 0; i <= teeth; i++) {
+                const px = x + i * step;
+                const py = y + (i % 2 === 0 ? 0 : (top ? 10 : -10));
+                ctx.lineTo(px, py);
+            }
+            ctx.lineTo(x + width, top ? y - 18 : y + 18);
+            ctx.lineTo(x, top ? y - 18 : y + 18);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function wrapCanvasText(ctx, text, maxWidth) {
+            const lines = [];
+            String(text).split("\n").forEach(paragraph => {
+                let line = "";
+                [...paragraph].forEach(char => {
+                    const test = line + char;
+                    if (ctx.measureText(test).width > maxWidth && line) {
+                        lines.push(line);
+                        line = char;
+                    } else {
+                        line = test;
+                    }
+                });
+                lines.push(line);
+            });
+            return lines;
+        }
+
+        function generateLeaveDoc() {
+            const type = els.leaveTypeForDoc.value;
+            const start = els.leaveStart.value;
+            const end = els.leaveEnd.value || start;
+            const applicant = els.leaveApplicantDoc.value.trim() || "________";
+            const recipient = els.leaveRecipientDoc.value.trim() || "尊敬的领导";
+            const handoff = els.leaveHandoffDoc.value.trim() || "请假期间我会提前安排好相关工作，确保不影响团队正常进度。";
+            const reason = els.leaveReasonDoc.value.trim() || defaultLeaveReason(type);
+
+            if (!isValidISODate(start) || !isValidISODate(end) || start > end) {
+                els.leaveOutput.value = "请选择有效的开始日期和结束日期。";
+                els.leaveReceipt.classList.add("empty");
+                els.leaveReceipt.innerHTML = `<div class="receipt-empty">请选择有效的开始日期和结束日期</div>`;
+                return;
+            }
+
+            const days = countLeaveDays(start, end, type);
+            const applyDate = toISO(new Date());
+            const body = leaveDocBody(type, start, end, days, reason, applicant, applyDate, recipient, handoff);
+
+            els.leaveOutput.value = body;
+            renderLeaveReceipt({type, start, end, days, reason, applicant, applyDate, body});
+            syncSettingsFromInputs();
+            state.settings.applicantName = applicant === "________" ? "" : applicant;
+            state.settings.leaveRecipient = recipient;
+            state.settings.leaveHandoff = handoff;
+            els.applicantName.value = state.settings.applicantName;
+            els.leaveRecipientInput.value = state.settings.leaveRecipient;
+            els.leaveHandoffInput.value = state.settings.leaveHandoff;
+            saveState();
+        }
+
+        function renderLeaveReceipt({type, start, end, days, reason, applicant, applyDate, body}) {
+            const typeText = STATUS_LABELS[type] || "事假";
+            currentLeaveReceipt = {
+                kind: "leave",
+                title: "请假条",
+                subtitle: `${typeText} · THERMAL PRINT`,
+                filename: `请假条-${applicant}-${applyDate}`,
+                sections: [
+                    [
+                        {label: "申请人", value: applicant},
+                        {label: "请假类型", value: typeText},
+                        {label: "请假天数", value: `${days} 天`},
+                        {label: "申请日期", value: applyDate},
+                        ...(reason ? [{label: "请假理由", value: reason}] : [])
+                    ]
+                ],
+                body,
+                footer: ["休历生成", applyDate]
+            };
+            els.leaveReceipt.classList.remove("empty");
+            els.leaveReceipt.innerHTML = receiptInnerHtml(currentLeaveReceipt);
+            currentReceipt = currentLeaveReceipt;
+        }
+
+        function leaveDocBody(type, start, end, days, reason, applicant, applyDate, recipient, handoff) {
+            if (type === "sick") {
+                return `${recipient}：\n您好！\n因${reason}，需于${start}至${end}请病假，共${days}天。本人会根据实际情况及时同步恢复进度，并尽量减少对工作的影响。\n恳请批准，谢谢！\n\n申请人：${applicant}\n日期：${applyDate}`;
+            }
+            const typeText = STATUS_LABELS[type] || "事假";
+            const reasonText = reason ? `因${reason}，` : "";
+            return `${recipient}：\n您好！\n${reasonText}本人需于${start}至${end}请${typeText}，共${days}天。${handoff}\n恳请批准，谢谢！\n\n申请人：${applicant}\n日期：${applyDate}`;
+        }
+
+        function defaultLeaveReason(type) {
+            if (type === "sick") return state.settings.sickReason || "身体不适";
+            if (type === "personal") return state.settings.personalReason || "个人事务";
+            return "";
+        }
+
+        function countLeaveDays(start, end, type) {
+            const dates = rangeDates(start, end);
+            const marked = dates.filter(iso => state.records[iso]?.status === type).length;
+            if (marked > 0) return marked;
+            return dates.filter(iso => getDayInfo(fromISO(iso)).isWorkday).length;
+        }
+
+        function exportCsv() {
+            const rows = [CSV_HEADERS];
+            Object.keys(state.records).sort().forEach(iso => {
+                const record = state.records[iso];
+                const info = getDayInfo(fromISO(iso));
+                rows.push([
+                    iso,
+                    STATUS_LABELS[record.status] || "",
+                    record.leaveType || "",
+                    record.reason || "",
+                    info.isHoliday ? "是" : "否",
+                    info.isWeekend ? "是" : "否",
+                    record.note || ""
+                ]);
+            });
+            const csv = "\ufeff" + rows.map(row => row.map(csvEscape).join(",")).join("\n");
+            const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `休历-请假数据-${toISO(new Date())}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            els.csvNotice.textContent = "CSV 已导出。";
+        }
+
+        function importCsv(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const parsed = parseCsv(String(reader.result || ""));
+                    const imported = validateImportedRows(parsed);
+                    state.records = {...state.records, ...imported};
+                    saveState();
+                    els.csvNotice.textContent = `导入成功：${Object.keys(imported).length} 条记录已合并。`;
+                    render();
+                } catch (error) {
+                    els.csvNotice.textContent = `导入失败：${error.message}`;
+                } finally {
+                    event.target.value = "";
+                }
+            };
+            reader.readAsText(file, "utf-8");
+        }
+
+        function validateImportedRows(rows) {
+            if (rows.length < 2) throw new Error("CSV 内容为空。");
+            const headers = rows[0].map(cell => cell.replace(/^\ufeff/, "").trim());
+            const missing = CSV_HEADERS.filter(header => !headers.includes(header));
+            if (missing.length) throw new Error(`缺少字段：${missing.join("、")}。`);
+
+            const index = Object.fromEntries(headers.map((header, i) => [header, i]));
+            const imported = {};
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row.some(cell => cell.trim())) continue;
+                const iso = (row[index["日期"]] || "").trim();
+                const statusText = (row[index["状态"]] || "").trim();
+                if (!isValidISODate(iso)) throw new Error(`第 ${i + 1} 行日期格式不正确。`);
+                const status = Object.entries(STATUS_LABELS).find(([, label]) => label === statusText)?.[0];
+                if (!status) throw new Error(`第 ${i + 1} 行状态必须是${Object.values(STATUS_LABELS).join("、")}。`);
+                if (!getDayInfo(fromISO(iso)).isWorkday) throw new Error(`第 ${i + 1} 行不是可标记的工作日。`);
+                imported[iso] = {
+                    status,
+                    leaveType: row[index["请假类型"]] || (LEAVE_STATUSES.includes(status) ? STATUS_LABELS[status] : ""),
+                    reason: row[index["请假理由"]] || "",
+                    note: row[index["备注"]] || "",
+                    updatedAt: new Date().toISOString()
+                };
+            }
+            return imported;
+        }
+
+        function getTicketReminders(year) {
+            const holidayMap = getHolidayMap(year);
+            const firstByName = new Map();
+            for (const [iso, value] of holidayMap.entries()) {
+                if (!firstByName.has(value.name) || iso < firstByName.get(value.name)) {
+                    firstByName.set(value.name, iso);
+                }
+            }
+
+            return [...firstByName.entries()].map(([name, iso]) => {
+                const departure = fromISO(iso);
+                const saleDate = addDays(departure, -15);
+                return {name, departure, saleDate};
+            }).sort((a, b) => a.departure - b.departure);
+        }
+
+        function getHolidayMap(year) {
+            return calendarApi.years.get(year)?.holidays || buildHolidayMap(year);
+        }
+
+        function visibleCalendarYears() {
+            const years = new Set(getCalendarDays(currentYear, currentMonth).map(date => date.getFullYear()));
+            years.add(currentYear);
+            return years;
+        }
+
+        function isCalendarDataReady() {
+            return [...visibleCalendarYears()].every(year => calendarApi.years.has(year) || calendarApi.failedYears.has(year));
+        }
+
+        async function ensureCalendarDataForView() {
+            await Promise.all([...visibleCalendarYears()].map(year => loadRemoteCalendarYear(year)));
+        }
+
+        async function loadRemoteCalendarYear(year) {
+            if (calendarApi.years.has(year) || calendarApi.failedYears.has(year)) return;
+            const controller = new AbortController();
+            const timeout = window.setTimeout(() => controller.abort(), 4500);
+            try {
+                const response = await fetch(CALENDAR_API.yearJson(year), {
+                    cache: "force-cache",
+                    signal: controller.signal
+                });
+                if (!response.ok) throw new Error(`${year} 年接口返回 ${response.status}`);
+                const json = await response.json();
+                calendarApi.years.set(year, normalizeRemoteCalendarYear(json));
+                calendarApi.status = "api";
+                calendarApi.message = `Connected ${CALENDAR_API.sourceName} API`;
+            } catch (error) {
+                calendarApi.failedYears.add(year);
+                if (!calendarApi.years.size) {
+                    calendarApi.status = "fallback";
+                    calendarApi.message = "远程日历暂不可用，正在使用本地备用数据";
+                } else {
+                    calendarApi.status = "partial";
+                    calendarApi.message = "部分年份使用远程数据，部分年份使用本地备用数据";
+                }
+            } finally {
+                window.clearTimeout(timeout);
+            }
+        }
+
+        function normalizeRemoteCalendarYear(data) {
+            return {
+                holidays: normalizeRemoteDayMap(data?.holidays),
+                makeupWorkdays: normalizeRemoteDayMap(data?.workdays)
+            };
+        }
+
+        function normalizeRemoteDayMap(rawMap) {
+            const map = new Map();
+            Object.entries(rawMap || {}).forEach(([date, raw]) => {
+                map.set(date, {
+                    date,
+                    name: parseRemoteDayName(raw),
+                    raw
+                });
+            });
+            return map;
+        }
+
+        function parseRemoteDayName(raw) {
+            if (raw && typeof raw === "object") return raw.name || raw.localName || raw.cn || raw.title || "节假日";
+            const parts = String(raw || "").split(",");
+            return parts[1] || parts[0] || "节假日";
+        }
+
+        function updateCalendarSource() {
+            if (!els.calendarSource) return;
+            els.calendarSource.textContent = calendarApi.message;
+            els.calendarSource.classList.toggle("ok", calendarApi.status === "api");
+            els.calendarSource.classList.toggle("warn", calendarApi.status !== "api");
+        }
+
+        function getDayInfo(date) {
+            const iso = toISO(date);
+            const yearData = calendarApi.years.get(date.getFullYear());
+            const holiday = yearData?.holidays.get(iso) || buildHolidayMap(date.getFullYear()).get(iso);
+            const makeup = yearData?.makeupWorkdays.get(iso) || buildMakeupMap(date.getFullYear()).get(iso);
+            const naturalWeekend = date.getDay() === 0 || date.getDay() === 6;
+            const isHoliday = Boolean(holiday);
+            const isWeekend = naturalWeekend && !makeup && !isHoliday;
+            const isWorkday = Boolean(makeup) || (!naturalWeekend && !isHoliday);
+            return {
+                isHoliday,
+                isWeekend,
+                isWorkday,
+                holidayName: holiday?.name || "",
+                makeupName: makeup?.name || ""
+            };
+        }
+
+        const holidayCache = new Map();
+        const makeupCache = new Map();
+
+        function buildHolidayMap(year) {
+            if (holidayCache.has(year)) return holidayCache.get(year);
+            const map = new Map();
+            (HOLIDAY_DATA[year]?.holidays || []).forEach(item => map.set(item.date, item));
+            holidayCache.set(year, map);
+            return map;
+        }
+
+        function buildMakeupMap(year) {
+            if (makeupCache.has(year)) return makeupCache.get(year);
+            const map = new Map();
+            (HOLIDAY_DATA[year]?.makeupWorkdays || []).forEach(item => map.set(item.date, item));
+            makeupCache.set(year, map);
+            return map;
+        }
+
+        function getCalendarDays(year, month) {
+            const first = new Date(year, month - 1, 1);
+            const mondayOffset = (first.getDay() + 6) % 7;
+            const start = addDays(first, -mondayOffset);
+            return Array.from({length: 42}, (_, i) => addDays(start, i));
+        }
+
+        function getMonthDates(year, month) {
+            const total = new Date(year, month, 0).getDate();
+            return Array.from({length: total}, (_, i) => new Date(year, month - 1, i + 1));
+        }
+
+        function getYearDates(year) {
+            const dates = [];
+            for (let month = 1; month <= 12; month++) {
+                dates.push(...getMonthDates(year, month));
+            }
+            return dates;
+        }
+
+        function startOfMonth(year, month) {
+            return new Date(year, month - 1, 1);
+        }
+
+        function shiftMonth(delta) {
+            const next = new Date(currentYear, currentMonth - 1 + delta, 1);
+            currentYear = next.getFullYear();
+            currentMonth = next.getMonth() + 1;
+            if (![...els.yearSelect.options].some(opt => Number(opt.value) === currentYear)) {
+                const opt = document.createElement("option");
+                opt.value = String(currentYear);
+                opt.textContent = `${currentYear} 年`;
+                els.yearSelect.appendChild(opt);
+                [...els.yearSelect.options].sort((a, b) => Number(a.value) - Number(b.value)).forEach(opt => els.yearSelect.appendChild(opt));
+            }
+            render();
+        }
+
+        const lunarTextCache = new Map();
+
+        function getLunarText(date) {
+            const iso = toISO(date);
+            if (lunarTextCache.has(iso)) return lunarTextCache.get(iso);
+            lunarTextCache.set(iso, computeLunarText(date, iso));
+            return lunarTextCache.get(iso);
+        }
+
+        function computeLunarText(date, iso) {
+            const chineseDays = window.chineseDays;
+            if (chineseDays?.getLunarDate) {
+                try {
+                    const lunar = chineseDays.getLunarDate(iso);
+                    const month = lunar.lunarMonCN || "";
+                    const day = lunar.lunarDayCN || "";
+                    const leap = lunar.isLeap ? "闰" : "";
+                    return `${leap}${month}${day}`.trim();
+                } catch {
+                    // Fall through to browser Intl fallback.
+                }
+            }
+
+            try {
+                const text = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+                    month: "long",
+                    day: "numeric"
+                }).format(date);
+                return text.replace("月", "月 ");
+            } catch {
+                return "";
+            }
+        }
+
+        const solarTermCache = new Map();
+
+        function getSolarTermText(date) {
+            const iso = toISO(date);
+            if (solarTermCache.has(iso)) return solarTermCache.get(iso);
+            const chineseDays = window.chineseDays;
+            let text = "";
+            if (chineseDays?.getSolarTerms) {
+                try {
+                    const terms = chineseDays.getSolarTerms(iso);
+                    text = terms?.[0]?.date === iso ? terms[0].name : "";
+                } catch {
+                    text = "";
+                }
+            }
+            solarTermCache.set(iso, text);
+            return text;
+        }
+
+        function tag(text, cls) {
+            return `<span class="tag ${cls}">${escapeHtml(text)}</span>`;
+        }
+
+        function weekdayName(date) {
+            return ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][date.getDay()];
+        }
+
+        function formatMoney(value) {
+            return new Intl.NumberFormat("zh-CN", {
+                style: "currency",
+                currency: "CNY",
+                maximumFractionDigits: 2
+            }).format(Number.isFinite(value) ? value : 0);
+        }
+
+        function formatMonthDay(date) {
+            return `${date.getMonth() + 1}月${date.getDate()}日`;
+        }
+
+        function diffDays(start, end) {
+            const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+            const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+            return Math.ceil((endDate - startDate) / 86400000);
+        }
+
+        function cleanNumber(value) {
+            const number = Number(value);
+            return Number.isFinite(number) && number > 0 ? number : 0;
+        }
+
+        function cleanPercent(value, fallback = 0) {
+            const number = Number(value);
+            if (!Number.isFinite(number)) return fallback;
+            return Math.min(100, Math.max(0, number));
+        }
+
+        function settingNumber(key, fallback = 0) {
+            return state.settings[key] === undefined || state.settings[key] === ""
+                ? fallback
+                : cleanNumber(state.settings[key]);
+        }
+
+        function getSalaryRates() {
+            return {
+                personal: cleanPercent(els.personalRateInput.value, DEFAULT_RATES.personal),
+                sick: cleanPercent(els.sickRateInput.value, DEFAULT_RATES.sick),
+                annual: cleanPercent(els.annualRateInput.value, DEFAULT_RATES.annual),
+                comp: cleanPercent(els.compRateInput.value, DEFAULT_RATES.comp)
+            };
+        }
+
+        function rangeDates(start, end) {
+            const result = [];
+            let cursor = fromISO(start);
+            const finish = fromISO(end);
+            while (cursor <= finish) {
+                result.push(toISO(cursor));
+                cursor = addDays(cursor, 1);
+            }
+            return result;
+        }
+
+        function addDays(date, amount) {
+            const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            copy.setDate(copy.getDate() + amount);
+            return copy;
+        }
+
+        function toISO(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, "0");
+            const d = String(date.getDate()).padStart(2, "0");
+            return `${y}-${m}-${d}`;
+        }
+
+        function fromISO(iso) {
+            const [y, m, d] = iso.split("-").map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        function isValidISODate(value) {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+            const date = fromISO(value);
+            return toISO(date) === value;
+        }
+
+        function isSameDate(a, b) {
+            return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+        }
+
+        function csvEscape(value) {
+            const text = String(value ?? "");
+            return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+        }
+
+        function parseCsv(text) {
+            const rows = [];
+            let row = [];
+            let cell = "";
+            let inQuotes = false;
+            const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+            for (let i = 0; i < normalized.length; i++) {
+                const char = normalized[i];
+                const next = normalized[i + 1];
+                if (char === '"') {
+                    if (inQuotes && next === '"') {
+                        cell += '"';
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === "," && !inQuotes) {
+                    row.push(cell);
+                    cell = "";
+                } else if (char === "\n" && !inQuotes) {
+                    row.push(cell);
+                    rows.push(row);
+                    row = [];
+                    cell = "";
+                } else {
+                    cell += char;
+                }
+            }
+            row.push(cell);
+            if (row.some(item => item.length)) rows.push(row);
+            return rows;
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char]));
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return {records: {}, settings: {}};
+                const parsed = JSON.parse(raw);
+                return {
+                    records: parsed.records && typeof parsed.records === "object" ? parsed.records : {},
+                    settings: parsed.settings && typeof parsed.settings === "object" ? parsed.settings : {}
+                };
+            } catch {
+                return {records: {}, settings: {}};
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+    </script>
+</body>
+
+</html>
