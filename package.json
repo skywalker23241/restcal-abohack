@@ -1,0 +1,47 @@
+{
+    "name": "xiuli",
+    "productName": "休历",
+    "version": "1.1.0",
+    "description": "休历 - 管理请假、出勤、工资扣除和节假日火车票购票提醒的本地日历工具",
+    "license": "MIT",
+    "author": "skywalker23241",
+    "main": "desktop/main.js",
+    "scripts": {
+        "start": "electron .",
+        "serve": "node server.js",
+        "dist": "electron-builder --win portable"
+    },
+    "devDependencies": {
+        "electron": "^33.2.0",
+        "electron-builder": "^25.1.8"
+    },
+    "build": {
+        "appId": "com.skywalker23241.xiuli",
+        "productName": "休历",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "desktop/**",
+            "index.html",
+            "styles.css",
+            "manifest.webmanifest",
+            "sw.js",
+            "icons/**",
+            "vendor/**",
+            "LICENSE"
+        ],
+        "win": {
+            "target": [
+                "portable"
+            ],
+            "icon": "icons/icon-512.png"
+        },
+        "portable": {
+            "artifactName": "休历-${version}-portable.exe"
+        },
+        "electronDownload": {
+            "mirror": "https://npmmirror.com/mirrors/electron/"
+        }
+    }
+}

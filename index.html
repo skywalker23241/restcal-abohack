@@ -8,6 +8,12 @@
     <meta name="theme-color" content="#f6f3ed">
     <link rel="icon"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b4382a'/%3E%3Crect x='4' y='4' width='56' height='56' rx='10' fill='none' stroke='%23fdf3ee' stroke-opacity='0.45' stroke-width='2.5'/%3E%3Ctext x='32' y='46' font-size='38' font-family='Georgia, Songti SC, SimSun, serif' font-weight='700' fill='%23fdf3ee' text-anchor='middle'%3E休%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="休历">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-600.css">
@@ -477,7 +483,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chinese-days@1.5.9/dist/index.min.js"></script>
+    <script src="vendor/chinese-days/index.min.js"></script>
     <script>
         const STORAGE_KEY = "xiuli-state-v1";
         const THEME_KEY = "xiuli-theme";
@@ -490,7 +496,7 @@
         const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
         const CALENDAR_API = {
             sourceName: "Chinese Days",
-            yearJson: year => `https://cdn.jsdelivr.net/npm/chinese-days@1.5.9/dist/years/${year}.json`
+            yearJson: year => `vendor/chinese-days/years/${year}.json`
         };
         const CSV_HEADERS = ["日期", "状态", "请假类型", "请假理由", "是否节假日", "是否周末", "备注"];
         const STATUS_LABELS = {
@@ -2423,6 +2429,19 @@
 
         function saveState() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+    </script>
+    <script>
+        // PWA：注册 Service Worker，并申请持久化存储，降低 localStorage 被系统清理的风险。
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").catch(error => {
+                    console.warn("Service Worker 注册失败，应用仍可在线使用", error);
+                });
+            });
+        }
+        if (navigator.storage?.persist) {
+            navigator.storage.persist().catch(() => { });
         }
     </script>
 </body>

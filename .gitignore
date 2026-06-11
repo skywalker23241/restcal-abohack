@@ -16,3 +16,6 @@ desktop.ini
 
 # Dependencies, if added later
 node_modules/
+
+# Desktop build output
+dist/
