@@ -1,5 +1,7 @@
-const { app, BrowserWindow, Menu, net, protocol, shell } = require("electron");
+const { app, BrowserWindow, Menu, net, protocol, shell, ipcMain } = require("electron");
 const path = require("path");
+const http = require("http");
+const https = require("https");
 const { pathToFileURL } = require("url");
 
 // 静态文件根目录：开发时是仓库根目录，打包后是 app.asar 根目录。
@@ -43,6 +45,48 @@ function openExternally(url) {
     }
 }
 
+// WebDav 请求在主进程用 Node 发出，绕过渲染进程的 CORS 限制，
+// 因此能兼容坚果云、Nextcloud、群晖等不发 CORS 头的服务器。
+// 入参 { method, url, headers, body }，返回 { ok, status, statusText, body }。
+// HTTP 层面的 401/404 等照常返回（ok=false），仅网络/连接错误才 reject。
+function webdavRequest({ method, url, headers, body } = {}) {
+    return new Promise((resolve, reject) => {
+        let target;
+        try {
+            target = new URL(url);
+        } catch {
+            reject(new Error("WebDav 地址无效"));
+            return;
+        }
+        if (target.protocol !== "https:" && target.protocol !== "http:") {
+            reject(new Error("WebDav 地址必须以 http:// 或 https:// 开头"));
+            return;
+        }
+        const transport = target.protocol === "https:" ? https : http;
+        const payload = body == null ? null : Buffer.from(String(body), "utf-8");
+        const requestHeaders = { ...(headers || {}) };
+        if (payload) requestHeaders["Content-Length"] = payload.length;
+
+        const req = transport.request(target, { method: method || "GET", headers: requestHeaders }, res => {
+            const chunks = [];
+            res.on("data", chunk => chunks.push(chunk));
+            res.on("end", () => {
+                const status = res.statusCode || 0;
+                resolve({
+                    ok: status >= 200 && status < 300,
+                    status,
+                    statusText: res.statusMessage || "",
+                    body: Buffer.concat(chunks).toString("utf-8")
+                });
+            });
+        });
+        req.on("error", err => reject(new Error(err.message || "网络请求失败")));
+        req.setTimeout(20000, () => req.destroy(new Error("连接超时")));
+        if (payload) req.write(payload);
+        req.end();
+    });
+}
+
 let mainWindow = null;
 
 function createWindow() {
@@ -55,6 +99,7 @@ function createWindow() {
         backgroundColor: "#f6f3ed",
         icon: path.join(root, "icons", "icon-512.png"),
         webPreferences: {
+            preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
             sandbox: true
         }
@@ -93,6 +138,7 @@ if (!gotLock) {
     app.whenReady().then(() => {
         Menu.setApplicationMenu(null);
         protocol.handle(APP_SCHEME, handleAppRequest);
+        ipcMain.handle("webdav:request", (event, options) => webdavRequest(options || {}));
         createWindow();
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) {

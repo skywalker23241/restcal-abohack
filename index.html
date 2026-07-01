@@ -58,6 +58,13 @@
             <path d="m3 16 4 4 4-4M7 20V4" />
             <path d="m21 8-4-4-4 4M17 4v16" />
         </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-4.35-4.35" />
+        </symbol>
+        <symbol id="i-filter" viewBox="0 0 24 24">
+            <path d="M4 5h16M7 12h10M10 19h4" />
+        </symbol>
         <symbol id="i-ticket" viewBox="0 0 24 24">
             <path
                 d="M2 9V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z" />
@@ -110,6 +117,10 @@
                 </div>
                 <div class="toolbar-group tool-group" aria-label="工具操作">
                     <button class="btn primary" id="todayBtn" type="button">今天</button>
+                    <button class="btn icon-btn" id="searchToggle" type="button" title="搜索与筛选"
+                        aria-label="搜索与筛选"><svg class="icon">
+                            <use href="#i-search" />
+                        </svg></button>
                     <button class="btn icon-btn" id="themeToggle" type="button" title="主题：跟随系统" aria-label="切换主题"><svg
                             class="icon">
                             <use href="#i-theme-auto" />
@@ -128,7 +139,10 @@
                         </svg></button>
                 </div>
                 <div class="csv-menu" id="csvMenu" aria-label="CSV 备份与导入">
-                    <div class="csv-menu-title">CSV 数据</div>
+                    <div class="csv-menu-head">
+                        <div class="csv-menu-title">CSV 数据</div>
+                        <button class="btn ghost compact-btn" id="csvClose" type="button">关闭</button>
+                    </div>
                     <div class="csv-actions">
                         <button class="btn primary" id="exportCsv" type="button">导出 CSV</button>
                         <label class="btn" for="importCsv">导入 CSV</label>
@@ -141,33 +155,50 @@
 
         <section class="layout">
             <aside class="side left-side">
-                <section class="panel section">
-                    <h2>本月统计</h2>
-                    <div class="stats-grid" id="monthStats"></div>
-                </section>
-
-                <section class="panel section ticket-strip" aria-label="购票提醒">
-                    <div class="ticket-head">
-                        <span class="ticket-icon"><svg class="icon">
-                                <use href="#i-ticket" />
-                            </svg></span>
-                        <h2>购票提醒</h2>
+                <section class="panel section mobile-collapsible" data-mobile-collapsible data-mobile-default="closed">
+                    <div class="section-head">
+                        <h2>本月统计</h2>
+                        <button class="btn ghost compact-btn section-toggle" type="button" aria-expanded="false">展开</button>
                     </div>
-                    <div class="reminder-list" id="ticketReminders"></div>
+                    <div class="section-body">
+                        <div class="stats-grid" id="monthStats"></div>
+                    </div>
                 </section>
 
-                <section class="panel section">
+                <section class="panel section ticket-strip mobile-collapsible" aria-label="购票提醒" data-mobile-collapsible
+                    data-mobile-default="open">
+                    <div class="section-head ticket-head">
+                        <div class="ticket-title-wrap">
+                            <span class="ticket-icon"><svg class="icon">
+                                    <use href="#i-ticket" />
+                                </svg></span>
+                            <h2>购票提醒</h2>
+                        </div>
+                        <button class="btn ghost compact-btn section-toggle" type="button" aria-expanded="true">收起</button>
+                    </div>
+                    <div class="section-body">
+                        <div class="reminder-list" id="ticketReminders"></div>
+                    </div>
+                </section>
+
+                <section class="panel section mobile-collapsible" data-mobile-collapsible data-mobile-default="closed">
                     <div class="section-head">
                         <h2>假期额度</h2>
-                        <button class="btn ghost compact-btn" data-open-settings="quota" type="button">设置</button>
+                        <div class="section-actions">
+                            <button class="btn ghost compact-btn" data-open-settings="quota" type="button">设置</button>
+                            <button class="btn ghost compact-btn section-toggle" type="button"
+                                aria-expanded="false">展开</button>
+                        </div>
                     </div>
-                    <div class="quota-line" id="quotaSummary"></div>
+                    <div class="section-body">
+                        <div class="quota-line" id="quotaSummary"></div>
+                    </div>
                 </section>
 
             </aside>
 
             <section class="center-column">
-                <div class="month-summary" id="monthSummary" aria-label="本月关键状态" hidden></div>
+                <div class="month-summary" id="monthSummary" aria-label="本月关键状态"></div>
                 <div class="panel calendar-panel">
                     <div class="weekday-row" aria-hidden="true">
                         <div class="weekday">周一</div>
@@ -184,40 +215,98 @@
             </section>
 
             <aside class="side right-side">
-                <section class="panel section">
+                <section class="panel section mobile-collapsible" data-mobile-collapsible data-mobile-default="closed">
                     <div class="section-head">
                         <h2>年度统计</h2>
-                        <div class="segmented" id="yearStatsMode" aria-label="年度统计显示方式">
-                            <button class="seg-btn active" type="button" data-year-mode="months">月</button>
-                            <button class="seg-btn" type="button" data-year-mode="days">天</button>
+                        <div class="section-actions">
+                            <div class="segmented" id="yearStatsMode" aria-label="年度统计显示方式">
+                                <button class="seg-btn active" type="button" data-year-mode="months">月</button>
+                                <button class="seg-btn" type="button" data-year-mode="days">天</button>
+                            </div>
+                            <button class="btn ghost compact-btn section-toggle" type="button"
+                                aria-expanded="false">展开</button>
                         </div>
                     </div>
-                    <div class="stats-grid" id="yearStats"></div>
+                    <div class="section-body">
+                        <div class="stats-grid" id="yearStats"></div>
+                    </div>
                 </section>
 
-                <section class="tools-panel">
-                    <button class="panel section tool-row salary-generate-button" data-open-receipt="salary"
-                        type="button">
-                        <span class="tool-icon"><svg class="icon">
-                                <use href="#i-salary-slip" />
-                            </svg></span>
-                        <span><strong id="salaryReceiptLabel">生成工资条</strong><small>按当前月份居中预览，并下载为图片</small></span>
-                        <span class="tool-chevron">›</span>
-                    </button>
-                    <button class="panel section tool-row leave-generate-button" data-generate-leave-receipt
-                        type="button">
-                        <span class="tool-icon"><svg class="icon">
-                                <use href="#i-leave-slip" />
-                            </svg></span>
-                        <span><strong>生成请假条</strong><small>填写请假时间和理由，预览并下载为图片</small></span>
-                        <span class="tool-chevron">›</span>
-                    </button>
-                    <div class="salary-snapshot" id="salaryResult"></div>
+                <section class="panel section tools-panel mobile-collapsible" data-mobile-collapsible
+                    data-mobile-default="closed">
+                    <div class="section-head">
+                        <h2>票据与工具</h2>
+                        <button class="btn ghost compact-btn section-toggle" type="button" aria-expanded="false">展开</button>
+                    </div>
+                    <div class="section-body tool-list">
+                        <button class="tool-row salary-generate-button" data-open-receipt="salary" type="button">
+                            <span class="tool-icon"><svg class="icon">
+                                    <use href="#i-salary-slip" />
+                                </svg></span>
+                            <span><strong id="salaryReceiptLabel">生成工资条</strong><small>按当前月份居中预览，并下载为图片</small></span>
+                            <span class="tool-chevron">›</span>
+                        </button>
+                        <button class="tool-row leave-generate-button" data-generate-leave-receipt type="button">
+                            <span class="tool-icon"><svg class="icon">
+                                    <use href="#i-leave-slip" />
+                                </svg></span>
+                            <span><strong>生成请假条</strong><small>填写请假时间和理由，预览并下载为图片</small></span>
+                            <span class="tool-chevron">›</span>
+                        </button>
+                        <div class="salary-snapshot" id="salaryResult"></div>
+                    </div>
                 </section>
 
             </aside>
         </section>
     </main>
+
+    <div class="modal-backdrop" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+        <div class="modal search-modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="searchTitle">搜索与筛选</h2>
+                    <div class="subtitle">查找请假、出勤、备注、农历和节假日，并跳转到日期。</div>
+                </div>
+                <button class="btn ghost" id="closeSearch" type="button" aria-label="关闭">关闭</button>
+            </div>
+            <div class="modal-body search-body">
+                <div class="field search-field">
+                    <label for="searchInput">关键词</label>
+                    <input id="searchInput" type="search" autocomplete="off" placeholder="搜索日期、请假理由、备注、节假日">
+                </div>
+                <div class="filter-grid">
+                    <div class="field">
+                        <label for="searchStatus">类型</label>
+                        <select id="searchStatus">
+                            <option value="all">全部类型</option>
+                            <option value="work">出勤</option>
+                            <option value="leave">全部请假</option>
+                            <option value="personal">事假</option>
+                            <option value="sick">病假</option>
+                            <option value="annual">年假</option>
+                            <option value="comp">调休</option>
+                            <option value="holiday">节假日</option>
+                            <option value="weekend">周末</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="searchFrom">开始日期</label>
+                        <input id="searchFrom" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="searchTo">结束日期</label>
+                        <input id="searchTo" type="date">
+                    </div>
+                </div>
+                <div class="search-results" id="searchResults" aria-live="polite"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" id="searchClear" type="button">清空条件</button>
+                <button class="btn primary" id="searchApply" type="button">确认筛选</button>
+            </div>
+        </div>
+    </div>
 
     <div class="modal-backdrop" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
         <div class="modal">
@@ -276,9 +365,11 @@
                 <button class="btn ghost" id="closeSettings" type="button" aria-label="关闭">关闭</button>
             </div>
             <div class="modal-body settings-body">
-                <section class="settings-group" data-settings-group="salary">
-                    <h3>工资与扣款</h3>
-                    <div class="settings-grid">
+                <details class="settings-group" data-settings-group="salary" open>
+                    <summary>
+                        <h3>工资与扣款</h3>
+                    </summary>
+                    <div class="settings-grid settings-content">
                         <div class="field">
                             <label for="salaryInput">月薪</label>
                             <input id="salaryInput" inputmode="decimal" type="number" min="0" step="100"
@@ -310,10 +401,12 @@
                                 placeholder="0">
                         </div>
                     </div>
-                </section>
-                <section class="settings-group" data-settings-group="quota">
-                    <h3>假期额度</h3>
-                    <div class="settings-grid">
+                </details>
+                <details class="settings-group" data-settings-group="quota" open>
+                    <summary>
+                        <h3>假期额度</h3>
+                    </summary>
+                    <div class="settings-grid settings-content">
                         <div class="field">
                             <label for="annualQuotaInput">年假额度</label>
                             <input id="annualQuotaInput" inputmode="decimal" type="number" min="0" step="0.5"
@@ -325,10 +418,12 @@
                                 placeholder="例如 2">
                         </div>
                     </div>
-                </section>
-                <section class="settings-group" data-settings-group="leave-doc">
-                    <h3>请假条默认值</h3>
-                    <div class="settings-grid">
+                </details>
+                <details class="settings-group" data-settings-group="leave-doc" open>
+                    <summary>
+                        <h3>请假条默认值</h3>
+                    </summary>
+                    <div class="settings-grid settings-content">
                         <div class="field">
                             <label for="applicantName">申请人</label>
                             <input id="applicantName" placeholder="请输入姓名">
@@ -350,7 +445,48 @@
                             <textarea id="leaveHandoffInput" placeholder="请假期间我会提前安排好相关工作，确保不影响团队正常进度。"></textarea>
                         </div>
                     </div>
-                </section>
+                </details>
+                <details class="settings-group" data-settings-group="data" open>
+                    <summary>
+                        <h3>数据管理</h3>
+                    </summary>
+                    <div class="settings-content data-management">
+                        <div class="csv-actions">
+                            <button class="btn primary" data-open-csv-panel type="button">CSV 导入导出</button>
+                            <button class="btn" data-open-settings-dynamic="webdav" type="button">WebDAV 云备份</button>
+                        </div>
+                        <p class="notice">CSV 适合手动备份和迁移；WebDAV 适合跨设备保存云端备份。</p>
+                    </div>
+                </details>
+                <details class="settings-group" data-settings-group="webdav" open>
+                    <summary>
+                        <h3>WebDav 云备份</h3>
+                    </summary>
+                    <div class="settings-grid settings-content">
+                        <div class="field wide-field">
+                            <label for="webdavUrl">服务器地址</label>
+                            <input id="webdavUrl" type="url" autocomplete="off" spellcheck="false"
+                                placeholder="https://dav.jianguoyun.com/dav/xiuli/">
+                        </div>
+                        <div class="field">
+                            <label for="webdavUsername">用户名</label>
+                            <input id="webdavUsername" autocomplete="off" spellcheck="false" placeholder="账号 / 邮箱">
+                        </div>
+                        <div class="field">
+                            <label for="webdavPassword">密码</label>
+                            <input id="webdavPassword" type="password" autocomplete="off" placeholder="建议使用应用专用密码">
+                        </div>
+                        <div class="field wide-field">
+                            <div class="csv-actions">
+                                <button class="btn" id="webdavTest" type="button">测试连接</button>
+                                <button class="btn primary" id="webdavUpload" type="button">上传备份</button>
+                                <button class="btn" id="webdavDownload" type="button">从云端恢复</button>
+                            </div>
+                            <p class="notice" id="webdavStatus">填好服务器地址、用户名和密码即可备份。建议地址末尾带一层子目录（如 /dav/xiuli/），程序会自动创建。</p>
+                            <p class="notice">恢复采用「合并」策略，不会删除本机已有记录。桌面版、以及用 npm run serve 启动的网页版都已绕过浏览器跨域限制，兼容坚果云、Nextcloud、群晖等。建议使用应用专用密码。</p>
+                        </div>
+                    </div>
+                </details>
             </div>
             <div class="modal-foot">
                 <button class="btn primary" id="settingsDone" type="button">完成</button>
@@ -448,32 +584,45 @@
                 <button class="btn ghost" id="closeModal" type="button" aria-label="关闭">关闭</button>
             </div>
             <div class="modal-body">
-                <div class="action-grid">
-                    <button class="action-btn work" data-action="work" type="button">出勤</button>
-                    <button class="action-btn personal" data-action="personal" type="button">事假</button>
-                    <button class="action-btn sick" data-action="sick" type="button">病假</button>
-                    <button class="action-btn annual" data-action="annual" type="button">年假</button>
-                    <button class="action-btn comp" data-action="comp" type="button">调休</button>
-                    <button class="action-btn" data-action="clear" type="button">清除状态</button>
-                </div>
-                <div class="range-grid">
-                    <div class="field">
-                        <label for="modalStartDate">开始日期</label>
-                        <input id="modalStartDate" type="date">
+                <div class="day-detail-summary" id="modalDaySummary"></div>
+                <div class="day-action-area">
+                    <div class="action-grid action-grid-primary">
+                        <button class="action-btn work" data-action="work" type="button">出勤</button>
+                        <button class="action-btn personal" data-action="personal" type="button">事假</button>
+                        <button class="action-btn sick" data-action="sick" type="button">病假</button>
+                        <button class="action-btn" data-action="clear" type="button">清除状态</button>
                     </div>
-                    <div class="field">
-                        <label for="modalEndDate">结束日期</label>
-                        <input id="modalEndDate" type="date">
+                    <details class="action-more" id="modalMoreActions" open>
+                        <summary>更多请假类型</summary>
+                        <div class="action-grid action-grid-extra">
+                            <button class="action-btn annual" data-action="annual" type="button">年假</button>
+                            <button class="action-btn comp" data-action="comp" type="button">调休</button>
+                        </div>
+                    </details>
+                </div>
+                <details class="day-advanced" id="modalAdvanced" open>
+                    <summary>日期范围与备注</summary>
+                    <div class="day-advanced-body">
+                        <div class="range-grid">
+                            <div class="field">
+                                <label for="modalStartDate">开始日期</label>
+                                <input id="modalStartDate" type="date">
+                            </div>
+                            <div class="field">
+                                <label for="modalEndDate">结束日期</label>
+                                <input id="modalEndDate" type="date">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="modalReason">请假理由</label>
+                            <textarea id="modalReason" placeholder="选择请假类型时填写"></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="modalNote">备注</label>
+                            <input id="modalNote" placeholder="可选">
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label for="modalReason">请假理由</label>
-                    <textarea id="modalReason" placeholder="选择请假类型时填写"></textarea>
-                </div>
-                <div class="field">
-                    <label for="modalNote">备注</label>
-                    <input id="modalNote" placeholder="可选">
-                </div>
+                </details>
             </div>
             <div class="modal-foot">
                 <button class="btn" id="modalCancel" type="button">取消</button>
@@ -486,6 +635,8 @@
     <script src="vendor/chinese-days/index.min.js"></script>
     <script>
         const STORAGE_KEY = "xiuli-state-v1";
+        const WEBDAV_KEY = "xiuli-webdav-v1";
+        const WEBDAV_FILENAME = "xiuli-backup.json";
         const THEME_KEY = "xiuli-theme";
         const THEME_SEQUENCE = ["auto", "light", "dark"];
         const THEME_META = {
@@ -537,6 +688,7 @@
         };
 
         const state = loadState();
+        const webdavConfig = loadWebDavConfig();
         const calendarApi = {
             years: new Map(),
             failedYears: new Set(),
@@ -557,6 +709,9 @@
         let currentLeaveReceipt = null;
         const enhancedSelects = new Map();
         let enhancedSelectEventsBound = false;
+        const narrowScreenQuery = window.matchMedia("(max-width: 760px)");
+        const openBackdrops = new Set();
+        let searchRenderTimer = 0;
 
         const els = {
             yearSelect: document.getElementById("yearSelect"),
@@ -565,6 +720,7 @@
             nextMonth: document.getElementById("nextMonth"),
             todayBtn: document.getElementById("todayBtn"),
             settingsToggle: document.getElementById("settingsToggle"),
+            searchToggle: document.getElementById("searchToggle"),
             themeToggle: document.getElementById("themeToggle"),
             guideToggle: document.getElementById("guideToggle"),
             calendarSource: document.getElementById("calendarSource"),
@@ -587,9 +743,17 @@
             quotaSummary: document.getElementById("quotaSummary"),
             csvToggle: document.getElementById("csvToggle"),
             csvMenu: document.getElementById("csvMenu"),
+            csvClose: document.getElementById("csvClose"),
             exportCsv: document.getElementById("exportCsv"),
             importCsv: document.getElementById("importCsv"),
             csvNotice: document.getElementById("csvNotice"),
+            webdavUrl: document.getElementById("webdavUrl"),
+            webdavUsername: document.getElementById("webdavUsername"),
+            webdavPassword: document.getElementById("webdavPassword"),
+            webdavTest: document.getElementById("webdavTest"),
+            webdavUpload: document.getElementById("webdavUpload"),
+            webdavDownload: document.getElementById("webdavDownload"),
+            webdavStatus: document.getElementById("webdavStatus"),
             ticketReminders: document.getElementById("ticketReminders"),
             applicantName: document.getElementById("applicantName"),
             leaveGeneratorModal: document.getElementById("leaveGeneratorModal"),
@@ -610,6 +774,15 @@
             generateDoc: document.getElementById("generateDoc"),
             leaveReceipt: document.getElementById("leaveReceipt"),
             leaveOutput: document.getElementById("leaveOutput"),
+            searchModal: document.getElementById("searchModal"),
+            closeSearch: document.getElementById("closeSearch"),
+            searchInput: document.getElementById("searchInput"),
+            searchStatus: document.getElementById("searchStatus"),
+            searchFrom: document.getElementById("searchFrom"),
+            searchTo: document.getElementById("searchTo"),
+            searchResults: document.getElementById("searchResults"),
+            searchClear: document.getElementById("searchClear"),
+            searchApply: document.getElementById("searchApply"),
             settingsModal: document.getElementById("settingsModal"),
             closeSettings: document.getElementById("closeSettings"),
             settingsDone: document.getElementById("settingsDone"),
@@ -626,6 +799,9 @@
             dayModal: document.getElementById("dayModal"),
             modalTitle: document.getElementById("modalTitle"),
             modalSubtitle: document.getElementById("modalSubtitle"),
+            modalDaySummary: document.getElementById("modalDaySummary"),
+            modalMoreActions: document.getElementById("modalMoreActions"),
+            modalAdvanced: document.getElementById("modalAdvanced"),
             modalStartDate: document.getElementById("modalStartDate"),
             modalEndDate: document.getElementById("modalEndDate"),
             modalReason: document.getElementById("modalReason"),
@@ -646,20 +822,13 @@
             applyTheme(getThemePreference());
             initSelectors();
             initEnhancedSelects();
+            initMobileCollapsibles();
+            initSettingsGroups();
             bindEvents();
-            els.salaryInput.value = state.settings.salary || "";
-            els.deductionInput.value = state.settings.deduction || "";
-            els.personalRateInput.value = settingNumber("personalRate", DEFAULT_RATES.personal);
-            els.sickRateInput.value = settingNumber("sickRate", DEFAULT_RATES.sick);
-            els.annualRateInput.value = settingNumber("annualRate", DEFAULT_RATES.annual);
-            els.compRateInput.value = settingNumber("compRate", DEFAULT_RATES.comp);
-            els.annualQuotaInput.value = state.settings.annualQuota || "";
-            els.compQuotaInput.value = state.settings.compQuota || "";
-            els.applicantName.value = state.settings.applicantName || "";
-            els.leaveRecipientInput.value = state.settings.leaveRecipient || "";
-            els.personalReasonInput.value = state.settings.personalReason || "";
-            els.sickReasonInput.value = state.settings.sickReason || "";
-            els.leaveHandoffInput.value = state.settings.leaveHandoff || "";
+            fillSettingsInputs();
+            els.webdavUrl.value = webdavConfig.url || "";
+            els.webdavUsername.value = webdavConfig.username || "";
+            els.webdavPassword.value = webdavConfig.password || "";
             resetLeaveGeneratorForm();
             await render();
         }
@@ -670,6 +839,8 @@
             window.clearTimeout(backdropTimers.get(el));
             el.classList.remove("closing");
             el.classList.add("open");
+            openBackdrops.add(el);
+            updateScrollLock();
         }
 
         function closeBackdrop(el) {
@@ -678,7 +849,18 @@
             window.clearTimeout(backdropTimers.get(el));
             backdropTimers.set(el, window.setTimeout(() => {
                 el.classList.remove("open", "closing");
+                openBackdrops.delete(el);
+                updateScrollLock();
             }, 200));
+        }
+
+        function updateScrollLock() {
+            const csvOpen = Boolean(els.csvMenu?.classList.contains("open"));
+            document.body.classList.toggle("modal-open", openBackdrops.size > 0 || csvOpen);
+        }
+
+        function isNarrowScreen() {
+            return narrowScreenQuery.matches;
         }
 
         function getThemePreference() {
@@ -759,6 +941,75 @@
             });
             document.addEventListener("keydown", event => {
                 if (event.key === "Escape") closeAllEnhancedSelects();
+            });
+        }
+
+        function initMobileCollapsibles() {
+            document.querySelectorAll("[data-mobile-collapsible]").forEach((section, index) => {
+                if (section.dataset.collapsibleReady) return;
+                section.dataset.collapsibleReady = "true";
+                if (!section.id) section.id = `mobileSection${index}`;
+                const button = section.querySelector(".section-toggle");
+                if (!button) return;
+                const body = section.querySelector(".section-body");
+                if (body && !body.id) body.id = `${section.id}Body`;
+                if (body) button.setAttribute("aria-controls", body.id);
+                button.addEventListener("click", () => {
+                    const expanded = section.dataset.expanded !== "true";
+                    section.dataset.userExpanded = "true";
+                    setMobileSectionExpanded(section, expanded);
+                });
+            });
+            narrowScreenQuery.addEventListener("change", () => {
+                applyMobileCollapsibleDefaults();
+                syncSettingsGroupDefaults();
+            });
+            applyMobileCollapsibleDefaults();
+        }
+
+        function applyMobileCollapsibleDefaults() {
+            document.querySelectorAll("[data-mobile-collapsible]").forEach(section => {
+                const defaultOpen = section.dataset.mobileDefault !== "closed";
+                if (!isNarrowScreen()) {
+                    setMobileSectionExpanded(section, true);
+                    return;
+                }
+                if (section.dataset.userExpanded !== "true") {
+                    setMobileSectionExpanded(section, defaultOpen);
+                } else {
+                    setMobileSectionExpanded(section, section.dataset.expanded === "true");
+                }
+            });
+        }
+
+        function setMobileSectionExpanded(section, expanded) {
+            section.dataset.expanded = String(expanded);
+            const button = section.querySelector(".section-toggle");
+            if (!button) return;
+            button.setAttribute("aria-expanded", String(expanded));
+            button.textContent = expanded ? "收起" : "展开";
+        }
+
+        function initSettingsGroups() {
+            document.querySelectorAll(".settings-group").forEach(group => {
+                if (!(group instanceof HTMLDetailsElement) || group.dataset.settingsReady) return;
+                group.dataset.settingsReady = "true";
+                group.addEventListener("toggle", () => {
+                    if (isNarrowScreen()) group.dataset.userToggled = "true";
+                });
+            });
+            syncSettingsGroupDefaults();
+        }
+
+        function syncSettingsGroupDefaults() {
+            document.querySelectorAll(".settings-group").forEach(group => {
+                if (!(group instanceof HTMLDetailsElement)) return;
+                if (!isNarrowScreen()) {
+                    group.open = true;
+                    return;
+                }
+                if (group.dataset.userToggled === "true") return;
+                group.open = group.dataset.settingsGroup === "salary";
             });
         }
 
@@ -965,6 +1216,17 @@
                 closeCsvMenu();
                 openSettings();
             });
+            els.searchToggle.addEventListener("click", event => {
+                event.stopPropagation();
+                closeCsvMenu();
+                openSearch();
+            });
+            document.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-open-search-panel]") : null;
+                if (!button) return;
+                closeCsvMenu();
+                openSearch();
+            });
             els.themeToggle.addEventListener("click", cycleTheme);
             darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
             els.closeSettings.addEventListener("click", closeSettings);
@@ -984,6 +1246,12 @@
             document.addEventListener("click", event => {
                 const button = event.target instanceof Element ? event.target.closest("[data-open-settings-dynamic]") : null;
                 if (button) openSettings(button.dataset.openSettingsDynamic);
+            });
+            document.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-open-csv-panel]") : null;
+                if (!button) return;
+                closeSettings();
+                window.setTimeout(openCsvMenu, 180);
             });
 
             els.guideToggle.addEventListener("click", event => {
@@ -1011,13 +1279,20 @@
 
             els.csvToggle.addEventListener("click", event => {
                 event.stopPropagation();
-                const open = els.csvMenu.classList.toggle("open");
-                els.csvToggle.setAttribute("aria-expanded", String(open));
+                if (els.csvMenu.classList.contains("open")) closeCsvMenu();
+                else openCsvMenu();
             });
+            els.csvClose.addEventListener("click", closeCsvMenu);
             els.csvMenu.addEventListener("click", event => event.stopPropagation());
             document.addEventListener("click", () => closeCsvMenu());
             els.exportCsv.addEventListener("click", exportCsv);
             els.importCsv.addEventListener("change", importCsv);
+            [els.webdavUrl, els.webdavUsername, els.webdavPassword].forEach(input => {
+                input.addEventListener("input", syncWebDavConfigFromInputs);
+            });
+            els.webdavTest.addEventListener("click", runWebdavTest);
+            els.webdavUpload.addEventListener("click", runWebdavUpload);
+            els.webdavDownload.addEventListener("click", runWebdavDownload);
             els.generateDoc.addEventListener("click", generateLeaveDoc);
             [els.leaveTypeForDoc, els.leaveStart, els.leaveEnd, els.leaveReasonDoc, els.leaveApplicantDoc, els.leaveRecipientDoc, els.leaveHandoffDoc].forEach(input => {
                 input.addEventListener("input", clearLeaveReceiptPreview);
@@ -1032,6 +1307,28 @@
                 });
                 renderStats();
             });
+            els.ticketReminders.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-toggle-reminders]") : null;
+                if (!button) return;
+                const expanded = els.ticketReminders.classList.toggle("show-all");
+                button.setAttribute("aria-expanded", String(expanded));
+                button.textContent = expanded ? "收起提醒" : `查看更多 ${button.dataset.count || ""} 条`;
+            });
+
+            els.closeSearch.addEventListener("click", closeSearch);
+            els.searchModal.addEventListener("click", event => {
+                if (event.target === els.searchModal) closeSearch();
+            });
+            els.searchClear.addEventListener("click", clearSearchFilters);
+            els.searchApply.addEventListener("click", runSearch);
+            [els.searchInput, els.searchStatus, els.searchFrom, els.searchTo].forEach(input => {
+                input.addEventListener("input", queueSearch);
+                input.addEventListener("change", runSearch);
+            });
+            els.searchResults.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-search-date]") : null;
+                if (button?.dataset.searchDate) jumpToSearchDate(button.dataset.searchDate);
+            });
 
             els.closeModal.addEventListener("click", closeModal);
             els.modalCancel.addEventListener("click", closeModal);
@@ -1041,6 +1338,7 @@
             });
             document.addEventListener("keydown", event => {
                 if (event.key !== "Escape") return;
+                if (els.searchModal.classList.contains("open")) return closeSearch();
                 if (els.dayModal.classList.contains("open")) return closeModal();
                 if (els.receiptModal.classList.contains("open")) return closeReceiptModal();
                 if (els.leaveGeneratorModal.classList.contains("open")) return closeLeaveGenerator();
@@ -1096,7 +1394,7 @@
                 const info = getDayInfo(date);
                 const record = state.records[iso];
                 const inMonth = date.getFullYear() === currentYear && date.getMonth() + 1 === currentMonth;
-                const card = document.createElement(info.isWorkday ? "button" : "div");
+                const card = document.createElement("button");
                 card.style.setProperty("--i", index);
                 card.className = [
                     "day-card",
@@ -1106,11 +1404,11 @@
                     info.isWeekend ? "is-weekend" : "",
                     iso === selectedDate ? "selected" : "",
                     record?.status ? `status-${record.status}` : "",
-                    info.isWorkday ? "clickable" : ""
+                    "clickable"
                 ].filter(Boolean).join(" ");
                 card.dataset.date = iso;
-
-                if (info.isWorkday) card.type = "button";
+                card.type = "button";
+                card.setAttribute("aria-label", dayAriaLabel(date, info, record));
 
                 const primaryTags = [];
                 const auxTags = [];
@@ -1139,6 +1437,19 @@
             els.calendarGrid.innerHTML = `<div class="calendar-loading">${escapeHtml(text)}<br>如果网络不可用，将自动使用本地备用数据。</div>`;
         }
 
+        function dayAriaLabel(date, info, record) {
+            const iso = toISO(date);
+            const labels = [iso, weekdayName(date), getLunarText(date)];
+            if (record?.status) labels.push(STATUS_LABELS[record.status]);
+            else if (info.holidayName) labels.push(info.holidayName);
+            else if (info.makeupName) labels.push("调休上班");
+            else if (info.isWeekend) labels.push("周末");
+            else labels.push("工作日");
+            if (record?.reason) labels.push(record.reason);
+            if (record?.note) labels.push(record.note);
+            return labels.filter(Boolean).join("，");
+        }
+
         function renderCalendarFooter() {
             els.calendarFooter.innerHTML = `
         ${heatLegend()}
@@ -1165,23 +1476,73 @@
         function renderMonthSummary(monthStats, yearStats) {
             const annualQuota = cleanNumber(els.annualQuotaInput.value);
             const annualRemaining = annualQuota > 0 ? Math.max(0, annualQuota - yearStats.annualLeave) : null;
-            const holidayText = monthHolidaySummary(currentYear, currentMonth, monthStats.holidayDays);
-            const leavePills = LEAVE_STATUSES
-                .filter(status => monthStats.leaveByStatus[status] > 0)
-                .map(status => summaryPill(STATUS_LABELS[status], monthStats.leaveByStatus[status], "alert"))
-                .join("");
+            const salary = calculateSalarySnapshot(monthStats);
+            const todaySummary = getTodaySummary();
+            const nextReminder = getNextTicketReminderSummary();
             els.monthSummary.innerHTML = `
-        <div class="month-summary-title">${currentMonth}月关键状态</div>
-        ${summaryPill("应出勤", monthStats.expectedWorkdays)}
-        ${summaryPill("已出勤", monthStats.actualWorkdays, monthStats.actualWorkdays ? "good" : "")}
-        ${leavePills || summaryPill("请假", 0, "good")}
-        ${summaryPill(holidayText.label, holidayText.days)}
-        <span class="summary-pill ${annualRemaining === 0 ? "alert" : ""}">剩余年假 <strong>${annualRemaining === null ? "未设置" : `${annualRemaining} 天`}</strong></span>
+        <div class="month-summary-head">
+          <div>
+            <div class="month-summary-title">${currentYear}年${currentMonth}月</div>
+            <div class="month-summary-subtitle">核心状态</div>
+          </div>
+          <button class="btn ghost compact-btn" data-open-search-panel type="button"><svg class="icon"><use href="#i-filter"/></svg>筛选</button>
+        </div>
+        <div class="mobile-summary-grid">
+          ${summaryCard("今日状态", todaySummary.label, todaySummary.meta, todaySummary.tone)}
+          ${summaryCard("本月请假", `${monthStats.totalLeave} 天`, leaveStatusBrief(monthStats), monthStats.totalLeave ? "alert" : "good")}
+          ${summaryCard("本月出勤", `${monthStats.actualWorkdays}/${monthStats.expectedWorkdays} 天`, "已标记 / 应出勤", "good")}
+          ${summaryCard("扣薪 / 实收", `${formatMoney(salary.leaveDeduction)} / ${formatMoney(salary.actual)}`, salary.salary ? "按当前工资设置估算" : "设置月薪后自动估算", salary.leaveDeduction ? "alert" : "")}
+        </div>
+        <div class="summary-extra">
+          <span class="summary-pill ${annualRemaining === 0 ? "alert" : ""}">剩余年假 <strong>${annualRemaining === null ? "未设置" : `${annualRemaining} 天`}</strong></span>
+          <span class="summary-pill">${escapeHtml(nextReminder.label)} <strong>${escapeHtml(nextReminder.value)}</strong></span>
+        </div>
       `;
         }
 
-        function summaryPill(label, value, tone = "") {
-            return `<span class="summary-pill ${tone}">${escapeHtml(label)} <strong>${value} 天</strong></span>`;
+        function summaryCard(label, value, meta, tone = "") {
+            return `
+        <div class="summary-card ${tone}">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+          <small>${escapeHtml(meta)}</small>
+        </div>
+      `;
+        }
+
+        function leaveStatusBrief(stats) {
+            const parts = LEAVE_STATUSES
+                .filter(status => stats.leaveByStatus[status] > 0)
+                .map(status => `${STATUS_LABELS[status]} ${stats.leaveByStatus[status]}天`);
+            return parts.length ? parts.join(" / ") : "本月暂无请假";
+        }
+
+        function getTodaySummary() {
+            const iso = toISO(today);
+            const info = getDayInfo(today);
+            const record = state.records[iso];
+            if (record?.status) {
+                return {
+                    label: STATUS_LABELS[record.status],
+                    meta: `${iso} ${weekdayName(today)}`,
+                    tone: record.status === "work" ? "good" : "alert"
+                };
+            }
+            if (info.holidayName) return {label: info.holidayName, meta: `${iso} ${weekdayName(today)}`, tone: "holiday"};
+            if (info.makeupName) return {label: "调休上班", meta: `${iso} ${weekdayName(today)}`, tone: "alert"};
+            if (info.isWeekend) return {label: "周末", meta: `${iso} ${weekdayName(today)}`, tone: ""};
+            return {label: "未标记", meta: `${iso} ${weekdayName(today)}`, tone: ""};
+        }
+
+        function getNextTicketReminderSummary() {
+            const reminders = getMonthTicketReminders(currentYear, currentMonth);
+            if (!reminders.length) return {label: "最近提醒", value: "暂无"};
+            const next = reminders.find(item => diffDays(today, item.saleDate) >= 0) || reminders[0];
+            const diff = diffDays(today, next.saleDate);
+            return {
+                label: next.name,
+                value: diff > 0 ? `${diff} 天后开售` : "已开售"
+            };
         }
 
         function monthHolidaySummary(year, month, fallbackDays) {
@@ -1195,6 +1556,12 @@
 
         function renderSalary() {
             const stats = calculateStats(currentYear, currentMonth);
+            const salary = calculateSalarySnapshot(stats);
+            currentSalaryReceipt = buildSalaryReceipt({stats, ...salary});
+            els.salaryResult.innerHTML = receiptHtml(currentSalaryReceipt);
+        }
+
+        function calculateSalarySnapshot(stats) {
             const salary = cleanNumber(els.salaryInput.value);
             const deduction = cleanNumber(els.deductionInput.value);
             const daily = stats.expectedWorkdays > 0 ? salary / stats.expectedWorkdays : 0;
@@ -1203,8 +1570,7 @@
                 return sum + daily * stats.leaveByStatus[status] * (rates[status] / 100);
             }, 0);
             const actual = Math.max(0, salary - leaveDeduction - deduction);
-            currentSalaryReceipt = buildSalaryReceipt({stats, salary, deduction, daily, leaveDeduction, actual});
-            els.salaryResult.innerHTML = receiptHtml(currentSalaryReceipt);
+            return {salary, deduction, daily, leaveDeduction, actual};
         }
 
         function buildSalaryReceipt({stats, salary, deduction, daily, leaveDeduction, actual}) {
@@ -1267,21 +1633,19 @@
         }
 
         function renderTicketReminders() {
-            const monthStart = startOfMonth(currentYear, currentMonth);
-            const monthEnd = new Date(currentYear, currentMonth, 0);
-            const reminders = getTicketReminders(currentYear)
-                .filter(item => item.saleDate >= monthStart && item.saleDate <= monthEnd);
+            const reminders = getMonthTicketReminders(currentYear, currentMonth);
 
             if (!reminders.length) {
                 els.ticketReminders.innerHTML = `<div class="ticket-card"><div class="ticket-card-title">暂无购票提醒</div><div class="ticket-meta">本月没有节假日火车票开售节点。</div></div>`;
                 return;
             }
 
-            els.ticketReminders.innerHTML = reminders.map(item => {
+            els.ticketReminders.classList.remove("show-all");
+            els.ticketReminders.innerHTML = reminders.map((item, index) => {
                 const diff = diffDays(today, item.saleDate);
                 const status = diff > 0 ? `还有 ${diff} 天` : "已开始";
                 return `
-          <div class="ticket-card">
+          <div class="ticket-card ${index >= 2 ? "is-extra" : ""}">
             <div class="ticket-card-title">
               <span>${escapeHtml(item.name)}</span>
               <span class="ticket-status">${status}</span>
@@ -1292,30 +1656,77 @@
             </div>
           </div>
         `;
-            }).join("");
+            }).join("") + (reminders.length > 2
+                ? `<button class="btn ghost compact-btn list-more" data-toggle-reminders data-count="${reminders.length}" aria-expanded="false" type="button">查看更多 ${reminders.length} 条</button>`
+                : "");
+        }
+
+        function getMonthTicketReminders(year, month) {
+            const monthStart = startOfMonth(year, month);
+            const monthEnd = new Date(year, month, 0);
+            return getTicketReminders(year)
+                .filter(item => item.saleDate >= monthStart && item.saleDate <= monthEnd);
         }
 
         function openModal(iso) {
             const date = fromISO(iso);
             const info = getDayInfo(date);
             const record = state.records[iso] || {};
+            const editable = info.isWorkday;
             activeDate = iso;
             selectedDate = iso;
-            pendingStatus = record.status || "work";
+            pendingStatus = record.status || (editable ? "work" : "");
             document.querySelectorAll(".day-card.selected").forEach(card => card.classList.remove("selected"));
             document.querySelector(`[data-date="${iso}"]`)?.classList.add("selected");
             els.modalTitle.textContent = `${iso} ${weekdayName(date)}`;
-            els.modalSubtitle.textContent = [info.makeupName, info.holidayName].filter(Boolean).join(" · ") || "工作日";
+            els.modalSubtitle.textContent = modalSubtitleText(info);
+            renderModalDaySummary(date, info, record, editable);
             els.modalStartDate.value = iso;
             els.modalEndDate.value = iso;
             els.modalReason.value = record.reason || "";
             els.modalNote.value = record.note || "";
             document.querySelectorAll("[data-action]").forEach(button => {
+                const canUse = editable || button.dataset.action === "clear";
+                button.disabled = !canUse;
                 button.classList.toggle("active", button.dataset.action === pendingStatus);
             });
+            els.modalSave.disabled = !editable;
+            els.modalAdvanced.open = !isNarrowScreen();
+            els.modalMoreActions.open = !isNarrowScreen();
             updateModalDocButton();
             openBackdrop(els.dayModal);
-            els.dayModal.querySelector(".action-btn")?.focus({preventScroll: true});
+            els.dayModal.querySelector(".action-btn:not(:disabled)")?.focus({preventScroll: true});
+        }
+
+        function modalSubtitleText(info) {
+            const labels = [info.makeupName, info.holidayName].filter(Boolean);
+            if (labels.length) return labels.join(" · ");
+            if (info.isWeekend) return "周末";
+            return "工作日";
+        }
+
+        function renderModalDaySummary(date, info, record, editable) {
+            const iso = toISO(date);
+            const statusLabel = record.status
+                ? STATUS_LABELS[record.status]
+                : (info.holidayName || (info.makeupName ? "调休上班" : info.isWeekend ? "周末" : "未标记"));
+            const tone = record.status || (info.holidayName ? "holiday" : info.makeupName ? "comp" : info.isWeekend ? "weekend" : "");
+            const lunar = getLunarText(date);
+            const extras = [lunar, info.holidayName, info.makeupName, record.reason, record.note].filter(Boolean);
+            els.modalDaySummary.innerHTML = `
+        <div class="day-summary-date">
+          <strong>${date.getDate()}</strong>
+          <span>${escapeHtml(weekdayName(date))}</span>
+        </div>
+        <div class="day-summary-content">
+          <div class="day-summary-topline">
+            <span>${escapeHtml(iso)}</span>
+            <span class="day-status-badge ${tone}">${escapeHtml(statusLabel)}</span>
+          </div>
+          <div class="day-summary-meta">${extras.length ? escapeHtml(extras.join(" · ")) : "没有额外记录"}</div>
+          ${editable ? "" : `<div class="day-summary-note">休息日仅展示详情；保存状态会自动跳过非工作日。</div>`}
+        </div>
+      `;
         }
 
         function closeModal() {
@@ -1324,9 +1735,16 @@
             closeBackdrop(els.dayModal);
         }
 
+        function openCsvMenu() {
+            els.csvMenu.classList.add("open");
+            els.csvToggle.setAttribute("aria-expanded", "true");
+            updateScrollLock();
+        }
+
         function closeCsvMenu() {
             els.csvMenu.classList.remove("open");
             els.csvToggle.setAttribute("aria-expanded", "false");
+            updateScrollLock();
         }
 
         function syncSettingsFromInputs() {
@@ -1345,10 +1763,31 @@
             state.settings.leaveHandoff = els.leaveHandoffInput.value.trim();
         }
 
+        function fillSettingsInputs() {
+            els.salaryInput.value = state.settings.salary || "";
+            els.deductionInput.value = state.settings.deduction || "";
+            els.personalRateInput.value = settingNumber("personalRate", DEFAULT_RATES.personal);
+            els.sickRateInput.value = settingNumber("sickRate", DEFAULT_RATES.sick);
+            els.annualRateInput.value = settingNumber("annualRate", DEFAULT_RATES.annual);
+            els.compRateInput.value = settingNumber("compRate", DEFAULT_RATES.comp);
+            els.annualQuotaInput.value = state.settings.annualQuota || "";
+            els.compQuotaInput.value = state.settings.compQuota || "";
+            els.applicantName.value = state.settings.applicantName || "";
+            els.leaveRecipientInput.value = state.settings.leaveRecipient || "";
+            els.personalReasonInput.value = state.settings.personalReason || "";
+            els.sickReasonInput.value = state.settings.sickReason || "";
+            els.leaveHandoffInput.value = state.settings.leaveHandoff || "";
+        }
+
         function openSettings(group) {
+            if (!group && isNarrowScreen()) syncSettingsGroupDefaults();
             openBackdrop(els.settingsModal);
             document.querySelectorAll("[data-settings-group]").forEach(section => {
                 section.classList.toggle("highlight", Boolean(group) && section.dataset.settingsGroup === group);
+                if (section instanceof HTMLDetailsElement) {
+                    if (!isNarrowScreen()) section.open = true;
+                    else if (group) section.open = section.dataset.settingsGroup === group;
+                }
             });
             if (group) {
                 document.querySelector(`[data-settings-group="${group}"]`)?.scrollIntoView({block: "nearest"});
@@ -1366,6 +1805,146 @@
 
         function closeGuide() {
             closeBackdrop(els.guideModal);
+        }
+
+        function openSearch() {
+            openBackdrop(els.searchModal);
+            runSearch();
+            window.setTimeout(() => els.searchInput.focus({preventScroll: true}), 80);
+        }
+
+        function closeSearch() {
+            closeBackdrop(els.searchModal);
+        }
+
+        function clearSearchFilters() {
+            els.searchInput.value = "";
+            els.searchStatus.value = "all";
+            els.searchFrom.value = "";
+            els.searchTo.value = "";
+            runSearch();
+            els.searchInput.focus({preventScroll: true});
+        }
+
+        function queueSearch() {
+            window.clearTimeout(searchRenderTimer);
+            searchRenderTimer = window.setTimeout(runSearch, 120);
+        }
+
+        function runSearch() {
+            const from = els.searchFrom.value;
+            const to = els.searchTo.value;
+            if (from && to && from > to) {
+                els.searchResults.innerHTML = `<div class="empty-state">开始日期不能晚于结束日期。</div>`;
+                return;
+            }
+            const results = collectSearchResults();
+            renderSearchResults(results);
+        }
+
+        function collectSearchResults() {
+            const query = normalizeSearchText(els.searchInput.value);
+            const status = els.searchStatus.value;
+            const from = els.searchFrom.value;
+            const to = els.searchTo.value;
+            const hasFilter = Boolean(query || status !== "all" || from || to);
+            const candidates = searchCandidateDates(from, to, hasFilter);
+            const results = [];
+
+            for (const iso of candidates) {
+                const date = fromISO(iso);
+                const info = getDayInfo(date);
+                const record = state.records[iso];
+                if (!matchesSearchStatus(status, info, record)) continue;
+                const text = normalizeSearchText([
+                    iso,
+                    weekdayName(date),
+                    getLunarText(date),
+                    info.holidayName,
+                    info.makeupName,
+                    record?.status ? STATUS_LABELS[record.status] : "",
+                    record?.leaveType,
+                    record?.reason,
+                    record?.note
+                ].filter(Boolean).join(" "));
+                if (query && !text.includes(query)) continue;
+                if (!hasFilter && !record?.status && !info.holidayName && !info.makeupName && !isSameDate(date, today)) continue;
+
+                results.push(buildSearchResult(iso, date, info, record));
+                if (results.length >= 80) break;
+            }
+            return results;
+        }
+
+        function searchCandidateDates(from, to, hasFilter) {
+            const set = new Set();
+            const start = isValidISODate(from) ? from : (isValidISODate(to) ? `${to.slice(0, 4)}-01-01` : `${currentYear}-01-01`);
+            const end = isValidISODate(to) ? to : (isValidISODate(from) ? `${from.slice(0, 4)}-12-31` : `${currentYear}-12-31`);
+            if (from || to) {
+                rangeDates(start, end).slice(0, 800).forEach(iso => set.add(iso));
+            } else if (hasFilter) {
+                getYearDates(currentYear).forEach(date => set.add(toISO(date)));
+            } else {
+                getMonthDates(currentYear, currentMonth).forEach(date => set.add(toISO(date)));
+            }
+            Object.keys(state.records).forEach(iso => {
+                if (from && iso < from) return;
+                if (to && iso > to) return;
+                if (!from && !to && !hasFilter && !iso.startsWith(`${currentYear}-${String(currentMonth).padStart(2, "0")}`)) return;
+                set.add(iso);
+            });
+            return [...set].sort();
+        }
+
+        function matchesSearchStatus(status, info, record) {
+            if (status === "all") return true;
+            if (status === "leave") return LEAVE_STATUSES.includes(record?.status);
+            if (status === "holiday") return info.isHoliday;
+            if (status === "weekend") return info.isWeekend;
+            return record?.status === status;
+        }
+
+        function buildSearchResult(iso, date, info, record) {
+            const label = record?.status
+                ? STATUS_LABELS[record.status]
+                : (info.holidayName || (info.makeupName ? "调休上班" : info.isWeekend ? "周末" : "工作日"));
+            const meta = [weekdayName(date), getLunarText(date), info.holidayName, info.makeupName, record?.reason, record?.note]
+                .filter(Boolean)
+                .join(" · ");
+            const tone = record?.status || (info.isHoliday ? "holiday" : info.isWeekend ? "weekend" : "");
+            return {iso, label, meta, tone};
+        }
+
+        function renderSearchResults(results) {
+            if (!results.length) {
+                els.searchResults.innerHTML = `<div class="empty-state">没有找到匹配日期。</div>`;
+                return;
+            }
+            els.searchResults.innerHTML = results.map(item => `
+        <button class="search-result ${item.tone}" type="button" data-search-date="${escapeHtml(item.iso)}">
+          <span class="search-result-date">${escapeHtml(item.iso)}</span>
+          <span class="search-result-main">${escapeHtml(item.label)}</span>
+          <span class="search-result-meta">${escapeHtml(item.meta || "点击查看当天详情")}</span>
+        </button>
+      `).join("");
+        }
+
+        function normalizeSearchText(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        async function jumpToSearchDate(iso) {
+            if (!isValidISODate(iso)) return;
+            const date = fromISO(iso);
+            currentYear = date.getFullYear();
+            currentMonth = date.getMonth() + 1;
+            ensureYearOption(currentYear);
+            closeSearch();
+            await render();
+            window.setTimeout(() => {
+                document.querySelector(`[data-date="${iso}"]`)?.scrollIntoView({block: "center", inline: "center"});
+                openModal(iso);
+            }, 80);
         }
 
         function resetLeaveGeneratorForm(preset = {}) {
@@ -1409,6 +1988,10 @@
 
         function chooseStatus(status) {
             if (!activeDate) return;
+            if (!getDayInfo(fromISO(activeDate)).isWorkday && status !== "clear") {
+                els.modalSubtitle.textContent = "休息日仅展示详情，状态保存会跳过非工作日。";
+                return;
+            }
             pendingStatus = status;
             document.querySelectorAll("[data-action]").forEach(button => {
                 button.classList.toggle("active", button.dataset.action === status);
@@ -1437,7 +2020,9 @@
         }
 
         function updateModalDocButton() {
-            els.modalGenerateDoc.hidden = !["personal", "sick"].includes(pendingStatus);
+            const canGenerate = getDayInfo(fromISO(activeDate || toISO(today))).isWorkday && ["personal", "sick"].includes(pendingStatus);
+            els.modalGenerateDoc.hidden = !canGenerate;
+            els.modalGenerateDoc.disabled = !canGenerate;
         }
 
         function generateLeaveDocFromModal() {
@@ -1476,6 +2061,10 @@
             const reason = els.modalReason.value.trim();
             const note = els.modalNote.value.trim();
             const dates = rangeDates(start, end).filter(iso => getDayInfo(fromISO(iso)).isWorkday);
+            if (!dates.length) {
+                els.modalSubtitle.textContent = "所选范围没有可标记的工作日。";
+                return;
+            }
             dates.forEach(iso => {
                 state.records[iso] = {
                     status: pendingStatus,
@@ -2051,6 +2640,261 @@
             return imported;
         }
 
+        // ---- WebDav 云备份 ----
+        // 凭据独立存放在 WEBDAV_KEY，不进 state，因此既不会上传到云端，
+        // 也不会在「从云端恢复」时被覆盖。
+        function loadWebDavConfig() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(WEBDAV_KEY) || "{}");
+                return {
+                    url: typeof parsed.url === "string" ? parsed.url : "",
+                    username: typeof parsed.username === "string" ? parsed.username : "",
+                    password: typeof parsed.password === "string" ? parsed.password : ""
+                };
+            } catch {
+                return {url: "", username: "", password: ""};
+            }
+        }
+
+        function saveWebDavConfig() {
+            try {
+                localStorage.setItem(WEBDAV_KEY, JSON.stringify(webdavConfig));
+            } catch { }
+        }
+
+        function syncWebDavConfigFromInputs() {
+            webdavConfig.url = els.webdavUrl.value.trim();
+            webdavConfig.username = els.webdavUsername.value.trim();
+            webdavConfig.password = els.webdavPassword.value;
+            saveWebDavConfig();
+        }
+
+        // 目录地址（确保末尾带 /）；若用户直接填了 .json 文件路径则原样返回。
+        function webdavBaseUrl() {
+            const base = webdavConfig.url.trim();
+            if (!base) return "";
+            if (/\.json($|\?)/i.test(base)) return base;
+            return base.replace(/\/+$/, "") + "/";
+        }
+
+        // 备份文件的完整地址。
+        function webdavTargetUrl() {
+            const base = webdavConfig.url.trim();
+            if (!base) return "";
+            if (/\.json($|\?)/i.test(base)) return base;
+            return base.replace(/\/+$/, "") + "/" + encodeURIComponent(WEBDAV_FILENAME);
+        }
+
+        // 备份文件所在目录（PUT 前用它确保目录存在）。
+        function webdavParentUrl() {
+            const target = webdavTargetUrl();
+            const i = target.lastIndexOf("/");
+            return i >= 0 ? target.slice(0, i + 1) : target;
+        }
+
+        function webdavAuthHeader() {
+            // 先 UTF-8 编码再 base64，兼容含中文/特殊字符的密码。
+            return "Basic " + btoa(unescape(encodeURIComponent(`${webdavConfig.username}:${webdavConfig.password}`)));
+        }
+
+        // 桌面版（有 window.xiuliDav）走主进程；网页/PWA 走 server.js 的同源代理；
+        // 两者都在 Node 端发请求，绕过浏览器 CORS，兼容坚果云等所有服务器。
+        // 仅当代理不可达时才退回直连（直连受 CORS 限制，仅支持已开启 CORS 的服务器）。
+        async function webdavRequest(method, {url, headers = {}, body} = {}) {
+            const target = url || webdavTargetUrl();
+            if (!target) throw new Error("请先填写服务器地址");
+            const reqHeaders = {Authorization: webdavAuthHeader(), ...headers};
+            const payload = {method, url: target, headers: reqHeaders, body};
+            if (window.xiuliDav?.request) {
+                return await window.xiuliDav.request(payload);
+            }
+            // 网页/PWA：优先用同源代理（server.js 在 Node 端转发，绕过跨域）
+            try {
+                const res = await fetch("/__webdav", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json", "X-Xiuli-Proxy": "1"},
+                    body: JSON.stringify(payload)
+                });
+                if (res.status === 502) {
+                    const info = await res.json().catch(() => ({}));
+                    throw new Error(info.error || "无法连接服务器");
+                }
+                if (res.ok) return await res.json();
+                // 其他状态（如 404）说明当前服务器没有代理，退回直连
+            } catch (error) {
+                // 仅代理本身不可达（网络错误 TypeError）时退回直连；业务错误直接抛出
+                if (!(error instanceof TypeError)) throw error;
+            }
+            // 兜底：直接跨域请求（仅支持已开启 CORS 的服务器）
+            let res;
+            try {
+                res = await fetch(target, {method, headers: reqHeaders, body, mode: "cors", redirect: "follow"});
+            } catch {
+                throw new Error("无法连接服务器：网页版请用 npm run serve 启动（自带代理可绕过跨域），或改用桌面版。");
+            }
+            return {ok: res.ok, status: res.status, statusText: res.statusText, body: await res.text()};
+        }
+
+        function webdavErrorText(status) {
+            if (status === 401 || status === 403) return "用户名或密码（建议用应用专用密码）不正确";
+            if (status === 404) return "地址不存在，请检查服务器地址";
+            if (status === 405) return "服务器不支持该操作";
+            if (status === 409) return "目标目录不存在，请填写一个已存在的目录";
+            if (!status) return "无法连接服务器";
+            return `请求失败（${status}）`;
+        }
+
+        // 在友好提示后附上服务器返回的真实状态与内容片段，便于定位问题（坚果云等常在响应体里说明原因）。
+        function describeWebdavFailure(res) {
+            const snippet = (res.body || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
+            return `${webdavErrorText(res.status)}（HTTP ${res.status}${snippet ? "：" + snippet : ""}）`;
+        }
+
+        // 按 updatedAt 取较新者合并，避免用较旧的云端记录覆盖本机的新修改。
+        function mergeRecords(local, remote) {
+            const merged = {...local};
+            let added = 0;
+            let updated = 0;
+            for (const iso of Object.keys(remote)) {
+                const incoming = remote[iso];
+                if (!incoming || typeof incoming !== "object") continue;
+                const current = merged[iso];
+                if (!current) {
+                    merged[iso] = incoming;
+                    added += 1;
+                    continue;
+                }
+                const localTime = Date.parse(current.updatedAt) || 0;
+                const remoteTime = Date.parse(incoming.updatedAt) || 0;
+                if (remoteTime >= localTime) {
+                    merged[iso] = incoming;
+                    updated += 1;
+                }
+            }
+            return {merged, added, updated};
+        }
+
+        function setWebdavStatus(text) {
+            els.webdavStatus.textContent = text;
+        }
+
+        function setWebdavBusy(busy) {
+            [els.webdavTest, els.webdavUpload, els.webdavDownload].forEach(btn => {
+                btn.disabled = busy;
+            });
+        }
+
+        function ensureWebdavConfigured() {
+            if (!webdavConfig.url.trim() || !webdavConfig.username || !webdavConfig.password) {
+                setWebdavStatus("请先填写服务器地址、用户名和密码。");
+                return false;
+            }
+            return true;
+        }
+
+        async function runWebdavTest() {
+            if (!ensureWebdavConfigured()) return;
+            setWebdavBusy(true);
+            setWebdavStatus("正在测试连接…");
+            try {
+                const res = await webdavRequest("PROPFIND", {
+                    url: webdavBaseUrl(),
+                    headers: {Depth: "0", "Content-Type": "application/xml; charset=utf-8"},
+                    body: '<?xml version="1.0" encoding="utf-8"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>'
+                });
+                if (res.ok || res.status === 207) setWebdavStatus("连接成功，可以备份。");
+                else if (res.status === 404) setWebdavStatus("连接正常，但目标目录还不存在，首次「上传备份」会自动创建。");
+                else setWebdavStatus("连接失败：" + describeWebdavFailure(res));
+            } catch (error) {
+                setWebdavStatus("连接失败：" + error.message);
+            } finally {
+                setWebdavBusy(false);
+            }
+        }
+
+        async function runWebdavUpload() {
+            if (!ensureWebdavConfigured()) return;
+            setWebdavBusy(true);
+            setWebdavStatus("正在上传备份…");
+            try {
+                const payload = JSON.stringify({
+                    app: "xiuli",
+                    version: 1,
+                    exportedAt: new Date().toISOString(),
+                    records: state.records,
+                    settings: state.settings
+                });
+                const res = await webdavRequest("PUT", {
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
+                    body: payload
+                });
+                if (res.ok) {
+                    const count = Object.keys(state.records).length;
+                    setWebdavStatus(`上传成功：已备份 ${count} 条记录到云端（${new Date().toLocaleString()}）。`);
+                } else if (res.status === 404 || res.status === 409) {
+                    // 多数情况是目标目录不存在：先尝试创建目录，再重试一次 PUT。
+                    await webdavRequest("MKCOL", {url: webdavParentUrl()}).catch(() => {});
+                    const retry = await webdavRequest("PUT", {
+                        headers: {"Content-Type": "application/json; charset=utf-8"},
+                        body: payload
+                    });
+                    if (retry.ok) {
+                        const count = Object.keys(state.records).length;
+                        setWebdavStatus(`上传成功：已备份 ${count} 条记录到云端（${new Date().toLocaleString()}）。`);
+                    } else {
+                        setWebdavStatus("上传失败：" + describeWebdavFailure(retry));
+                    }
+                } else {
+                    setWebdavStatus("上传失败：" + describeWebdavFailure(res));
+                }
+            } catch (error) {
+                setWebdavStatus("上传失败：" + error.message);
+            } finally {
+                setWebdavBusy(false);
+            }
+        }
+
+        async function runWebdavDownload() {
+            if (!ensureWebdavConfigured()) return;
+            setWebdavBusy(true);
+            setWebdavStatus("正在从云端恢复…");
+            try {
+                const res = await webdavRequest("GET", {headers: {"Cache-Control": "no-cache"}});
+                if (res.status === 404) {
+                    setWebdavStatus("云端还没有备份文件，请先点「上传备份」。");
+                    return;
+                }
+                if (!res.ok) {
+                    setWebdavStatus("恢复失败：" + describeWebdavFailure(res));
+                    return;
+                }
+                let parsed;
+                try {
+                    parsed = JSON.parse(res.body);
+                } catch {
+                    setWebdavStatus("恢复失败：云端文件格式无法识别。");
+                    return;
+                }
+                const remoteRecords = parsed && typeof parsed.records === "object" && parsed.records ? parsed.records : null;
+                if (!remoteRecords) {
+                    setWebdavStatus("恢复失败：云端文件缺少记录数据。");
+                    return;
+                }
+                const remoteSettings = parsed.settings && typeof parsed.settings === "object" ? parsed.settings : {};
+                const {merged, added, updated} = mergeRecords(state.records, remoteRecords);
+                state.records = merged;
+                state.settings = {...state.settings, ...remoteSettings};
+                saveState();
+                fillSettingsInputs();
+                await render();
+                setWebdavStatus(`恢复成功：新增 ${added} 条，更新 ${updated} 条。`);
+            } catch (error) {
+                setWebdavStatus("恢复失败：" + error.message);
+            } finally {
+                setWebdavBusy(false);
+            }
+        }
+
         function getTicketReminders(year) {
             const holidayMap = getHolidayMap(year);
             const firstByName = new Map();
@@ -2210,14 +3054,20 @@
             const next = new Date(currentYear, currentMonth - 1 + delta, 1);
             currentYear = next.getFullYear();
             currentMonth = next.getMonth() + 1;
-            if (![...els.yearSelect.options].some(opt => Number(opt.value) === currentYear)) {
-                const opt = document.createElement("option");
-                opt.value = String(currentYear);
-                opt.textContent = `${currentYear} 年`;
-                els.yearSelect.appendChild(opt);
-                [...els.yearSelect.options].sort((a, b) => Number(a.value) - Number(b.value)).forEach(opt => els.yearSelect.appendChild(opt));
-            }
+            ensureYearOption(currentYear);
             render();
+        }
+
+        function ensureYearOption(year) {
+            if ([...els.yearSelect.options].some(opt => Number(opt.value) === year)) return;
+            const opt = document.createElement("option");
+            opt.value = String(year);
+            opt.textContent = `${year} 年`;
+            els.yearSelect.appendChild(opt);
+            [...els.yearSelect.options]
+                .sort((a, b) => Number(a.value) - Number(b.value))
+                .forEach(item => els.yearSelect.appendChild(item));
+            syncEnhancedSelects(true);
         }
 
         const lunarTextCache = new Map();
