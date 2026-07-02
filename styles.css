@@ -2301,6 +2301,7 @@ html.theme-anim #themeToggle .icon {
     max-height: calc(100vh - 32px);
     max-height: calc(100dvh - 32px);
     overflow: auto;
+    overscroll-behavior: contain;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--popover);
@@ -2329,6 +2330,7 @@ html.theme-anim #themeToggle .icon {
     display: grid;
     gap: 12px;
     padding: 16px;
+    overscroll-behavior: contain;
 }
 
 .settings-modal {
@@ -2735,6 +2737,14 @@ html.theme-anim #themeToggle .icon {
         padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
+    /* 弹窗打开时固定 body，配合 JS 记录/恢复滚动位置，阻止 iOS 背景滚动 */
+    body.modal-open {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
     /* 模态改为底部抽屉：贴底、全宽、顶部圆角、上滑入场 */
     .modal-backdrop {
         align-items: flex-end;
@@ -2771,24 +2781,29 @@ html.theme-anim #themeToggle .icon {
     .topbar {
         align-items: flex-start;
         flex-direction: column;
-        gap: 14px;
-        margin-bottom: 16px;
-        padding-bottom: 16px;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
     }
 
     .brand {
         width: 100%;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .logo {
-        width: 38px;
-        height: 38px;
-        font-size: 20px;
+        width: 32px;
+        height: 32px;
+        font-size: 17px;
     }
 
     h1 {
-        font-size: 22px;
+        font-size: 20px;
+    }
+
+    /* 移动端隐藏副标题文案，仅保留数据源状态徽标，压缩首屏高度 */
+    .subtitle-text {
+        display: none;
     }
 
     .subtitle {
@@ -2881,6 +2896,30 @@ html.theme-anim #themeToggle .icon {
 
     .csv-menu.open {
         animation: sheet-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* 底部抽屉顶部拖拽把手：绝对定位，不参与网格/块布局，
+       避免挤占 .leave-generator-window / .receipt-window 的网格行 */
+    .modal-backdrop>* {
+        position: relative;
+    }
+
+    .modal-backdrop>*::before,
+    .csv-menu::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 36px;
+        height: 4px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: currentColor;
+        opacity: 0.22;
+    }
+
+    .csv-menu {
+        overscroll-behavior: contain;
     }
 
     .side {
@@ -3175,23 +3214,30 @@ html.theme-anim #themeToggle .icon {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-        .leave-generator-body {
-            grid-template-columns: 1fr;
-            overflow: auto;
-        }
+    /* 单列改块级流布局：前后元素在流中不可能相互覆盖，由 body 统一滚动 */
+    .leave-generator-body {
+        display: block;
+        overflow: auto;
+        overscroll-behavior: contain;
+    }
 
-        .leave-form-panel {
-            border-right: 0;
-            border-bottom: 1px solid var(--border);
-        }
+    .leave-form-panel,
+    .leave-preview-panel {
+        overflow: visible;
+    }
 
-        .leave-preview-panel {
-            min-height: 280px;
-        }
+    .leave-form-panel {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
 
-        .settings-grid {
-            grid-template-columns: 1fr;
-        }
+    .leave-preview-panel {
+        min-height: 280px;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
 
     .wide-field {
         grid-column: auto;

@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v1.3.1";
+const CACHE_VERSION = "v1.3.3";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 
@@ -52,16 +52,17 @@ self.addEventListener("fetch", event => {
 
     if (url.origin !== self.location.origin) return;
 
-    // 页面导航：network-first，离线时回退缓存的 index.html
-    if (request.mode === "navigate") {
+    // 页面与样式 network-first：避免新 index.html 搭配旧 styles.css 造成布局错位，离线时回退缓存
+    if (request.mode === "navigate" || url.pathname.endsWith("/styles.css")) {
+        const cacheKey = request.mode === "navigate" ? "index.html" : request;
         event.respondWith(
             fetch(request)
                 .then(response => {
                     const copy = response.clone();
-                    caches.open(APP_CACHE).then(cache => cache.put("index.html", copy));
+                    caches.open(APP_CACHE).then(cache => cache.put(cacheKey, copy));
                     return response;
                 })
-                .catch(() => caches.match("index.html"))
+                .catch(() => caches.match(cacheKey))
         );
         return;
     }

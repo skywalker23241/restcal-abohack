@@ -96,7 +96,7 @@
                 <div class="logo">休</div>
                 <div>
                     <h1>休历</h1>
-                    <div class="subtitle">请假、出行日程规划 & 工资核算 <span class="api-state" id="calendarSource">正在加载日历数据</span>
+                    <div class="subtitle"><span class="subtitle-text">请假、出行日程规划 & 工资核算</span> <span class="api-state" id="calendarSource">正在加载日历数据</span>
                     </div>
                 </div>
             </div>
@@ -345,7 +345,7 @@
                     </div>
                     <div class="guide-step">
                         <strong>备份和恢复</strong>
-                        <span>点击右上角的双向箭头图标导出 CSV 备份。更换浏览器或设备前建议先导出，之后可通过导入 CSV 恢复数据。</span>
+                        <span>在「设置 → 数据管理」中导出 CSV 备份（桌面端也可点击右上角的双向箭头图标）。更换浏览器或设备前建议先导出，之后可通过导入 CSV 恢复数据。</span>
                     </div>
                 </div>
             </div>
@@ -517,7 +517,7 @@
             <div class="modal-head">
                 <div>
                     <h2 id="leaveGeneratorTitle">生成请假条</h2>
-                    <div class="subtitle">填写请假信息，右侧实时预览小票。</div>
+                    <div class="subtitle">填写请假信息，实时预览小票。</div>
                 </div>
                 <button class="btn ghost" id="closeLeaveGenerator" type="button" aria-label="关闭">关闭</button>
             </div>
@@ -714,6 +714,7 @@
         let searchRenderTimer = 0;
 
         const els = {
+            app: document.querySelector("main.app"),
             yearSelect: document.getElementById("yearSelect"),
             monthSelect: document.getElementById("monthSelect"),
             prevMonth: document.getElementById("prevMonth"),
@@ -823,6 +824,7 @@
             initSelectors();
             initEnhancedSelects();
             initMobileCollapsibles();
+            initCalendarSwipe();
             initSettingsGroups();
             bindEvents();
             fillSettingsInputs();
@@ -834,9 +836,12 @@
         }
 
         const backdropTimers = new WeakMap();
+        const modalReturnFocus = new WeakMap();
+        let lockedScrollY = -1;
 
         function openBackdrop(el) {
             window.clearTimeout(backdropTimers.get(el));
+            if (!el.classList.contains("open")) modalReturnFocus.set(el, document.activeElement);
             el.classList.remove("closing");
             el.classList.add("open");
             openBackdrops.add(el);
@@ -851,12 +856,35 @@
                 el.classList.remove("open", "closing");
                 openBackdrops.delete(el);
                 updateScrollLock();
+                restoreModalFocus(el);
             }, 200));
+        }
+
+        function restoreModalFocus(el) {
+            // 弹窗全部关闭后把焦点还给触发元素；弹窗接力（如设置→CSV 抽屉、日期弹窗→请假条）时不抢焦点
+            const trigger = modalReturnFocus.get(el);
+            modalReturnFocus.delete(el);
+            if (openBackdrops.size > 0 || els.csvMenu?.classList.contains("open")) return;
+            if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus({preventScroll: true});
         }
 
         function updateScrollLock() {
             const csvOpen = Boolean(els.csvMenu?.classList.contains("open"));
-            document.body.classList.toggle("modal-open", openBackdrops.size > 0 || csvOpen);
+            const locked = openBackdrops.size > 0 || csvOpen;
+            // 背景 inert 仅针对模态弹窗；CSV 抽屉在 <main> 内部，不能把自己 inert 掉
+            if (els.app) els.app.inert = openBackdrops.size > 0;
+            if (locked === document.body.classList.contains("modal-open")) return;
+            if (locked && isNarrowScreen()) {
+                // 记录滚动位置并固定 body，阻止 iOS 背景橡皮筋滚动
+                lockedScrollY = window.scrollY;
+                document.body.style.top = `-${lockedScrollY}px`;
+            }
+            document.body.classList.toggle("modal-open", locked);
+            if (!locked && lockedScrollY >= 0) {
+                document.body.style.top = "";
+                window.scrollTo(0, lockedScrollY);
+                lockedScrollY = -1;
+            }
         }
 
         function isNarrowScreen() {
@@ -965,6 +993,35 @@
                 syncSettingsGroupDefaults();
             });
             applyMobileCollapsibleDefaults();
+        }
+
+        function initCalendarSwipe() {
+            // 日历面板左右滑动切换月份；仅在 touchend 判定，绝不干扰纵向滚动
+            const panel = document.querySelector(".calendar-panel");
+            if (!panel) return;
+            let startX = 0;
+            let startY = 0;
+            let tracking = false;
+            panel.addEventListener("touchstart", event => {
+                // 单指且避开屏幕左缘（系统返回手势区）才开始跟踪
+                tracking = event.touches.length === 1 && event.touches[0].clientX > 24;
+                if (!tracking) return;
+                startX = event.touches[0].clientX;
+                startY = event.touches[0].clientY;
+            }, {passive: true});
+            panel.addEventListener("touchend", event => {
+                if (!tracking || openBackdrops.size) return;
+                tracking = false;
+                const touch = event.changedTouches[0];
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+                // 横向位移需达阈值且明显大于纵向位移，排除点击和滚动
+                if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+                shiftMonth(dx < 0 ? 1 : -1);
+            }, {passive: true});
+            panel.addEventListener("touchcancel", () => {
+                tracking = false;
+            }, {passive: true});
         }
 
         function applyMobileCollapsibleDefaults() {
@@ -1345,6 +1402,25 @@
                 if (els.settingsModal.classList.contains("open")) return closeSettings();
                 if (els.guideModal.classList.contains("open")) return closeGuide();
                 closeCsvMenu();
+            });
+            document.addEventListener("keydown", event => {
+                // 轻量焦点圈定：Tab 只在最上层弹窗内循环（Set 保留插入顺序，最后打开的在最上层）
+                if (event.key !== "Tab" || !openBackdrops.size) return;
+                const topmost = [...openBackdrops].at(-1);
+                if (topmost.classList.contains("closing")) return;
+                const focusables = [...topmost.querySelectorAll(
+                    'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, [tabindex]:not([tabindex="-1"])'
+                )].filter(node => node.offsetParent !== null);
+                if (!focusables.length) return event.preventDefault();
+                const first = focusables[0];
+                const last = focusables.at(-1);
+                if (event.shiftKey && (document.activeElement === first || !topmost.contains(document.activeElement))) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && (document.activeElement === last || !topmost.contains(document.activeElement))) {
+                    event.preventDefault();
+                    first.focus();
+                }
             });
             els.dayModal.addEventListener("click", event => {
                 if (event.target === els.dayModal) closeModal();
