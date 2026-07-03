@@ -1,0 +1,202 @@
+<!doctype html>
+<!-- Source for og-image.png (1200x630). Render with:
+     chrome --headless --screenshot=og-image.png --window-size=1200,630 og-image.html -->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-600.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-700.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/700.css">
+    <style>
+        :root {
+            --paper: #f6f3ed;
+            --card: #fdfbf7;
+            --ink: #221e1a;
+            --muted: #837b6f;
+            --line: #e4ded1;
+            --seal: #b4382a;
+            --on-seal: #fdf3ee;
+            --st-work: #2f7d44;
+            --st-holiday: #bc3f2b;
+            --st-makeup: #9038c8;
+            --st-annual: #6d4fd2;
+            --st-weekend: #8a8273;
+            --font-display: "Bodoni Moda", Georgia, serif;
+            --font-cjk: "Noto Serif SC", "Songti SC", "SimSun", serif;
+            --font-body: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { width: 1200px; height: 630px; overflow: hidden; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--paper);
+            color: var(--ink);
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .frame {
+            position: absolute;
+            inset: 26px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            z-index: 1;
+        }
+
+        .bg-kanji {
+            position: absolute;
+            right: -30px;
+            bottom: -110px;
+            font-family: var(--font-cjk);
+            font-weight: 700;
+            font-size: 460px;
+            line-height: 1;
+            color: rgba(180, 56, 42, 0.055);
+            z-index: 0;
+        }
+
+        .content {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            padding: 78px 92px 70px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand { display: flex; align-items: center; gap: 20px; }
+
+        .mark {
+            display: grid;
+            place-items: center;
+            width: 62px;
+            height: 62px;
+            border-radius: 15px;
+            background: var(--seal);
+            color: var(--on-seal);
+            font-family: var(--font-cjk);
+            font-weight: 700;
+            font-size: 36px;
+            box-shadow: inset 0 0 0 3px rgba(253, 243, 238, 0.3);
+        }
+
+        .brand b {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 40px;
+            letter-spacing: 0.01em;
+        }
+
+        .brand span {
+            font-family: var(--font-cjk);
+            font-weight: 700;
+            font-size: 25px;
+            color: var(--muted);
+            margin-left: -6px;
+            margin-top: 6px;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 74px;
+            line-height: 1.07;
+            letter-spacing: -0.015em;
+            max-width: 17ch;
+            margin-top: 52px;
+        }
+
+        h1 em { font-style: italic; color: var(--seal); }
+
+        .sub {
+            margin-top: 26px;
+            font-size: 25px;
+            color: var(--muted);
+        }
+
+        .sub i {
+            font-style: normal;
+            margin-inline: 12px;
+            opacity: 0.45;
+        }
+
+        .strip {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: repeat(7, 108px);
+            gap: 12px;
+        }
+
+        .d {
+            height: 96px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--card);
+            display: grid;
+            gap: 2px;
+            align-content: center;
+            justify-items: center;
+            box-shadow: 0 2px 8px rgba(64, 45, 30, 0.06);
+        }
+
+        .d .n { font-family: var(--font-display); font-weight: 600; font-size: 30px; line-height: 1.1; }
+
+        .d .s { font-size: 15px; font-weight: 600; color: var(--muted); font-family: var(--font-cjk); }
+
+        .d.hol { background: #f4e6e2; border-color: rgba(188, 63, 43, 0.32); }
+        .d.hol .n, .d.hol .s { color: var(--st-holiday); }
+
+        .d.att { background: #eef3ec; }
+        .d.att .s { color: var(--st-work); font-family: var(--font-body); }
+
+        .d.mk { background: #f1e6f7; border-color: rgba(144, 56, 200, 0.3); }
+        .d.mk .s { color: var(--st-makeup); }
+
+        .d.an { background: #ebe8f9; border-color: rgba(109, 79, 210, 0.3); }
+        .d.an .s { color: var(--st-annual); }
+
+        .d.wk { background: #efede7; }
+        .d.wk .n { color: var(--muted); }
+    </style>
+</head>
+
+<body>
+    <div class="frame"></div>
+    <div class="bg-kanji">休</div>
+
+    <div class="content">
+        <div class="brand">
+            <span class="mark">休</span>
+            <b>RestCal</b>
+            <span>休历</span>
+        </div>
+
+        <h1>Leave, attendance &amp; holidays in one <em>clean calendar</em>.</h1>
+
+        <p class="sub">Leave tracking<i>·</i>Working-day math<i>·</i>Salary deductions<i>·</i>Free &amp; open source</p>
+
+        <div class="strip">
+            <div class="d hol"><span class="n">6</span><span class="s">中秋</span></div>
+            <div class="d hol"><span class="n">7</span><span class="s">休</span></div>
+            <div class="d hol"><span class="n">8</span><span class="s">休</span></div>
+            <div class="d att"><span class="n">9</span><span class="s">✓</span></div>
+            <div class="d an"><span class="n">10</span><span class="s">年假</span></div>
+            <div class="d mk"><span class="n">11</span><span class="s">班</span></div>
+            <div class="d wk"><span class="n">12</span><span class="s">廿一</span></div>
+        </div>
+    </div>
+</body>
+
+</html>
