@@ -28,7 +28,7 @@ function handleAppRequest(request) {
     } catch {
         return new Response("Bad request", { status: 400 });
     }
-    const requested = pathname === "" || pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+    const requested = pathname === "" || pathname === "/" ? "app.html" : pathname.replace(/^\/+/, "");
     const file = path.resolve(root, requested);
     const relative = path.relative(root, file);
 

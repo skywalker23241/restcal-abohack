@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v1.3.3";
+const CACHE_VERSION = "v1.4.0";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 
@@ -9,6 +9,7 @@ const YEAR_DATA = Array.from({ length: 2026 - 2004 + 1 }, (_, i) => `vendor/chin
 const PRECACHE = [
     "./",
     "index.html",
+    "app.html",
     "styles.css",
     "manifest.webmanifest",
     "vendor/chinese-days/index.min.js",
@@ -52,9 +53,12 @@ self.addEventListener("fetch", event => {
 
     if (url.origin !== self.location.origin) return;
 
-    // 页面与样式 network-first：避免新 index.html 搭配旧 styles.css 造成布局错位，离线时回退缓存
+    // 页面与样式 network-first：避免新页面搭配旧 styles.css 造成布局错位，离线时回退缓存。
+    // 导航请求按路径区分：/app.html 是应用，其余路径（站点根）是落地页。
     if (request.mode === "navigate" || url.pathname.endsWith("/styles.css")) {
-        const cacheKey = request.mode === "navigate" ? "index.html" : request;
+        const cacheKey = request.mode === "navigate"
+            ? (url.pathname.endsWith("/app.html") ? "app.html" : "index.html")
+            : request;
         event.respondWith(
             fetch(request)
                 .then(response => {

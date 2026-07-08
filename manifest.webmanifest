@@ -3,7 +3,7 @@
     "short_name": "休历",
     "description": "管理请假、出勤、工资扣除和节假日火车票购票提醒的本地日历工具。",
     "lang": "zh-CN",
-    "start_url": "./",
+    "start_url": "app.html",
     "scope": "./",
     "display": "standalone",
     "orientation": "portrait-primary",

@@ -32,7 +32,7 @@
 
 安装后离线也能使用：应用壳、节假日、农历和节气数据都已打包在本地（`vendor/` 目录，含 2004–2026 年），由 Service Worker 缓存。仅标题字体来自 CDN，离线时回退到系统字体。
 
-注意：直接以 `file://` 方式打开 `index.html` 时 Service Worker 不可用，页面仍可正常使用，但没有安装和离线能力。
+注意：直接以 `file://` 方式打开 `app.html` 时 Service Worker 不可用，页面仍可正常使用，但没有安装和离线能力。
 
 发布新版本时需要递增 `sw.js` 顶部的 `CACHE_VERSION`，否则已安装用户的静态资源不会更新。
 
@@ -44,7 +44,7 @@
 
 ## 本地运行
 
-直接打开 `index.html` 即可使用。
+直接打开 `app.html` 即可使用（站点根路径 `index.html` 是英文介绍页，应用本体在 `app.html`）。
 
 如果浏览器对本地文件访问有安全限制，可以使用项目自带的本地服务器：
 
@@ -55,7 +55,7 @@ node server.js
 然后打开：
 
 ```text
-http://localhost:8765/
+http://localhost:8765/app.html
 ```
 
 ## 桌面版（Windows exe）
@@ -138,13 +138,16 @@ npm run dist
 
 ```text
 .
-├── index.html            # 主页面，包含 HTML 和 JS
+├── index.html            # 英文介绍页（站点首页）
+├── app.html              # 应用主页面，包含 HTML 和 JS
+├── og-image.png          # 介绍页社交分享图
 ├── styles.css            # 页面样式
 ├── manifest.webmanifest  # PWA 应用清单
 ├── sw.js                 # Service Worker，离线缓存
 ├── icons/                # PWA 应用图标
 ├── vendor/chinese-days/  # 本地化的节假日、农历数据（2004-2026）
 ├── tools/make-icons.ps1  # 图标生成脚本
+├── tools/og-image.html   # 社交分享图源文件
 ├── desktop/main.js       # Electron 桌面壳（Windows exe）
 ├── package.json          # 桌面版依赖与打包配置
 ├── server.js             # 本地静态预览服务器
