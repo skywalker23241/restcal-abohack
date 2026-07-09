@@ -637,6 +637,11 @@
         const STORAGE_KEY = "xiuli-state-v1";
         const WEBDAV_KEY = "xiuli-webdav-v1";
         const WEBDAV_FILENAME = "xiuli-backup.json";
+        // 网页版 WebDAV 代理地址。默认同源 /__webdav：本地 npm run serve、
+        // 或 Cloudflare Worker 绑定到站点域名路由（README 方式一）时无需改动；
+        // Worker 用 workers.dev 域名（README 方式二）时改成完整地址，
+        // 如 "https://xiuli-webdav.<账户名>.workers.dev/__webdav"。
+        const WEBDAV_PROXY_URL = "/__webdav";
         const THEME_KEY = "xiuli-theme";
         const THEME_SEQUENCE = ["auto", "light", "dark"];
         const THEME_META = {
@@ -2773,9 +2778,10 @@
             return "Basic " + btoa(unescape(encodeURIComponent(`${webdavConfig.username}:${webdavConfig.password}`)));
         }
 
-        // 桌面版（有 window.xiuliDav）走主进程；网页/PWA 走 server.js 的同源代理；
-        // 两者都在 Node 端发请求，绕过浏览器 CORS，兼容坚果云等所有服务器。
-        // 仅当代理不可达时才退回直连（直连受 CORS 限制，仅支持已开启 CORS 的服务器）。
+        // 桌面版（有 window.xiuliDav）走主进程；网页/PWA 走同源代理（本地为 server.js，
+        // 线上为 Cloudflare Worker，部署见 README）。两者都在服务端发请求，绕过浏览器
+        // CORS，兼容坚果云等所有服务器。仅当代理不可达时才退回直连（直连受 CORS 限制，
+        // 仅支持已开启 CORS 的服务器）。
         async function webdavRequest(method, {url, headers = {}, body} = {}) {
             const target = url || webdavTargetUrl();
             if (!target) throw new Error("请先填写服务器地址");
@@ -2784,14 +2790,15 @@
             if (window.xiuliDav?.request) {
                 return await window.xiuliDav.request(payload);
             }
-            // 网页/PWA：优先用同源代理（server.js 在 Node 端转发，绕过跨域）
+            // 网页/PWA：优先用同源代理（服务端转发，绕过跨域）
             try {
-                const res = await fetch("/__webdav", {
+                const res = await fetch(WEBDAV_PROXY_URL, {
                     method: "POST",
                     headers: {"Content-Type": "application/json", "X-Xiuli-Proxy": "1"},
                     body: JSON.stringify(payload)
                 });
-                if (res.status === 502) {
+                // 400/502 是代理自己报告的错误（地址无效、不在白名单、上游不可达），直接展示
+                if (res.status === 400 || res.status === 502) {
                     const info = await res.json().catch(() => ({}));
                     throw new Error(info.error || "无法连接服务器");
                 }
@@ -2806,7 +2813,7 @@
             try {
                 res = await fetch(target, {method, headers: reqHeaders, body, mode: "cors", redirect: "follow"});
             } catch {
-                throw new Error("无法连接服务器：网页版请用 npm run serve 启动（自带代理可绕过跨域），或改用桌面版。");
+                throw new Error("无法连接服务器：网页版需要代理绕过跨域 —— 本地用 npm run serve 启动，线上按 README 部署 Cloudflare Worker 代理，或改用桌面版。");
             }
             return {ok: res.ok, status: res.status, statusText: res.statusText, body: await res.text()};
         }

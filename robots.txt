@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://restcal.abohack.com/sitemap.xml

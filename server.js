@@ -14,7 +14,9 @@ const types = {
   ".csv": "text/csv; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".webmanifest": "application/manifest+json; charset=utf-8",
-  ".svg": "image/svg+xml"
+  ".svg": "image/svg+xml",
+  ".xml": "application/xml; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8"
 };
 
 // 网页/PWA 版的 WebDav 同源代理：浏览器无法直接跨域访问坚果云等不发 CORS 头的
