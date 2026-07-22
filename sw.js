@@ -8,7 +8,7 @@ const PRECACHE = [
     "./",
     "index.html",
     "app.html",
-    "app-i18n.js",
+    "app-i18n-v1.4.8.js",
     "calendar-years.js",
     "onboarding.js",
     "styles.css",
