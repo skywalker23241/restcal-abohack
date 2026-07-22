@@ -11,7 +11,7 @@
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · [下载桌面版](#-桌面版windows) · [问题反馈](https://github.com/skywalker23241/restcal/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · [下载桌面版](#-桌面版windows) · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="docs/screenshots/overview-light.png" alt="休历主界面：月历标记、本月统计、年度统计与工具面板" width="100%">
 
