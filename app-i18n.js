@@ -216,13 +216,18 @@
             if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
             else translateElement(node);
         }
-        document.documentElement.lang = language === "en" ? "en" : "zh-CN";
-        document.title = language === "en" ? "RestCal - Leave, attendance and pay" : "休历 - 请假、出勤与购票提醒";
+        if (root !== document) return;
+        const documentLanguage = language === "en" ? "en" : "zh-CN";
+        const documentTitle = language === "en" ? "RestCal - Leave, attendance and pay" : "休历 - 请假、出勤与购票提醒";
+        if (document.documentElement.lang !== documentLanguage) document.documentElement.lang = documentLanguage;
+        if (document.title !== documentTitle) document.title = documentTitle;
         const button = document.getElementById("languageToggle");
         if (button) {
-            button.textContent = language === "en" ? "ZH" : "EN";
-            button.title = language === "en" ? "Switch to Chinese" : "Switch to English";
-            button.setAttribute("aria-label", button.title);
+            const buttonText = language === "en" ? "ZH" : "EN";
+            const buttonLabel = language === "en" ? "Switch to Chinese" : "Switch to English";
+            if (button.textContent !== buttonText) button.textContent = buttonText;
+            if (button.title !== buttonLabel) button.title = buttonLabel;
+            if (button.getAttribute("aria-label") !== buttonLabel) button.setAttribute("aria-label", buttonLabel);
         }
     }
 
