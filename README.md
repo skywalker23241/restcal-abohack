@@ -7,11 +7,12 @@
 **请假、出勤、工资核算、购票提醒 —— 一页搞定的中国职场日历**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![Release](https://img.shields.io/badge/release-v1.4.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · [下载桌面版](#-桌面版windows) · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v1.4.0 离线版](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="docs/screenshots/overview-light.png" alt="休历主界面：月历标记、本月统计、年度统计与工具面板" width="100%">
 
@@ -24,6 +25,8 @@
 休历是一个为中国职场人打造的请假日历工具：在月历上标记出勤和请假，自动算出勤天数、扣薪和到手工资，提前提醒节假日火车票开售，还能一键生成正式的请假条和工资条小票。
 
 **纯前端、零构建、零依赖**——原生 HTML/CSS/JavaScript 实现，数据全部保存在本机浏览器，不注册、不上传、离线可用。农历、节气、法定节假日与调休数据（2004–2026）已完整打包在本地。
+
+应用界面支持中文与英文一键切换；语言、主题以及所有业务设置都可以随 CSV 或 WebDAV 完整备份和恢复。
 
 ## ✨ 功能一览
 
@@ -83,18 +86,18 @@
 <div align="center"><img src="docs/screenshots/settings.png" alt="设置面板：工资、额度、请假条默认值与 WebDAV 云备份" width="560"></div>
 
 - 数据默认保存在本机浏览器 `localStorage`，不经过任何服务器。
-- CSV 导入导出：适合手动备份和跨浏览器迁移，导入前自动校验格式。
-- WebDAV 云备份：一键备份到坚果云等 WebDAV 网盘，跨设备恢复。桌面版、本地运行及 Netlify 在线版开箱即用。
+- CSV 导入导出：同时保存日历记录、个人资料、工作制度、工资、假期额度、请假条默认值、主题和语言，适合手动备份和跨浏览器迁移；导入前自动校验格式。
+- WebDAV 云备份：一键完整备份上述数据到坚果云等 WebDAV 网盘并跨设备恢复。WebDAV 地址和账号凭据只保存在当前设备，不写入备份文件。桌面版、本地运行及 Netlify 在线版开箱即用。
 
 ## 🚀 快速开始
 
 | 方式 | 适合场景 | 上手方法 |
 |---|---|---|
 | **在线版** | 大多数用户 | 直接打开 [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html)，可安装为 PWA |
-| **桌面版** | Windows 免浏览器使用 | 见[桌面版（Windows）](#-桌面版windows)，免安装单文件 exe |
+| **桌面版** | Windows 免浏览器使用 | 从 [v1.4.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0) 下载便携版、安装版或 ZIP |
 | **本地运行** | 开发或内网使用 | 克隆仓库后 `node server.js`，访问 `http://localhost:8765/app.html` |
 
-也可以直接双击打开 `app.html` 使用（站点根路径的 `index.html` 是英文介绍页，应用本体在 `app.html`）。注意：以 `file://` 方式打开时 Service Worker 不可用，页面功能正常，但没有安装和离线能力。
+也可以直接双击打开 `app.html` 使用（站点根路径的 `index.html` 是介绍页，应用本体在 `app.html`）。`file://` 模式本身可以离线运行，但浏览器不会注册 Service Worker，也不能将其安装为 PWA；需要 PWA 能力时请通过 HTTP(S) 打开。
 
 ### 安装为应用（PWA）
 
@@ -108,19 +111,30 @@
 
 ## 💻 桌面版（Windows）
 
-项目自带 Electron 壳，可以打包成免安装的单文件 exe：
+最新离线版：[RestCal v1.4.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0)
+
+| 下载 | 用途 |
+|---|---|
+| [`RestCal-1.4.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-portable.exe) | 免安装，下载后直接运行 |
+| [`RestCal-1.4.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-setup.exe) | Windows 安装程序，可选择安装目录 |
+| [`RestCal-1.4.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-win.zip) | 解压后运行 `休历.exe` |
+| [`SHA256SUMS-1.4.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/SHA256SUMS-1.4.0.txt) | 下载文件完整性校验值 |
+
+三个程序包均包含应用和 2004–2026 年中国日历数据，无网络时也能使用。当前构建尚未进行代码签名，Windows SmartScreen 可能在首次运行时显示提醒。
+
+项目自带 Electron 壳，也可以自行构建：
 
 ```bash
 npm install
 npm run dist
 ```
 
-构建完成后，`dist/` 目录下会生成 `休历-<版本>-portable.exe`，双击即可运行，无需安装 Node 或浏览器。
+构建完成后，`dist/` 目录会生成便携版 EXE、安装版 EXE 和 ZIP，运行时无需安装 Node 或浏览器。
 
 说明：
 
 - 桌面版内部通过自定义 `app://` 协议加载页面，农历、节假日数据与网页版完全一致。
-- 数据保存在 Electron 的本地存储中（`%APPDATA%\休历`），与浏览器中的数据互相独立，可通过 CSV 导入导出迁移。
+- 数据保存在 Electron 的本地存储中（`%APPDATA%\休历`），与浏览器中的数据互相独立，可通过完整 CSV 或 WebDAV 备份迁移。
 - 开发调试可以运行 `npm start` 直接启动桌面窗口。
 - 国内网络下 Electron 二进制会自动走 npmmirror 镜像；如果 `npm install` 较慢，可加 `--registry=https://registry.npmmirror.com`。
 - 如果构建报错 `Cannot create symbolic link`（解压 winCodeSign 时缺少权限），可以在 Windows 设置中开启「开发者模式」后重试，或手动把 [winCodeSign-2.6.0.7z](https://npmmirror.com/mirrors/electron-builder-binaries/winCodeSign-2.6.0/winCodeSign-2.6.0.7z) 解压到 `%LOCALAPPDATA%\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0`（两个 macOS 符号链接解压失败可忽略）。
@@ -156,7 +170,7 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 
 ## 🔒 数据与隐私
 
-用户数据只保存在本机浏览器 `localStorage` 中，不采集、不上传。WebDAV 备份是可选功能，凭据只持久化在本机；执行备份时，凭据和备份内容会经过本站的 Netlify Function 转发，但不会在服务端存储。建议使用 WebDAV 应用专用密码。
+用户数据默认只保存在本机浏览器 `localStorage` 中，不采集、不自动上传。WebDAV 备份是可选功能，凭据只持久化在本机且不会写入 CSV 或 WebDAV 备份文件；执行备份时，凭据和备份内容会经过本站的 Netlify Function 转发，但不会在服务端存储。建议使用 WebDAV 应用专用密码。
 
 建议定期使用右上角 CSV 图标导出备份，或在设置中配置 WebDAV 云备份。更换浏览器、清理浏览器数据或更换设备时，`localStorage` 数据可能不可用。
 
@@ -165,8 +179,10 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 导出的 CSV 包含以下字段：
 
 ```text
-日期,状态,请假类型,请假理由,是否节假日,是否周末,备注
+日期,状态,请假类型,请假理由,是否节假日,是否周末,备注,用户设置(JSON)
 ```
+
+`用户设置(JSON)` 只在首条数据行写入一次，其中包含个人资料、工作制度、工资、额度、请假条默认值、主题和语言。即使当前没有任何日历记录，导出的 CSV 也会保留一行设置数据。旧版不含该列的 7 字段 CSV 仍可正常导入。
 
 支持的状态：
 
@@ -177,7 +193,7 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 导出文件名格式：
 
 ```text
-休历-请假数据-YYYY-MM-DD.csv
+休历-完整备份-YYYY-MM-DD.csv
 ```
 
 导入时会校验字段、日期格式和状态值。校验失败时不会覆盖现有数据。
@@ -210,8 +226,10 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 
 ```text
 .
-├── index.html            # 英文介绍页（站点首页）
+├── index.html            # 中英文介绍页（站点首页）
 ├── app.html              # 应用主页面，包含 HTML 和 JS
+├── app-i18n-v1.4.9.js    # 中英文界面翻译与语言切换
+├── calendar-years.js     # 2004–2026 年离线日历数据包
 ├── og-image.png          # 介绍页社交分享图
 ├── sitemap.xml           # 站点地图（搜索引擎索引）
 ├── robots.txt            # 爬虫规则，引用 sitemap
