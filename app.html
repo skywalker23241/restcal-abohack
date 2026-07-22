@@ -686,7 +686,7 @@
 
     <script src="vendor/chinese-days/index.min.js"></script>
     <script src="calendar-years.js"></script>
-    <script src="app-i18n-v1.4.8.js"></script>
+    <script src="app-i18n-v1.4.9.js"></script>
     <script src="onboarding.js"></script>
     <script>
         const STORAGE_KEY = "xiuli-state-v1";
@@ -707,6 +707,7 @@
             yearJson: year => `vendor/chinese-days/years/${year}.json`
         };
         const CSV_HEADERS = ["日期", "状态", "请假类型", "请假理由", "是否节假日", "是否周末", "备注"];
+        const CSV_USER_DATA_HEADER = "用户设置(JSON)";
         const STATUS_LABELS = {
             work: "出勤",
             personal: "事假",
@@ -2785,7 +2786,11 @@
         }
 
         function exportCsv() {
-            const rows = [CSV_HEADERS];
+            syncSettingsFromInputs();
+            saveState();
+            const rows = [[...CSV_HEADERS, CSV_USER_DATA_HEADER]];
+            const userDataJson = JSON.stringify(backupUserDataSnapshot());
+            let includesUserData = false;
             Object.keys(state.records).sort().forEach(iso => {
                 const record = state.records[iso];
                 const info = getDayInfo(fromISO(iso));
@@ -2796,15 +2801,18 @@
                     record.reason || "",
                     info.isHoliday ? "是" : "否",
                     info.isWeekend ? "是" : "否",
-                    record.note || ""
+                    record.note || "",
+                    includesUserData ? "" : userDataJson
                 ]);
+                includesUserData = true;
             });
+            if (!includesUserData) rows.push(["", "", "", "", "", "", "", userDataJson]);
             const csv = "\ufeff" + rows.map(row => row.map(csvEscape).join(",")).join("\n");
             const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `休历-请假数据-${toISO(new Date())}.csv`;
+            a.download = `休历-完整备份-${toISO(new Date())}.csv`;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -2819,10 +2827,12 @@
             reader.onload = () => {
                 try {
                     const parsed = parseCsv(String(reader.result || ""));
-                    const imported = validateImportedRows(parsed);
+                    const {records: imported, userData} = validateImportedRows(parsed);
                     state.records = {...state.records, ...imported};
+                    const restoredUserData = restoreUserDataBackup(userData);
                     saveState();
-                    els.csvNotice.textContent = `导入成功：${Object.keys(imported).length} 条记录已合并。`;
+                    fillSettingsInputs();
+                    els.csvNotice.textContent = `导入成功：${Object.keys(imported).length} 条记录已合并${restoredUserData ? "，用户设置已恢复" : ""}。`;
                     render();
                 } catch (error) {
                     els.csvNotice.textContent = `导入失败：${error.message}`;
@@ -2841,11 +2851,23 @@
 
             const index = Object.fromEntries(headers.map((header, i) => [header, i]));
             const imported = {};
+            let userData = null;
             for (let i = 1; i < rows.length; i++) {
                 const row = rows[i];
                 if (!row.some(cell => cell.trim())) continue;
                 const iso = (row[index["日期"]] || "").trim();
                 const statusText = (row[index["状态"]] || "").trim();
+                const userDataText = index[CSV_USER_DATA_HEADER] === undefined ? "" : (row[index[CSV_USER_DATA_HEADER]] || "").trim();
+                if (userDataText && !userData) {
+                    try {
+                        const parsedUserData = JSON.parse(userDataText);
+                        if (!parsedUserData || typeof parsedUserData !== "object" || Array.isArray(parsedUserData)) throw new Error();
+                        userData = parsedUserData;
+                    } catch {
+                        throw new Error(`第 ${i + 1} 行用户设置格式不正确。`);
+                    }
+                }
+                if (!iso && !statusText && userDataText) continue;
                 if (!isValidISODate(iso)) throw new Error(`第 ${i + 1} 行日期格式不正确。`);
                 const status = Object.entries(STATUS_LABELS).find(([, label]) => label === statusText)?.[0];
                 if (!status) throw new Error(`第 ${i + 1} 行状态必须是${Object.values(STATUS_LABELS).join("、")}。`);
@@ -2858,7 +2880,7 @@
                     updatedAt: new Date().toISOString()
                 };
             }
-            return imported;
+            return {records: imported, userData};
         }
 
         // ---- WebDav 云备份 ----
@@ -2919,6 +2941,63 @@
 
         function userDataSnapshot() {
             return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary}));
+        }
+
+        function backupUserDataSnapshot() {
+            return JSON.parse(JSON.stringify({
+                settings: state.settings,
+                profile: state.profile,
+                workSchedule: state.workSchedule,
+                salary: state.salary,
+                preferences: {
+                    theme: getThemePreference(),
+                    language: window.RestCalI18n?.getLanguage() || "zh"
+                },
+                onboardingCompleted: state.onboardingCompleted,
+                onboardingSkipped: state.onboardingSkipped
+            }));
+        }
+
+        function restoreUserDataBackup(data) {
+            if (!data || typeof data !== "object" || Array.isArray(data)) return false;
+            let restored = false;
+            if (data.settings && typeof data.settings === "object" && !Array.isArray(data.settings)) {
+                state.settings = {...state.settings, ...data.settings};
+                restored = true;
+            }
+            if (data.profile && typeof data.profile === "object" && !Array.isArray(data.profile)) {
+                state.profile = {...DEFAULT_USER_DATA.profile, ...state.profile, ...data.profile};
+                restored = true;
+            }
+            if (data.workSchedule && typeof data.workSchedule === "object" && !Array.isArray(data.workSchedule)) {
+                const restDays = Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : state.workSchedule.restDays;
+                state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...state.workSchedule, ...data.workSchedule, restDays};
+                restored = true;
+            }
+            if (data.salary && typeof data.salary === "object" && !Array.isArray(data.salary)) {
+                state.salary = {...DEFAULT_USER_DATA.salary, ...state.salary, ...data.salary};
+                restored = true;
+            }
+            if (data.preferences && typeof data.preferences === "object" && !Array.isArray(data.preferences)) {
+                if (THEME_SEQUENCE.includes(data.preferences.theme)) {
+                    try { localStorage.setItem(THEME_KEY, data.preferences.theme); } catch { }
+                    applyTheme(data.preferences.theme);
+                    restored = true;
+                }
+                if (["zh", "en"].includes(data.preferences.language)) {
+                    window.RestCalI18n?.setLanguage(data.preferences.language);
+                    restored = true;
+                }
+            }
+            if (typeof data.onboardingCompleted === "boolean") {
+                state.onboardingCompleted = data.onboardingCompleted;
+                restored = true;
+            }
+            if (typeof data.onboardingSkipped === "boolean") {
+                state.onboardingSkipped = data.onboardingSkipped;
+                restored = true;
+            }
+            return restored;
         }
 
         function renderOnboardingStep() {
@@ -3119,15 +3198,17 @@
 
         async function runWebdavUpload() {
             if (!ensureWebdavConfigured()) return;
+            syncSettingsFromInputs();
+            saveState();
             setWebdavBusy(true);
             setWebdavStatus("正在上传备份…");
             try {
                 const payload = JSON.stringify({
                     app: "xiuli",
-                    version: 1,
+                    version: 2,
                     exportedAt: new Date().toISOString(),
                     records: state.records,
-                    settings: state.settings
+                    ...backupUserDataSnapshot()
                 });
                 const res = await webdavRequest("PUT", {
                     headers: {"Content-Type": "application/json; charset=utf-8"},
@@ -3135,7 +3216,7 @@
                 });
                 if (res.ok) {
                     const count = Object.keys(state.records).length;
-                    setWebdavStatus(`上传成功：已备份 ${count} 条记录到云端（${new Date().toLocaleString()}）。`);
+                    setWebdavStatus(`上传成功：已备份 ${count} 条记录和全部用户设置（${new Date().toLocaleString()}）。`);
                 } else if (res.status === 404 || res.status === 409) {
                     // 多数情况是目标目录不存在：先尝试创建目录，再重试一次 PUT。
                     await webdavRequest("MKCOL", {url: webdavParentUrl()}).catch(() => {});
@@ -3145,7 +3226,7 @@
                     });
                     if (retry.ok) {
                         const count = Object.keys(state.records).length;
-                        setWebdavStatus(`上传成功：已备份 ${count} 条记录到云端（${new Date().toLocaleString()}）。`);
+                        setWebdavStatus(`上传成功：已备份 ${count} 条记录和全部用户设置（${new Date().toLocaleString()}）。`);
                     } else {
                         setWebdavStatus("上传失败：" + describeWebdavFailure(retry));
                     }
@@ -3185,14 +3266,13 @@
                     setWebdavStatus("恢复失败：云端文件缺少记录数据。");
                     return;
                 }
-                const remoteSettings = parsed.settings && typeof parsed.settings === "object" ? parsed.settings : {};
                 const {merged, added, updated} = mergeRecords(state.records, remoteRecords);
                 state.records = merged;
-                state.settings = {...state.settings, ...remoteSettings};
+                const restoredUserData = restoreUserDataBackup(parsed.userData || parsed);
                 saveState();
                 fillSettingsInputs();
                 await render();
-                setWebdavStatus(`恢复成功：新增 ${added} 条，更新 ${updated} 条。`);
+                setWebdavStatus(`恢复成功：新增 ${added} 条，更新 ${updated} 条${restoredUserData ? "，用户设置已恢复" : ""}。`);
             } catch (error) {
                 setWebdavStatus("恢复失败：" + error.message);
             } finally {

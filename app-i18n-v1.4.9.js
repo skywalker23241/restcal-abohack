@@ -138,6 +138,9 @@
         }
         if (!translated) {
             const rules = [
+                [/^导入成功：(\d+) 条记录已合并，用户设置已恢复。$/, "Import successful: $1 records merged and user settings restored."],
+                [/^上传成功：已备份 (\d+) 条记录和全部用户设置（(.+)）。$/, "Upload successful: $1 records and all user settings backed up ($2)."],
+                [/^恢复成功：新增 (\d+) 条，更新 (\d+) 条，用户设置已恢复。$/, "Restore successful: $1 added, $2 updated, and user settings restored."],
                 [/^例如[：:]?\s*(.+)$/, "e.g. $1"],
                 [/^(\d{4}) 年$/, "$1"],
                 [/^(\d{1,2}) 月$/, "$1"],
