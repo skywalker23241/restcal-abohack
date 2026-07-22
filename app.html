@@ -685,6 +685,7 @@
     </div>
 
     <script src="vendor/chinese-days/index.min.js"></script>
+    <script src="calendar-years.js"></script>
     <script src="app-i18n.js"></script>
     <script src="onboarding.js"></script>
     <script>
@@ -912,7 +913,7 @@
 
         async function init() {
             applyTheme(getThemePreference());
-            RestCalI18n.init();
+            window.RestCalI18n?.init();
             initSelectors();
             initEnhancedSelects();
             initMobileCollapsibles();
@@ -927,7 +928,7 @@
             resetLeaveGeneratorForm();
             await render();
             renderWelcome();
-            if (!state.onboardingCompleted && !state.onboardingSkipped) openOnboarding();
+            if (!state.onboardingCompleted && !state.onboardingSkipped && window.RestCalOnboardingView) openOnboarding();
         }
 
         const backdropTimers = new WeakMap();
@@ -1383,7 +1384,7 @@
                 openSearch();
             });
             els.themeToggle.addEventListener("click", cycleTheme);
-            els.languageToggle.addEventListener("click", () => RestCalI18n.toggle());
+            els.languageToggle.addEventListener("click", () => window.RestCalI18n?.toggle());
             darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
             els.closeSettings.addEventListener("click", closeSettings);
             els.settingsDone.addEventListener("click", () => { syncSettingsFromInputs(); saveState(); closeSettings(); renderWelcome(); showToast("设置已保存"); });
@@ -2897,6 +2898,10 @@
         }
 
         function openOnboarding(reset = false) {
+            if (!window.RestCalOnboardingView) {
+                showToast("首次设置模块暂不可用，请刷新后重试", "error");
+                return;
+            }
             if (reset) onboardingDraft = userDataSnapshot();
             else onboardingDraft = onboardingDraft || userDataSnapshot();
             onboardingStep = 0;
@@ -2966,7 +2971,7 @@
         function clampInt(value, min, max, fallback) { const n = Number.parseInt(value, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function clampNumber(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function nonNegativeNumber(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
-        function renderRestDaysPicker() { if (els.restDaysPicker) els.restDaysPicker.innerHTML = RestCalOnboardingView.restDayOptions(state.workSchedule.restDays); }
+        function renderRestDaysPicker() { if (els.restDaysPicker && window.RestCalOnboardingView) els.restDaysPicker.innerHTML = RestCalOnboardingView.restDayOptions(state.workSchedule.restDays); }
 
         // 目录地址（确保末尾带 /）；若用户直接填了 .json 文件路径则原样返回。
         function webdavBaseUrl() {
@@ -3231,6 +3236,21 @@
 
         async function loadRemoteCalendarYear(year) {
             if (calendarApi.years.has(year) || calendarApi.failedYears.has(year)) return;
+            const bundled = window.RESTCAL_CALENDAR_YEARS?.[year];
+            if (bundled) {
+                calendarApi.years.set(year, normalizeRemoteCalendarYear(bundled));
+                calendarApi.status = "bundled";
+                calendarApi.message = "本地中国日历数据已就绪";
+                return;
+            }
+            if (location.hostname === "restcal.abohack.com") {
+                calendarApi.failedYears.add(year);
+                calendarApi.status = calendarApi.years.size ? "partial" : "fallback";
+                calendarApi.message = calendarApi.years.size
+                    ? "部分年份使用本地中国日历数据"
+                    : "正在使用本地备用日历数据";
+                return;
+            }
             const controller = new AbortController();
             const timeout = window.setTimeout(() => controller.abort(), 4500);
             try {

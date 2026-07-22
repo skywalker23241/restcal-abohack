@@ -1,16 +1,15 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v1.4.6";
+const CACHE_VERSION = "v1.4.7";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
-
-const YEAR_DATA = Array.from({ length: 2026 - 2004 + 1 }, (_, i) => `vendor/chinese-days/years/${2004 + i}.json`);
 
 const PRECACHE = [
     "./",
     "index.html",
     "app.html",
     "app-i18n.js",
+    "calendar-years.js",
     "onboarding.js",
     "styles.css",
     "manifest.webmanifest",
@@ -18,14 +17,17 @@ const PRECACHE = [
     "icons/icon-192.png",
     "icons/icon-512.png",
     "icons/maskable-512.png",
-    "icons/apple-touch-icon.png",
-    ...YEAR_DATA
+    "icons/apple-touch-icon.png"
 ];
 
 self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(APP_CACHE)
-            .then(cache => cache.addAll(PRECACHE))
+            .then(cache => Promise.allSettled(PRECACHE.map(async url => {
+                const response = await fetch(new Request(url, {cache: "reload"}));
+                if (!isCacheable(response)) throw new Error(`Cannot precache ${url}`);
+                await cache.put(url, response);
+            })))
             .then(() => self.skipWaiting())
     );
 });
@@ -64,6 +66,7 @@ self.addEventListener("fetch", event => {
         event.respondWith(
             fetch(request)
                 .then(response => {
+                    if (!isCacheable(response)) throw new Error(`Uncacheable response ${response.status}`);
                     const copy = response.clone();
                     caches.open(APP_CACHE).then(cache => cache.put(cacheKey, copy));
                     return response;
@@ -88,4 +91,8 @@ function cacheFirst(request, cacheName) {
             return response;
         });
     });
+}
+
+function isCacheable(response) {
+    return response.ok && response.headers.get("cf-mitigated") !== "challenge";
 }

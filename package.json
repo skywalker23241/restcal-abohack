@@ -25,6 +25,7 @@
             "desktop/**",
             "app.html",
             "app-i18n.js",
+            "calendar-years.js",
             "onboarding.js",
             "styles.css",
             "manifest.webmanifest",
