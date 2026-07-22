@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data: blob:; connect-src 'self' https: http:; object-src 'none'; frame-src 'none'">
     <meta name="description" content="休历：管理请假、出勤、工资扣除和节假日火车票购票提醒的单页面工具，数据保存在本机浏览器。">
     <meta name="theme-color" content="#f6f3ed">
     <link rel="icon"
@@ -117,6 +118,7 @@
                 </div>
                 <div class="toolbar-group tool-group" aria-label="工具操作">
                     <button class="btn primary" id="todayBtn" type="button">今天</button>
+                    <button class="btn language-btn" id="languageToggle" type="button" title="Switch to English" aria-label="Switch to English">EN</button>
                     <button class="btn icon-btn" id="searchToggle" type="button" title="搜索与筛选"
                         aria-label="搜索与筛选"><svg class="icon">
                             <use href="#i-search" />
@@ -152,6 +154,15 @@
                 </div>
             </div>
         </header>
+
+        <section class="panel welcome-card" id="welcomeCard" aria-label="个性化欢迎">
+            <div class="welcome-card-copy">
+                <span class="eyebrow">RestCal · 今日概览</span>
+                <h2 id="welcomeTitle">欢迎使用 RestCal</h2>
+                <p id="welcomeSubtitle">把请假、出勤、工资和节假日安排放在一个日历里。</p>
+            </div>
+            <div class="welcome-metrics" id="welcomeMetrics"></div>
+        </section>
 
         <section class="layout">
             <aside class="side left-side">
@@ -259,7 +270,25 @@
 
             </aside>
         </section>
+
     </main>
+
+    <div class="onboarding-backdrop" id="onboardingBackdrop" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+        <div class="onboarding-card">
+            <div class="onboarding-topline">
+                <div class="onboarding-brand"><span class="logo">休</span><span>RestCal</span></div>
+                <span class="onboarding-step-label" id="onboardingStepLabel">1 / 5</span>
+            </div>
+            <div class="onboarding-progress" aria-hidden="true"><span id="onboardingProgress"></span></div>
+            <div class="onboarding-content" id="onboardingContent"></div>
+            <div class="onboarding-actions">
+                <button class="btn ghost" id="onboardingBack" type="button">返回</button>
+                <button class="btn" id="onboardingSkip" type="button">暂时跳过</button>
+                <button class="btn primary" id="onboardingNext" type="button">开始设置</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
 
     <div class="modal-backdrop" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
         <div class="modal search-modal">
@@ -365,7 +394,19 @@
                 <button class="btn ghost" id="closeSettings" type="button" aria-label="关闭">关闭</button>
             </div>
             <div class="modal-body settings-body">
-                <details class="settings-group" data-settings-group="salary" open>
+                <details class="settings-group" data-settings-group="personal">
+                    <summary><h3>个人与工作制度</h3></summary>
+                    <div class="settings-grid settings-content">
+                        <div class="field"><label for="profileNameInput">姓名或昵称</label><input id="profileNameInput" autocomplete="name" placeholder="例如：小明"></div>
+                        <div class="field"><label for="companyInput">工作单位 <em>选填</em></label><input id="companyInput" autocomplete="organization" placeholder="例如：RestCal 工作室"></div>
+                        <div class="field"><label for="hireDateInput">入职日期 <em>选填</em></label><input id="hireDateInput" type="date"></div>
+                        <div class="field"><label for="workdaysInput">每周工作天数</label><input id="workdaysInput" inputmode="numeric" type="number" min="1" max="7" step="1" placeholder="5"></div>
+                        <div class="field"><label for="dailyHoursInput">每日标准工作时长</label><input id="dailyHoursInput" inputmode="decimal" type="number" min="0.5" max="24" step="0.5" placeholder="8"><small class="field-help">小时</small></div>
+                        <div class="field"><label for="scheduleTypeInput">工资计算方式</label><select id="scheduleTypeInput"><option value="standard">按月薪计算</option><option value="daily">按日薪计算</option><option value="shift">排班制</option></select></div>
+                        <div class="field wide-field"><label>默认休息日</label><div class="weekday-picker" id="restDaysPicker"></div></div>
+                    </div>
+                </details>
+                <details class="settings-group" data-settings-group="salary">
                     <summary>
                         <h3>工资与扣款</h3>
                     </summary>
@@ -380,6 +421,8 @@
                             <input id="deductionInput" inputmode="decimal" type="number" min="0" step="50"
                                 placeholder="例如 1800">
                         </div>
+                        <div class="field"><label for="estimatedTaxInput">个税预估 <em>选填</em></label><input id="estimatedTaxInput" inputmode="decimal" type="number" min="0" step="50" placeholder="例如 300"></div>
+                        <div class="field"><label for="paydayInput">发薪日 <em>选填</em></label><input id="paydayInput" inputmode="numeric" type="number" min="1" max="31" step="1" placeholder="例如 10"></div>
                         <div class="field">
                             <label for="personalRateInput">事假扣款比例</label>
                             <input id="personalRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
@@ -400,9 +443,10 @@
                             <input id="compRateInput" inputmode="decimal" type="number" min="0" max="100" step="10"
                                 placeholder="0">
                         </div>
+                        <p class="notice wide-field">这些数据仅保存在当前设备中，不会上传到服务器。</p>
                     </div>
                 </details>
-                <details class="settings-group" data-settings-group="quota" open>
+                <details class="settings-group" data-settings-group="quota">
                     <summary>
                         <h3>假期额度</h3>
                     </summary>
@@ -419,7 +463,7 @@
                         </div>
                     </div>
                 </details>
-                <details class="settings-group" data-settings-group="leave-doc" open>
+                <details class="settings-group" data-settings-group="leave-doc">
                     <summary>
                         <h3>请假条默认值</h3>
                     </summary>
@@ -446,11 +490,19 @@
                         </div>
                     </div>
                 </details>
-                <details class="settings-group" data-settings-group="data" open>
+                <details class="settings-group" data-settings-group="data">
                     <summary>
                         <h3>数据管理</h3>
                     </summary>
                     <div class="settings-content data-management">
+                        <div class="csv-actions">
+                            <button class="btn" id="rerunOnboarding" type="button">重新运行首次引导</button>
+                            <button class="btn" id="exportPersonalSettings" type="button">导出个人设置</button>
+                        </div>
+                        <div class="csv-actions">
+                            <button class="btn" id="clearPersonalSettings" type="button">清除个人设置</button>
+                            <button class="btn danger" id="clearAllData" type="button">清除所有本地数据</button>
+                        </div>
                         <div class="csv-actions">
                             <button class="btn primary" data-open-csv-panel type="button">CSV 导入导出</button>
                             <button class="btn" data-open-settings-dynamic="webdav" type="button">WebDAV 云备份</button>
@@ -458,7 +510,7 @@
                         <p class="notice">CSV 适合手动备份和迁移；WebDAV 适合跨设备保存云端备份。</p>
                     </div>
                 </details>
-                <details class="settings-group" data-settings-group="webdav" open>
+                <details class="settings-group" data-settings-group="webdav">
                     <summary>
                         <h3>WebDav 云备份</h3>
                     </summary>
@@ -633,6 +685,8 @@
     </div>
 
     <script src="vendor/chinese-days/index.min.js"></script>
+    <script src="app-i18n.js"></script>
+    <script src="onboarding.js"></script>
     <script>
         const STORAGE_KEY = "xiuli-state-v1";
         const WEBDAV_KEY = "xiuli-webdav-v1";
@@ -665,6 +719,13 @@
             sick: 50,
             annual: 0,
             comp: 0
+        };
+        const DEFAULT_USER_DATA = {
+            profile: {name: "", company: "", hireDate: ""},
+            workSchedule: {workdaysPerWeek: 5, restDays: [0, 6], dailyWorkHours: 8, scheduleType: "standard"},
+            salary: {monthlySalary: 0, fixedDeductions: 0, estimatedTax: 0, payday: null},
+            onboardingCompleted: false,
+            onboardingSkipped: false
         };
 
         const HOLIDAY_DATA = {
@@ -714,6 +775,8 @@
         const narrowScreenQuery = window.matchMedia("(max-width: 760px)");
         const openBackdrops = new Set();
         let searchRenderTimer = 0;
+        let onboardingStep = 0;
+        let onboardingDraft = null;
 
         const els = {
             app: document.querySelector("main.app"),
@@ -722,6 +785,7 @@
             prevMonth: document.getElementById("prevMonth"),
             nextMonth: document.getElementById("nextMonth"),
             todayBtn: document.getElementById("todayBtn"),
+            languageToggle: document.getElementById("languageToggle"),
             settingsToggle: document.getElementById("settingsToggle"),
             searchToggle: document.getElementById("searchToggle"),
             themeToggle: document.getElementById("themeToggle"),
@@ -733,8 +797,14 @@
             yearStats: document.getElementById("yearStats"),
             yearStatsMode: document.getElementById("yearStatsMode"),
             monthSummary: document.getElementById("monthSummary"),
+            welcomeCard: document.getElementById("welcomeCard"),
+            welcomeTitle: document.getElementById("welcomeTitle"),
+            welcomeSubtitle: document.getElementById("welcomeSubtitle"),
+            welcomeMetrics: document.getElementById("welcomeMetrics"),
             salaryInput: document.getElementById("salaryInput"),
             deductionInput: document.getElementById("deductionInput"),
+            estimatedTaxInput: document.getElementById("estimatedTaxInput"),
+            paydayInput: document.getElementById("paydayInput"),
             personalRateInput: document.getElementById("personalRateInput"),
             sickRateInput: document.getElementById("sickRateInput"),
             annualRateInput: document.getElementById("annualRateInput"),
@@ -743,6 +813,13 @@
             salaryReceiptLabel: document.getElementById("salaryReceiptLabel"),
             annualQuotaInput: document.getElementById("annualQuotaInput"),
             compQuotaInput: document.getElementById("compQuotaInput"),
+            profileNameInput: document.getElementById("profileNameInput"),
+            companyInput: document.getElementById("companyInput"),
+            hireDateInput: document.getElementById("hireDateInput"),
+            workdaysInput: document.getElementById("workdaysInput"),
+            dailyHoursInput: document.getElementById("dailyHoursInput"),
+            scheduleTypeInput: document.getElementById("scheduleTypeInput"),
+            restDaysPicker: document.getElementById("restDaysPicker"),
             quotaSummary: document.getElementById("quotaSummary"),
             csvToggle: document.getElementById("csvToggle"),
             csvMenu: document.getElementById("csvMenu"),
@@ -799,6 +876,18 @@
             guideModal: document.getElementById("guideModal"),
             closeGuide: document.getElementById("closeGuide"),
             guideDone: document.getElementById("guideDone"),
+            onboardingBackdrop: document.getElementById("onboardingBackdrop"),
+            onboardingContent: document.getElementById("onboardingContent"),
+            onboardingStepLabel: document.getElementById("onboardingStepLabel"),
+            onboardingProgress: document.getElementById("onboardingProgress"),
+            onboardingBack: document.getElementById("onboardingBack"),
+            onboardingSkip: document.getElementById("onboardingSkip"),
+            onboardingNext: document.getElementById("onboardingNext"),
+            toastRegion: document.getElementById("toastRegion"),
+            rerunOnboarding: document.getElementById("rerunOnboarding"),
+            exportPersonalSettings: document.getElementById("exportPersonalSettings"),
+            clearPersonalSettings: document.getElementById("clearPersonalSettings"),
+            clearAllData: document.getElementById("clearAllData"),
             dayModal: document.getElementById("dayModal"),
             modalTitle: document.getElementById("modalTitle"),
             modalSubtitle: document.getElementById("modalSubtitle"),
@@ -823,6 +912,7 @@
 
         async function init() {
             applyTheme(getThemePreference());
+            RestCalI18n.init();
             initSelectors();
             initEnhancedSelects();
             initMobileCollapsibles();
@@ -830,11 +920,14 @@
             initSettingsGroups();
             bindEvents();
             fillSettingsInputs();
+            renderRestDaysPicker();
             els.webdavUrl.value = webdavConfig.url || "";
             els.webdavUsername.value = webdavConfig.username || "";
             els.webdavPassword.value = webdavConfig.password || "";
             resetLeaveGeneratorForm();
             await render();
+            renderWelcome();
+            if (!state.onboardingCompleted && !state.onboardingSkipped) openOnboarding();
         }
 
         const backdropTimers = new WeakMap();
@@ -1054,7 +1147,10 @@
                 if (!(group instanceof HTMLDetailsElement) || group.dataset.settingsReady) return;
                 group.dataset.settingsReady = "true";
                 group.addEventListener("toggle", () => {
-                    if (isNarrowScreen()) group.dataset.userToggled = "true";
+                    if (!group.open) return;
+                    document.querySelectorAll(".settings-group").forEach(other => {
+                        if (other !== group && other instanceof HTMLDetailsElement) other.open = false;
+                    });
                 });
             });
             syncSettingsGroupDefaults();
@@ -1063,12 +1159,7 @@
         function syncSettingsGroupDefaults() {
             document.querySelectorAll(".settings-group").forEach(group => {
                 if (!(group instanceof HTMLDetailsElement)) return;
-                if (!isNarrowScreen()) {
-                    group.open = true;
-                    return;
-                }
-                if (group.dataset.userToggled === "true") return;
-                group.open = group.dataset.settingsGroup === "salary";
+                group.open = false;
             });
         }
 
@@ -1247,6 +1338,8 @@
             [
                 els.salaryInput,
                 els.deductionInput,
+                els.estimatedTaxInput,
+                els.paydayInput,
                 els.personalRateInput,
                 els.sickRateInput,
                 els.annualRateInput,
@@ -1258,6 +1351,7 @@
                 els.personalReasonInput,
                 els.sickReasonInput,
                 els.leaveHandoffInput
+                ,els.profileNameInput, els.companyInput, els.hireDateInput, els.workdaysInput, els.dailyHoursInput, els.scheduleTypeInput
             ].forEach(input => {
                 input.addEventListener("input", () => {
                     syncSettingsFromInputs();
@@ -1266,9 +1360,11 @@
                     settingsRenderTimer = window.setTimeout(() => {
                         renderStats();
                         renderSalary();
+                        renderWelcome();
                     }, 150);
                 });
             });
+            els.restDaysPicker.addEventListener("change", () => { syncSettingsFromInputs(); saveState(); renderWelcome(); });
 
             els.settingsToggle.addEventListener("click", event => {
                 event.stopPropagation();
@@ -1287,15 +1383,26 @@
                 openSearch();
             });
             els.themeToggle.addEventListener("click", cycleTheme);
+            els.languageToggle.addEventListener("click", () => RestCalI18n.toggle());
             darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
             els.closeSettings.addEventListener("click", closeSettings);
-            els.settingsDone.addEventListener("click", closeSettings);
+            els.settingsDone.addEventListener("click", () => { syncSettingsFromInputs(); saveState(); closeSettings(); renderWelcome(); showToast("设置已保存"); });
             els.settingsModal.addEventListener("click", event => {
                 if (event.target === els.settingsModal) closeSettings();
             });
             document.querySelectorAll("[data-open-settings]").forEach(button => {
                 button.addEventListener("click", () => openSettings(button.dataset.openSettings));
             });
+            els.rerunOnboarding.addEventListener("click", () => { closeSettings(); openOnboarding(true); });
+            els.exportPersonalSettings.addEventListener("click", exportPersonalSettings);
+            els.clearPersonalSettings.addEventListener("click", clearPersonalSettings);
+            els.clearAllData.addEventListener("click", clearAllData);
+            els.onboardingBack.addEventListener("click", () => { if (onboardingStep > 0) { onboardingStep -= 1; renderOnboardingStep(); } });
+            els.onboardingSkip.addEventListener("click", skipOnboarding);
+            els.onboardingNext.addEventListener("click", nextOnboardingStep);
+            els.onboardingContent.addEventListener("input", syncOnboardingDraft);
+            els.onboardingContent.addEventListener("change", syncOnboardingDraft);
+            els.onboardingContent.addEventListener("keydown", event => { if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") { event.preventDefault(); nextOnboardingStep(); } });
             document.querySelectorAll("[data-open-receipt]").forEach(button => {
                 button.addEventListener("click", () => openReceiptModal(button.dataset.openReceipt));
             });
@@ -1642,16 +1749,17 @@
         function calculateSalarySnapshot(stats) {
             const salary = cleanNumber(els.salaryInput.value);
             const deduction = cleanNumber(els.deductionInput.value);
+            const estimatedTax = cleanNumber(els.estimatedTaxInput.value);
             const daily = stats.expectedWorkdays > 0 ? salary / stats.expectedWorkdays : 0;
             const rates = getSalaryRates();
             const leaveDeduction = LEAVE_STATUSES.reduce((sum, status) => {
                 return sum + daily * stats.leaveByStatus[status] * (rates[status] / 100);
             }, 0);
-            const actual = Math.max(0, salary - leaveDeduction - deduction);
-            return {salary, deduction, daily, leaveDeduction, actual};
+            const actual = Math.max(0, salary - leaveDeduction - deduction - estimatedTax);
+            return {salary, deduction, estimatedTax, daily, leaveDeduction, actual};
         }
 
-        function buildSalaryReceipt({stats, salary, deduction, daily, leaveDeduction, actual}) {
+        function buildSalaryReceipt({stats, salary, deduction, estimatedTax, daily, leaveDeduction, actual}) {
             const monthText = `${currentYear}-${String(currentMonth).padStart(2, "0")}`;
             return {
                 kind: "salary",
@@ -1674,6 +1782,7 @@
                     [
                         {label: "请假扣款", value: formatMoney(leaveDeduction)},
                         {label: "固定扣除", value: formatMoney(deduction)},
+                        {label: "个税预估", value: formatMoney(estimatedTax)},
                         {label: "实际到手", value: formatMoney(actual), strong: true}
                     ]
                 ],
@@ -1839,11 +1948,18 @@
             state.settings.personalReason = els.personalReasonInput.value.trim();
             state.settings.sickReason = els.sickReasonInput.value.trim();
             state.settings.leaveHandoff = els.leaveHandoffInput.value.trim();
+            state.profile = {name: els.profileNameInput.value.trim(), company: els.companyInput.value.trim(), hireDate: els.hireDateInput.value};
+            state.workSchedule = {workdaysPerWeek: clampInt(els.workdaysInput.value, 1, 7, 5), restDays: [...els.restDaysPicker.querySelectorAll("input:checked")].map(input => Number(input.value)), dailyWorkHours: clampNumber(els.dailyHoursInput.value, 0.5, 24, 8), scheduleType: els.scheduleTypeInput.value || "standard"};
+            state.salary = {monthlySalary: state.settings.salary, fixedDeductions: state.settings.deduction, estimatedTax: cleanNumber(els.estimatedTaxInput.value), payday: els.paydayInput.value ? clampInt(els.paydayInput.value, 1, 31, 10) : null};
+            state.settings.estimatedTax = state.salary.estimatedTax;
+            state.settings.payday = state.salary.payday;
         }
 
         function fillSettingsInputs() {
             els.salaryInput.value = state.settings.salary || "";
             els.deductionInput.value = state.settings.deduction || "";
+            els.estimatedTaxInput.value = state.salary.estimatedTax || state.settings.estimatedTax || "";
+            els.paydayInput.value = state.salary.payday || state.settings.payday || "";
             els.personalRateInput.value = settingNumber("personalRate", DEFAULT_RATES.personal);
             els.sickRateInput.value = settingNumber("sickRate", DEFAULT_RATES.sick);
             els.annualRateInput.value = settingNumber("annualRate", DEFAULT_RATES.annual);
@@ -1855,16 +1971,41 @@
             els.personalReasonInput.value = state.settings.personalReason || "";
             els.sickReasonInput.value = state.settings.sickReason || "";
             els.leaveHandoffInput.value = state.settings.leaveHandoff || "";
+            els.profileNameInput.value = state.profile.name || state.settings.applicantName || "";
+            els.companyInput.value = state.profile.company || "";
+            els.hireDateInput.value = state.profile.hireDate || "";
+            els.workdaysInput.value = state.workSchedule.workdaysPerWeek;
+            els.dailyHoursInput.value = state.workSchedule.dailyWorkHours;
+            els.scheduleTypeInput.value = state.workSchedule.scheduleType;
+            renderRestDaysPicker();
         }
 
+        function renderWelcome() {
+            if (!els.welcomeCard) return;
+            const name = state.profile.name || state.settings.applicantName || "";
+            els.welcomeTitle.textContent = name ? `${getGreeting()}，${name}` : "欢迎使用 RestCal";
+            const stats = calculateStats(currentYear, currentMonth);
+            const salary = calculateSalarySnapshot(stats);
+            els.welcomeSubtitle.textContent = name ? `${currentYear} 年 ${currentMonth} 月，今天也把节奏安排好。` : "把请假、出勤、工资和节假日安排放在一个日历里。";
+            const items = [["本月工作日", stats.expectedWorkdays ? `${stats.expectedWorkdays} 天` : "暂无数据"], ["已请假", stats.totalLeave ? `${stats.totalLeave} 天` : "暂无记录"], ["剩余年假", remainingAnnualText()], ["预计实发", salary.salary ? formatMoney(salary.actual) : "待设置"], ["下个节假日", nextHolidayText()], ["最近请假", latestLeaveText()]];
+            els.welcomeMetrics.innerHTML = items.map(([label, value]) => `<div class="welcome-metric"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
+        }
+        function getGreeting() { const hour = new Date().getHours(); return hour < 6 ? "夜深了" : hour < 12 ? "早上好" : hour < 18 ? "下午好" : "晚上好"; }
+        function latestLeaveText() { const entries = Object.entries(state.records).filter(([, record]) => LEAVE_STATUSES.includes(record?.status)).sort(([a], [b]) => b.localeCompare(a)); return entries[0]?.[0] || "暂无记录"; }
+        function remainingAnnualText() { const quota = cleanNumber(els.annualQuotaInput.value); return quota > 0 ? `${Math.max(0, quota - calculateStats(currentYear).annualLeave)} 天` : "未设置"; }
+        function nextHolidayText() { for (let offset = 0; offset <= 370; offset += 1) { const date = addDays(today, offset); const info = getDayInfo(date); if (info.holidayName) return `${info.holidayName} · ${date.getMonth() + 1}/${date.getDate()}`; } return "暂无安排"; }
+        function showToast(message, tone = "success") { const toast = document.createElement("div"); toast.className = `toast ${tone}`; toast.textContent = message; els.toastRegion.appendChild(toast); window.setTimeout(() => toast.classList.add("show"), 10); window.setTimeout(() => toast.remove(), 3200); }
+        function exportPersonalSettings() { syncSettingsFromInputs(); const blob = new Blob([JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary}, null, 2)], {type: "application/json"}); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "restcal-personal-settings.json"; link.click(); URL.revokeObjectURL(link.href); showToast("个人设置已导出"); }
+        function clearPersonalSettings() { if (!window.confirm("确定清除个人与工资设置吗？请假记录不会被删除。")) return; applyUserData(DEFAULT_USER_DATA); state.onboardingCompleted = false; state.onboardingSkipped = true; saveState(); render(); renderWelcome(); showToast("个人设置已清除"); }
+        function clearAllData() { if (!window.confirm("确定清除所有本地数据吗？这会删除请假记录、工资设置和本地备份信息，且无法恢复。")) return; localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(WEBDAV_KEY); localStorage.removeItem(THEME_KEY); localStorage.removeItem("restcal-language"); window.location.reload(); }
+
         function openSettings(group) {
-            if (!group && isNarrowScreen()) syncSettingsGroupDefaults();
+            syncSettingsGroupDefaults();
             openBackdrop(els.settingsModal);
             document.querySelectorAll("[data-settings-group]").forEach(section => {
                 section.classList.toggle("highlight", Boolean(group) && section.dataset.settingsGroup === group);
                 if (section instanceof HTMLDetailsElement) {
-                    if (!isNarrowScreen()) section.open = true;
-                    else if (group) section.open = section.dataset.settingsGroup === group;
+                    section.open = Boolean(group) && section.dataset.settingsGroup === group;
                 }
             });
             if (group) {
@@ -2066,7 +2207,7 @@
 
         function chooseStatus(status) {
             if (!activeDate) return;
-            if (!getDayInfo(fromISO(activeDate)).isWorkday && status !== "clear") {
+            if (!isConfiguredWorkday(fromISO(activeDate)) && status !== "clear") {
                 els.modalSubtitle.textContent = "休息日仅展示详情，状态保存会跳过非工作日。";
                 return;
             }
@@ -2076,6 +2217,7 @@
             });
             updateModalDocButton();
             if (status === "clear") {
+                if (!window.confirm("确定清除所选日期的记录吗？")) return;
                 const start = els.modalStartDate.value || activeDate;
                 const end = els.modalEndDate.value || start;
                 if (isValidISODate(start) && isValidISODate(end) && start <= end) {
@@ -2138,7 +2280,7 @@
             }
             const reason = els.modalReason.value.trim();
             const note = els.modalNote.value.trim();
-            const dates = rangeDates(start, end).filter(iso => getDayInfo(fromISO(iso)).isWorkday);
+            const dates = rangeDates(start, end).filter(iso => isConfiguredWorkday(fromISO(iso)));
             if (!dates.length) {
                 els.modalSubtitle.textContent = "所选范围没有可标记的工作日。";
                 return;
@@ -2192,7 +2334,7 @@
                 const record = state.records[iso];
                 if (info.isHoliday) stats.holidayDays += 1;
                 if (info.isWeekend) stats.weekendDays += 1;
-                if (info.isWorkday) {
+                if (isConfiguredWorkday(date, info)) {
                     stats.expectedWorkdays += 1;
                     if (LEAVE_STATUSES.includes(record?.status)) {
                         stats.leaveByStatus[record.status] += 1;
@@ -2746,6 +2888,85 @@
             webdavConfig.password = els.webdavPassword.value;
             saveWebDavConfig();
         }
+
+        function isConfiguredWorkday(date, info = getDayInfo(date)) {
+            if (info.isHoliday) return false;
+            if (info.makeupName) return true;
+            const restDays = Array.isArray(state.workSchedule?.restDays) ? state.workSchedule.restDays : [0, 6];
+            return !restDays.includes(date.getDay());
+        }
+
+        function openOnboarding(reset = false) {
+            if (reset) onboardingDraft = userDataSnapshot();
+            else onboardingDraft = onboardingDraft || userDataSnapshot();
+            onboardingStep = 0;
+            els.onboardingBackdrop.classList.add("open");
+            openBackdrops.add(els.onboardingBackdrop);
+            document.body.classList.add("modal-open");
+            renderOnboardingStep();
+        }
+
+        function closeOnboarding() {
+            els.onboardingBackdrop.classList.remove("open");
+            openBackdrops.delete(els.onboardingBackdrop);
+            updateScrollLock();
+        }
+
+        function userDataSnapshot() {
+            return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary}));
+        }
+
+        function renderOnboardingStep() {
+            const step = RestCalOnboardingView.steps[onboardingStep];
+            els.onboardingStepLabel.textContent = `${onboardingStep + 1} / ${RestCalOnboardingView.steps.length}`;
+            els.onboardingProgress.style.width = `${((onboardingStep + 1) / RestCalOnboardingView.steps.length) * 100}%`;
+            els.onboardingBack.hidden = onboardingStep === 0;
+            els.onboardingSkip.hidden = false;
+            els.onboardingSkip.textContent = onboardingStep === 4 ? "稍后再设置" : "暂时跳过";
+            els.onboardingNext.textContent = onboardingStep === 0 ? "开始设置" : onboardingStep === 4 ? "完成并进入 RestCal" : "下一步";
+            els.onboardingContent.innerHTML = RestCalOnboardingView.markup(step);
+            if (step.kind === "profile") {
+                setInputValue("obName", onboardingDraft.profile.name);
+                setInputValue("obCompany", onboardingDraft.profile.company);
+                setInputValue("obHireDate", onboardingDraft.profile.hireDate);
+            } else if (step.kind === "schedule") {
+                setInputValue("obWorkdays", onboardingDraft.workSchedule.workdaysPerWeek);
+                setInputValue("obDailyHours", onboardingDraft.workSchedule.dailyWorkHours);
+                setInputValue("obScheduleType", onboardingDraft.workSchedule.scheduleType);
+                renderOnboardingRestDays();
+            } else if (step.kind === "salary") {
+                setInputValue("obSalary", onboardingDraft.salary.monthlySalary || "");
+                setInputValue("obDeductions", onboardingDraft.salary.fixedDeductions || "");
+                setInputValue("obTax", onboardingDraft.salary.estimatedTax || "");
+                setInputValue("obPayday", onboardingDraft.salary.payday || "");
+            } else if (step.kind === "summary") renderOnboardingSummary();
+            els.onboardingContent.querySelector("input,select")?.focus({preventScroll: true});
+        }
+
+        function setInputValue(id, value) { const input = document.getElementById(id); if (input) input.value = value ?? ""; }
+        function syncOnboardingDraft() {
+            const value = id => document.getElementById(id)?.value ?? "";
+            if (RestCalOnboardingView.steps[onboardingStep].kind === "profile") onboardingDraft.profile = {name: value("obName").trim(), company: value("obCompany").trim(), hireDate: value("obHireDate")};
+            if (RestCalOnboardingView.steps[onboardingStep].kind === "schedule") onboardingDraft.workSchedule = {workdaysPerWeek: clampInt(value("obWorkdays"), 1, 7, 5), dailyWorkHours: clampNumber(value("obDailyHours"), 0.5, 24, 8), scheduleType: value("obScheduleType") || "standard", restDays: [...document.querySelectorAll("#obRestDays input:checked")].map(input => Number(input.value))};
+            if (RestCalOnboardingView.steps[onboardingStep].kind === "salary") onboardingDraft.salary = {monthlySalary: nonNegativeNumber(value("obSalary")), fixedDeductions: nonNegativeNumber(value("obDeductions")), estimatedTax: nonNegativeNumber(value("obTax")), payday: value("obPayday") ? clampInt(value("obPayday"), 1, 31, 10) : null};
+        }
+        function renderOnboardingRestDays() { const host = document.getElementById("obRestDays"); if (!host) return; host.innerHTML = RestCalOnboardingView.restDayOptions(onboardingDraft.workSchedule.restDays); }
+        function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div>`; }
+        function nextOnboardingStep() { syncOnboardingDraft(); if (!validateOnboardingStep()) return; if (onboardingStep < RestCalOnboardingView.steps.length - 1) { onboardingStep += 1; renderOnboardingStep(); return; } applyUserData(onboardingDraft); state.onboardingCompleted = true; state.onboardingSkipped = false; saveState(); closeOnboarding(); render(); renderWelcome(); showToast("设置已保存，欢迎来到 RestCal"); }
+        function validateOnboardingStep() {
+            const kind = RestCalOnboardingView.steps[onboardingStep].kind;
+            if (kind === "welcome" || kind === "profile" || kind === "summary") return true;
+            const checks = kind === "schedule" ? [["obWorkdays", 1, 7, "每周工作天数应为 1–7"], ["obDailyHours", 0.5, 24, "每日工作时长应为 0.5–24 小时"]] : [["obSalary", 0, Infinity, "月薪不能为负数"], ["obDeductions", 0, Infinity, "固定扣除不能为负数"], ["obTax", 0, Infinity, "个税预估不能为负数"], ["obPayday", 1, 31, "发薪日应为 1–31"]];
+            let valid = true;
+            checks.forEach(([id, min, max, message]) => { const input = document.getElementById(id); const raw = input?.value.trim() || ""; const value = Number(raw); const error = document.getElementById(`${id}Error`); const invalid = raw !== "" && (!Number.isFinite(value) || value < min || value > max); if (error) error.textContent = invalid ? message : ""; input?.classList.toggle("invalid", invalid); if (invalid) valid = false; });
+            return valid;
+        }
+        function skipOnboarding() { state.onboardingSkipped = true; state.onboardingCompleted = false; saveState(); closeOnboarding(); showToast("已跳过设置，之后可在设置中重新打开"); }
+        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name}); fillSettingsInputs(); renderRestDaysPicker(); }
+        function clampInt(value, min, max, fallback) { const n = Number.parseInt(value, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
+        function clampNumber(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
+        function nonNegativeNumber(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
+        function renderRestDaysPicker() { if (els.restDaysPicker) els.restDaysPicker.innerHTML = RestCalOnboardingView.restDayOptions(state.workSchedule.restDays); }
 
         // 目录地址（确保末尾带 /）；若用户直接填了 .json 文件路径则原样返回。
         function webdavBaseUrl() {
@@ -3345,15 +3566,30 @@
         function loadState() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return {records: {}, settings: {}};
+                if (!raw) return structuredState({records: {}, settings: {}});
                 const parsed = JSON.parse(raw);
-                return {
+                const result = structuredState({
                     records: parsed.records && typeof parsed.records === "object" ? parsed.records : {},
                     settings: parsed.settings && typeof parsed.settings === "object" ? parsed.settings : {}
-                };
+                }, parsed);
+                // 已有旧版本数据默认视为已跳过引导，避免升级时打断原有使用。
+                if (!Object.prototype.hasOwnProperty.call(parsed, "onboardingCompleted") && !Object.prototype.hasOwnProperty.call(parsed, "onboardingSkipped") && (Object.keys(result.records).length || Object.keys(result.settings).length)) result.onboardingSkipped = true;
+                return result;
             } catch {
-                return {records: {}, settings: {}};
+                return structuredState({records: {}, settings: {}});
             }
+        }
+
+        function structuredState(base, source = {}) {
+            const settings = base.settings || {};
+            const result = {
+                records: base.records || {}, settings,
+                profile: {...DEFAULT_USER_DATA.profile, ...(source.profile || {}), name: source.profile?.name ?? settings.applicantName ?? ""},
+                workSchedule: {...DEFAULT_USER_DATA.workSchedule, ...(source.workSchedule || {}), restDays: Array.isArray(source.workSchedule?.restDays) ? source.workSchedule.restDays : [0, 6]},
+                salary: {...DEFAULT_USER_DATA.salary, ...(source.salary || {}), monthlySalary: source.salary?.monthlySalary ?? settings.salary ?? 0, fixedDeductions: source.salary?.fixedDeductions ?? settings.deduction ?? 0, estimatedTax: source.salary?.estimatedTax ?? settings.estimatedTax ?? 0, payday: source.salary?.payday ?? settings.payday ?? null},
+                onboardingCompleted: Boolean(source.onboardingCompleted), onboardingSkipped: Boolean(source.onboardingSkipped)
+            };
+            return result;
         }
 
         function saveState() {

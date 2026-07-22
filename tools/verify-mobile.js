@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 const shotsDir = path.join(__dirname, "shots");
-const URL = "http://127.0.0.1:8765";
+const URL = "http://127.0.0.1:8765/app.html";
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -26,6 +26,9 @@ async function run() {
         useContentSize: true,
         webPreferences: { contextIsolation: true }
     });
+    win.webContents.on("console-message", (_event, level, message, line, source) => {
+        if (level >= 2) console.log(`renderer-console[${level}] ${message} (${source}:${line})`);
+    });
 
     const viewports = [
         [360, 780], [390, 844], [430, 932],
@@ -35,6 +38,9 @@ async function run() {
         win.setContentSize(w, h);
         await win.loadURL(URL);
         await wait(1200);
+        // 应用首次打开会展示引导；本脚本测试主应用功能时明确跳过它。
+        await win.webContents.executeJavaScript("if (typeof skipOnboarding === 'function') skipOnboarding(); undefined");
+        await wait(300);
         const overflow = await win.webContents.executeJavaScript(
             "document.documentElement.scrollWidth - document.documentElement.clientWidth"
         );

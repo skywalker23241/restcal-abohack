@@ -24,6 +24,8 @@
         "files": [
             "desktop/**",
             "app.html",
+            "app-i18n.js",
+            "onboarding.js",
             "styles.css",
             "manifest.webmanifest",
             "sw.js",
