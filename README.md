@@ -84,7 +84,7 @@
 
 - 数据默认保存在本机浏览器 `localStorage`，不经过任何服务器。
 - CSV 导入导出：适合手动备份和跨浏览器迁移，导入前自动校验格式。
-- WebDAV 云备份：一键备份到坚果云等 WebDAV 网盘，跨设备恢复。桌面版和本地运行开箱即用；部署到静态托管的网页版需配置代理，见「[网页版 WebDAV 云备份](#网页版-webdav-云备份cloudflare-worker-代理)」。
+- WebDAV 云备份：一键备份到坚果云等 WebDAV 网盘，跨设备恢复。桌面版、本地运行及 Netlify 在线版开箱即用。
 
 ## 🚀 快速开始
 
@@ -137,42 +137,26 @@ npm run dist
 4. Branch 选择 `main`，目录选择 `/root`。
 5. 保存后访问 GitHub Pages 地址。
 
-### 网页版 WebDAV 云备份（Cloudflare Worker 代理）
+### Netlify 部署与网页版 WebDAV
 
-设置面板中的「WebDAV 云备份」可以把数据备份到坚果云等支持 WebDAV 的网盘。桌面版和本地 `npm run serve` 开箱即用；但部署到 GitHub Pages 等静态托管后没有服务端，浏览器直连 WebDAV 服务器会被跨域（CORS）拦截。解决办法是部署一个 Cloudflare Worker 作为转发代理，免费额度对个人备份绰绰有余。
+浏览器不能直接访问未开放 CORS 的 WebDAV 服务。Netlify 部署会自动启用仓库中的同源 Function，网页请求 `/__webdav` 时由该 Function 安全转发，因此用户无需安装扩展或填写额外代理地址。
 
-代理源码在 `tools/webdav-proxy-worker.js`，与 `server.js` 的本地代理逻辑一致，并自带两道防滥用限制，部署前按需修改文件顶部的两个白名单：
+1. 在 Netlify 选择 `Add new project` → `Import an existing project`，连接本仓库。
+2. Build command 留空，Publish directory 填 `.`，然后部署。
+3. 在 `Domain management` 中绑定自定义域名，并按 Netlify 提示修改 DNS。
+4. 打开线上站点的设置 → WebDAV 云备份，填写地址、用户名和密码，点击「测试连接」。坚果云需使用在安全选项中生成的应用专用密码。
 
-- `ALLOWED_TARGET_HOSTS`：允许转发到的 WebDAV 服务器域名。默认只有坚果云 `dav.jianguoyun.com`，使用其他网盘时把对应域名加进来，防止代理被当作开放中继滥用。
-- `ALLOWED_ORIGINS`：允许跨域调用代理的站点地址。默认 `https://restcal.abohack.com`，改成自己的站点地址。
+默认只允许连接坚果云 `dav.jianguoyun.com`，以免接口被滥用为公开代理。若使用 Nextcloud、群晖等其他服务，请在 Netlify 的 `Project configuration` → `Environment variables` 中添加：
 
-**第一步：创建 Worker**
+```text
+WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
+```
 
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 `Workers & Pages` → `Create` → `Create Worker`，名称随意（如 `xiuli-webdav`），点 `Deploy`。
-2. 点 `Edit code`，把 `tools/webdav-proxy-worker.js` 的全部内容粘贴进去，替换默认代码。
-3. 按上文说明修改顶部两个白名单，再次点 `Deploy`。
-
-**第二步：接入站点（二选一）**
-
-方式一：绑定到站点域名（推荐，前端零改动）。适用于站点域名的 DNS 托管在 Cloudflare 的情况：
-
-1. 打开 Worker 的 `Settings` → `Domains & Routes` → `Add` → `Route`，Zone 选站点所在域名，路由填 `restcal.abohack.com/__webdav*`（换成自己的域名）。
-2. 到该域名的 `DNS` 页面确认站点记录已开启橙色云（Proxied）——Worker 路由只对经过 Cloudflare 代理的流量生效。搭配 GitHub Pages 时，`SSL/TLS` 加密模式建议设为 `Full`。
-3. 完成。页面请求同源的 `/__webdav` 时会被路由到 Worker，前端代码无需任何改动。
-
-方式二：使用 workers.dev 域名。站点 DNS 不在 Cloudflare 时使用：
-
-1. 在 Worker 的 `Settings` → `Domains & Routes` 确认 `workers.dev` 已启用，记下形如 `https://xiuli-webdav.<账户名>.workers.dev` 的地址。
-2. 确认 Worker 代码里的 `ALLOWED_ORIGINS` 包含站点地址，否则浏览器跨域预检会失败。
-3. 把 `app.html` 顶部的 `WEBDAV_PROXY_URL` 常量改成 `"https://xiuli-webdav.<账户名>.workers.dev/__webdav"`，递增 `sw.js` 的 `CACHE_VERSION`，重新部署站点。
-
-**第三步：验证**
-
-打开线上站点的设置 → WebDAV 云备份，填写服务器地址、用户名和密码（坚果云需使用「安全选项」里生成的应用专用密码），点「测试连接」。提示「连接成功，可以备份」或「目标目录还不存在」即代理部署成功；如果提示某域名「不在代理白名单中」，回到 Worker 代码给 `ALLOWED_TARGET_HOSTS` 补上该域名即可。
+填写逗号分隔的域名，不要包含协议或路径，然后重新部署。GitHub Pages 仍可展示静态页面，但无法运行 Netlify Function，所以网页版 WebDAV 仅在 Netlify、本地 `npm run serve` 和桌面版中可用。
 
 ## 🔒 数据与隐私
 
-用户数据只保存在本机浏览器 `localStorage` 中，不采集、不上传；WebDAV 备份是可选功能，凭据同样只存在本机，数据直达你自己的网盘。
+用户数据只保存在本机浏览器 `localStorage` 中，不采集、不上传。WebDAV 备份是可选功能，凭据只持久化在本机；执行备份时，凭据和备份内容会经过本站的 Netlify Function 转发，但不会在服务端存储。建议使用 WebDAV 应用专用密码。
 
 建议定期使用右上角 CSV 图标导出备份，或在设置中配置 WebDAV 云备份。更换浏览器、清理浏览器数据或更换设备时，`localStorage` 数据可能不可用。
 
@@ -239,7 +223,8 @@ npm run dist
 ├── vendor/chinese-days/  # 本地化的节假日、农历数据（2004-2026）
 ├── tools/make-icons.ps1  # 图标生成脚本
 ├── tools/og-image.html   # 社交分享图源文件
-├── tools/webdav-proxy-worker.js  # 网页版 WebDAV 代理（Cloudflare Worker）
+├── netlify/functions/webdav.mjs  # Netlify 网页版 WebDAV 同源服务
+├── netlify.toml          # Netlify 发布与 Function 配置
 ├── tools/readme-screenshots.cjs  # README 产品截图生成脚本（Playwright）
 ├── desktop/main.js       # Electron 桌面壳（Windows exe）
 ├── package.json          # 桌面版依赖与打包配置

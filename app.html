@@ -483,7 +483,7 @@
                                 <button class="btn" id="webdavDownload" type="button">从云端恢复</button>
                             </div>
                             <p class="notice" id="webdavStatus">填好服务器地址、用户名和密码即可备份。建议地址末尾带一层子目录（如 /dav/xiuli/），程序会自动创建。</p>
-                            <p class="notice">恢复采用「合并」策略，不会删除本机已有记录。桌面版、以及用 npm run serve 启动的网页版都已绕过浏览器跨域限制，兼容坚果云、Nextcloud、群晖等。建议使用应用专用密码。</p>
+                            <p class="notice">恢复采用「合并」策略，不会删除本机已有记录。桌面版、本地服务及 Netlify 在线版均已绕过浏览器跨域限制。建议使用应用专用密码。</p>
                         </div>
                     </div>
                 </details>
@@ -637,10 +637,7 @@
         const STORAGE_KEY = "xiuli-state-v1";
         const WEBDAV_KEY = "xiuli-webdav-v1";
         const WEBDAV_FILENAME = "xiuli-backup.json";
-        // 网页版 WebDAV 代理地址。默认同源 /__webdav：本地 npm run serve、
-        // 或 Cloudflare Worker 绑定到站点域名路由（README 方式一）时无需改动；
-        // Worker 用 workers.dev 域名（README 方式二）时改成完整地址，
-        // 如 "https://xiuli-webdav.<账户名>.workers.dev/__webdav"。
+        // 本地由 server.js 处理；在线版由同源 Netlify Function 处理。
         const WEBDAV_PROXY_URL = "/__webdav";
         const THEME_KEY = "xiuli-theme";
         const THEME_SEQUENCE = ["auto", "light", "dark"];
@@ -2778,10 +2775,10 @@
             return "Basic " + btoa(unescape(encodeURIComponent(`${webdavConfig.username}:${webdavConfig.password}`)));
         }
 
-        // 桌面版（有 window.xiuliDav）走主进程；网页/PWA 走同源代理（本地为 server.js，
-        // 线上为 Cloudflare Worker，部署见 README）。两者都在服务端发请求，绕过浏览器
-        // CORS，兼容坚果云等所有服务器。仅当代理不可达时才退回直连（直连受 CORS 限制，
-        // 仅支持已开启 CORS 的服务器）。
+        // 桌面版（有 window.xiuliDav）走主进程；网页/PWA 走同源服务（本地为 server.js，
+        // 线上为 Netlify Function，部署见 README）。两者都在服务端发请求，绕过浏览器
+        // CORS，兼容坚果云等所有服务器。网页端不再静默退回直连，否则代理的 404/CORS
+        // 配置错误会被二次跨域错误掩盖，用户无法判断真正原因。
         async function webdavRequest(method, {url, headers = {}, body} = {}) {
             const target = url || webdavTargetUrl();
             if (!target) throw new Error("请先填写服务器地址");
@@ -2790,32 +2787,31 @@
             if (window.xiuliDav?.request) {
                 return await window.xiuliDav.request(payload);
             }
-            // 网页/PWA：优先用同源代理（服务端转发，绕过跨域）
+            // 网页/PWA：通过服务端代理转发，绕过 WebDAV 服务器的跨域限制。
+            const proxyUrl = WEBDAV_PROXY_URL;
+            let res;
             try {
-                const res = await fetch(WEBDAV_PROXY_URL, {
+                res = await fetch(proxyUrl, {
                     method: "POST",
                     headers: {"Content-Type": "application/json", "X-Xiuli-Proxy": "1"},
                     body: JSON.stringify(payload)
                 });
-                // 400/502 是代理自己报告的错误（地址无效、不在白名单、上游不可达），直接展示
-                if (res.status === 400 || res.status === 502) {
-                    const info = await res.json().catch(() => ({}));
-                    throw new Error(info.error || "无法连接服务器");
-                }
-                if (res.ok) return await res.json();
-                // 其他状态（如 404）说明当前服务器没有代理，退回直连
-            } catch (error) {
-                // 仅代理本身不可达（网络错误 TypeError）时退回直连；业务错误直接抛出
-                if (!(error instanceof TypeError)) throw error;
-            }
-            // 兜底：直接跨域请求（仅支持已开启 CORS 的服务器）
-            let res;
-            try {
-                res = await fetch(target, {method, headers: reqHeaders, body, mode: "cors", redirect: "follow"});
             } catch {
-                throw new Error("无法连接服务器：网页版需要代理绕过跨域 —— 本地用 npm run serve 启动，线上按 README 部署 Cloudflare Worker 代理，或改用桌面版。");
+                throw new Error("无法访问本站的 WebDAV 服务，请稍后重试。");
             }
-            return {ok: res.ok, status: res.status, statusText: res.statusText, body: await res.text()};
+
+            let result;
+            try {
+                result = await res.json();
+            } catch {
+                if (res.status === 404) {
+                    throw new Error("本站尚未启用 WebDAV 服务，请确认网站已通过 Netlify 部署且 Functions 部署成功。");
+                }
+                throw new Error(`WebDAV 代理返回了无法识别的响应（HTTP ${res.status}）。`);
+            }
+            if (!res.ok) throw new Error(result.error || `WebDAV 代理请求失败（HTTP ${res.status}）`);
+            if (!result || typeof result.status !== "number") throw new Error("WebDAV 代理响应格式不正确，请更新 Worker 代码。");
+            return result;
         }
 
         function webdavErrorText(status) {
