@@ -7,14 +7,14 @@
 **请假、出勤、工资核算、购票提醒 —— 一页搞定的中国职场日历**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-![Release](https://img.shields.io/badge/release-v1.4.0-b4382a)
+![Release](https://img.shields.io/badge/release-v1.5.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v1.4.0 离线版](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v1.5.0 离线版](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.5.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
-<img src="docs/screenshots/overview-light.png" alt="休历主界面：月历标记、本月统计、年度统计与工具面板" width="100%">
+<img src="docs/screenshots/overview-light.png" alt="休历天视图：当日日历卡片、假期额度、出勤和预计实发概览" width="100%">
 
 *文档中的截图均为演示数据*
 
@@ -22,22 +22,33 @@
 
 ---
 
-休历是一个为中国职场人打造的请假日历工具：在月历上标记出勤和请假，自动算出勤天数、扣薪和到手工资，提前提醒节假日火车票开售，还能一键生成正式的请假条和工资条小票。
+休历是一个为中国职场人打造的请假日历工具：在日、周、月、年四种视图中记录出勤和请假，自动计算出勤天数、扣薪和到手工资，提前提醒节假日火车票开售，还能一键生成正式的请假条和工资条。
 
-**纯前端、零构建、零依赖**——原生 HTML/CSS/JavaScript 实现，数据全部保存在本机浏览器，不注册、不上传、离线可用。农历、节气、法定节假日与调休数据（2004–2026）已完整打包在本地。
+**纯前端、零构建、零依赖**——原生 HTML/CSS/JavaScript 实现，无需注册，数据默认保存在本机浏览器，支持离线使用，也可按需启用 CSV 或 WebDAV 备份。农历、节气、法定节假日与调休数据（2004–2026）已完整打包在本地。
 
 应用界面支持中文与英文一键切换；语言、主题以及所有业务设置都可以随 CSV 或 WebDAV 完整备份和恢复。
 
+## 🆕 v1.5.0 更新
+
+- 日历新增日、周、月、年四种视图，桌面与手机端均可快速切换。
+- 统计页新增月度/年度切换、全年月份/每日热力图切换，并在右侧集中展示年假和调休额度。
+- 工具页精简为工资条、请假条和购票提醒三个专注工具；数据管理统一移入设置，完成引导后可从顶栏重新打开帮助。
+- 设置页重新整理工作制度、工资扣款、假期额度、模板、数据同步与外观选项，修复手机端二级菜单返回问题。
+- 优化每日记录弹层、手机端概览、日历卡片、双语文案和 Landing Page 产品预览。
+
 ## ✨ 功能一览
 
-### 📅 月历与请假标记
+### 📅 日、周、月、年四种日历视图
 
-- 月历同时展示公历、农历、节气、法定节假日、调休补班和周末。
+- 日视图突出当天日期、农历、节气和记录状态；周、月、年视图适合不同粒度的回顾与规划。
+- 所有视图均结合公历、农历、节气、法定节假日、调休补班和周末。
 - 五种状态一键标记：出勤、事假、病假、年假、调休，支持填写请假理由和备注。
 - 批量标记：选择起止日期，自动跳过周末和节假日，一次性应用到多个工作日。
 - 全局搜索：按关键词、状态、日期范围快速筛选请假记录。
 
 ### 📊 月度与年度统计
+
+<img src="docs/screenshots/statistics.png" alt="统计页面：月度与年度切换、年度图表和假期额度使用情况" width="100%">
 
 <table>
   <tr>
@@ -49,6 +60,14 @@
 - 本月统计：应出勤、已出勤、各类请假天数、剩余年假，配合完整可见的月度热力图。
 - 年度统计：按月查看请假天数柱状图，或切换到全年每日状态热力图。
 - 假期额度：年假、调休的总额度与已用、剩余天数一目了然。
+
+### 🧰 三个专注工具
+
+<img src="docs/screenshots/tools.png" alt="工具页面：工资核算与工资条、生成请假条和购票提醒" width="100%">
+
+- 工资核算与工资条：计算请假扣款、预计实发并导出工资条图片。
+- 生成请假条：读取已保存记录，生成可复制或下载的正式请假条。
+- 购票提醒：按法定节假日列出火车票开售日期和倒计时。
 
 ### 💰 工资核算与工资条
 
@@ -76,14 +95,15 @@
 
 ### 📱 移动端与 PWA
 
-<div align="center"><img src="docs/screenshots/overview-mobile.png" alt="移动端视图：核心状态卡片与紧凑月历" width="340"></div>
+<div align="center"><img src="docs/screenshots/overview-mobile.png" alt="移动端天视图：当日卡片、概览和底部导航" width="340"></div>
 
-- 响应式布局，手机上以核心状态卡片 + 紧凑月历呈现。
+- 响应式布局，手机上使用紧凑概览、天视图卡片、底部导航和便于触控的记录弹层。
+- 设置二级页面提供明确的返回入口，记录弹层支持底部抽屉交互。
 - 支持安装到桌面 / 主屏幕，安装后完全离线可用（见[安装为应用](#安装为应用pwa)）。
 
 ### ☁️ 备份与云同步
 
-<div align="center"><img src="docs/screenshots/settings.png" alt="设置面板：工资、额度、请假条默认值与 WebDAV 云备份" width="560"></div>
+<div align="center"><img src="docs/screenshots/settings.png" alt="设置面板：工作制度、工资、额度、模板和数据同步" width="560"></div>
 
 - 数据默认保存在本机浏览器 `localStorage`，不经过任何服务器。
 - CSV 导入导出：同时保存日历记录、个人资料、工作制度、工资、假期额度、请假条默认值、主题和语言，适合手动备份和跨浏览器迁移；导入前自动校验格式。
@@ -94,7 +114,7 @@
 | 方式 | 适合场景 | 上手方法 |
 |---|---|---|
 | **在线版** | 大多数用户 | 直接打开 [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html)，可安装为 PWA |
-| **桌面版** | Windows 免浏览器使用 | 从 [v1.4.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0) 下载便携版、安装版或 ZIP |
+| **桌面版** | Windows 免浏览器使用 | 从 [v1.5.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.5.0) 下载便携版、安装版或 ZIP |
 | **本地运行** | 开发或内网使用 | 克隆仓库后 `node server.js`，访问 `http://localhost:8765/app.html` |
 
 也可以直接双击打开 `app.html` 使用（站点根路径的 `index.html` 是介绍页，应用本体在 `app.html`）。`file://` 模式本身可以离线运行，但浏览器不会注册 Service Worker，也不能将其安装为 PWA；需要 PWA 能力时请通过 HTTP(S) 打开。
@@ -111,14 +131,14 @@
 
 ## 💻 桌面版（Windows）
 
-最新离线版：[RestCal v1.4.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.4.0)
+最新离线版：[RestCal v1.5.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.5.0)
 
 | 下载 | 用途 |
 |---|---|
-| [`RestCal-1.4.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-portable.exe) | 免安装，下载后直接运行 |
-| [`RestCal-1.4.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-setup.exe) | Windows 安装程序，可选择安装目录 |
-| [`RestCal-1.4.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/RestCal-1.4.0-win.zip) | 解压后运行 `休历.exe` |
-| [`SHA256SUMS-1.4.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.4.0/SHA256SUMS-1.4.0.txt) | 下载文件完整性校验值 |
+| [`RestCal-1.5.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.5.0/RestCal-1.5.0-portable.exe) | 免安装，下载后直接运行 |
+| [`RestCal-1.5.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.5.0/RestCal-1.5.0-setup.exe) | Windows 安装程序，可选择安装目录 |
+| [`RestCal-1.5.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.5.0/RestCal-1.5.0-win.zip) | 解压后运行 `休历.exe` |
+| [`SHA256SUMS-1.5.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v1.5.0/SHA256SUMS-1.5.0.txt) | 下载文件完整性校验值 |
 
 三个程序包均包含应用和 2004–2026 年中国日历数据，无网络时也能使用。当前构建尚未进行代码签名，Windows SmartScreen 可能在首次运行时显示提醒。
 
@@ -172,7 +192,7 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 
 用户数据默认只保存在本机浏览器 `localStorage` 中，不采集、不自动上传。WebDAV 备份是可选功能，凭据只持久化在本机且不会写入 CSV 或 WebDAV 备份文件；执行备份时，凭据和备份内容会经过本站的 Netlify Function 转发，但不会在服务端存储。建议使用 WebDAV 应用专用密码。
 
-建议定期使用右上角 CSV 图标导出备份，或在设置中配置 WebDAV 云备份。更换浏览器、清理浏览器数据或更换设备时，`localStorage` 数据可能不可用。
+建议定期在设置 → 数据与同步中导出 CSV，或配置 WebDAV 云备份。更换浏览器、清理浏览器数据或更换设备时，`localStorage` 数据可能不可用。
 
 ### CSV 字段
 

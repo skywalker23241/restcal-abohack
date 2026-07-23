@@ -9,6 +9,7 @@
 const {chromium} = require("playwright");
 const {spawn} = require("child_process");
 const fs = require("fs");
+const http = require("http");
 const path = require("path");
 
 const REPO = path.resolve(__dirname, "..");
@@ -46,15 +47,55 @@ const settings = {
     personalReason: "个人事务", sickReason: "身体不适",
     leaveHandoff: "手头工作已交接给张伟"
 };
-const webdav = {url: "https://dav.jianguoyun.com/dav/xiuli/", username: "demo@example.com", password: "demo-password"};
+const webdav = {
+    url: "https://dav.jianguoyun.com/dav/xiuli/",
+    username: "demo@example.com",
+    password: "demo-password",
+    lastVerifiedAt: "2026-07-20T09:30:00.000Z",
+    lastBackupAt: "2026-07-20T09:35:00.000Z"
+};
+const demoState = {
+    records: R,
+    settings,
+    profile: {name: "李修", company: "RestCal 工作室", hireDate: "2022-03-14"},
+    workSchedule: {workdaysPerWeek: 5, restDays: [0, 6], dailyWorkHours: 8, scheduleType: "standard"},
+    salary: {monthlySalary: 18000, fixedDeductions: 3200, estimatedTax: 680, payday: 10},
+    onboardingCompleted: true,
+    onboardingSkipped: false,
+    setupBannerDismissed: true
+};
 
 const initScript = theme => `
-    localStorage.setItem("xiuli-state-v1", ${JSON.stringify(JSON.stringify({records: R, settings}))});
+    localStorage.setItem("xiuli-state-v1", ${JSON.stringify(JSON.stringify(demoState))});
     localStorage.setItem("xiuli-webdav-v1", ${JSON.stringify(JSON.stringify(webdav))});
     localStorage.setItem("xiuli-theme", ${JSON.stringify(theme)});
+    localStorage.setItem("xiuli-calendar-mode", "month");
+    localStorage.setItem("restcal-language", "zh");
 `;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function waitForServer(server) {
+    let lastError = "";
+    server.stderr.on("data", data => { lastError = String(data).trim(); });
+    for (let attempt = 0; attempt < 50; attempt++) {
+        if (server.exitCode !== null) throw new Error(lastError || `server 已退出（${server.exitCode}）`);
+        const ready = await new Promise(resolve => {
+            const request = http.get(`${BASE}/app.html`, response => {
+                response.resume();
+                resolve(response.statusCode === 200);
+            });
+            request.on("error", () => resolve(false));
+            request.setTimeout(500, () => {
+                request.destroy();
+                resolve(false);
+            });
+        });
+        if (ready) return;
+        await sleep(100);
+    }
+    throw new Error(lastError || "server 未就绪");
+}
 
 async function openApp(context) {
     const page = await context.newPage();
@@ -75,22 +116,26 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
 (async () => {
     fs.mkdirSync(OUT, {recursive: true});
     const server = spawn(process.execPath, [path.join(REPO, "server.js")], {env: {...process.env, PORT: String(PORT)}});
-    await new Promise((resolve, reject) => {
-        server.stdout.on("data", d => String(d).includes(String(PORT)) && resolve());
-        server.on("error", reject);
-        setTimeout(() => reject(new Error("server 未就绪")), 5000);
-    });
+    await waitForServer(server);
 
     const browser = await chromium.launch();
     try {
         // ---- 桌面亮色：总览 + 各功能特写 ----
-        const light = await browser.newContext({viewport: {width: 1440, height: 900}, deviceScaleFactor: 2, locale: "zh-CN", timezoneId: "Asia/Shanghai"});
+        const light = await browser.newContext({viewport: {width: 1440, height: 900}, deviceScaleFactor: 2, locale: "zh-CN", timezoneId: "Asia/Shanghai", serviceWorkers: "block"});
         await light.addInitScript(initScript("light"));
         const page = await openApp(light);
+        await page.click('[data-cal-mode="day"]');
+        await sleep(400);
         await page.screenshot({path: path.join(OUT, "overview-light.png")});
         console.log("shot overview-light.png");
 
-        const yearPanel = page.locator("section.panel:has(#yearStats)");
+        await page.click('[data-nav="stats"]');
+        await page.click('[data-stats-period="year"]');
+        await sleep(400);
+        await page.locator("#viewStats").screenshot({path: path.join(OUT, "statistics.png")});
+        console.log("shot statistics.png");
+
+        const yearPanel = page.locator("#yearStatsPanel");
         await yearPanel.screenshot({path: path.join(OUT, "year-stats.png")});
         console.log("shot year-stats.png");
         await page.click('[data-year-mode="days"]');
@@ -98,6 +143,12 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await yearPanel.screenshot({path: path.join(OUT, "year-heatmap.png")});
         console.log("shot year-heatmap.png");
         await page.click('[data-year-mode="months"]');
+
+        await page.click('[data-nav="tools"]');
+        await page.click("#ticketToolToggle");
+        await sleep(350);
+        await page.locator("#viewTools").screenshot({path: path.join(OUT, "tools.png")});
+        console.log("shot tools.png");
 
         await shootModal(page, () => page.click('[data-open-receipt="salary"]'), "#receiptModal", "salary-slip.png", ".receipt-window");
         await page.click("#receiptDone");
@@ -119,12 +170,17 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await page.click("#closeLeaveGenerator");
         await sleep(500);
 
-        await shootModal(page, () => page.click("#settingsToggle"), "#settingsModal", "settings.png");
+        await page.click("#settingsToggle");
+        await page.waitForSelector("#settingsModal.open", {timeout: 5000});
+        await page.click('[data-settings-nav="schedule"]');
+        await sleep(500);
+        await page.locator("#settingsModal .settings-page").screenshot({path: path.join(OUT, "settings.png")});
+        console.log("shot settings.png");
         await page.click("#settingsDone");
         await light.close();
 
         // ---- 桌面暗色：总览 ----
-        const dark = await browser.newContext({viewport: {width: 1440, height: 900}, deviceScaleFactor: 2, locale: "zh-CN", timezoneId: "Asia/Shanghai", colorScheme: "dark"});
+        const dark = await browser.newContext({viewport: {width: 1440, height: 900}, deviceScaleFactor: 2, locale: "zh-CN", timezoneId: "Asia/Shanghai", colorScheme: "dark", serviceWorkers: "block"});
         await dark.addInitScript(initScript("dark"));
         const darkPage = await openApp(dark);
         await darkPage.screenshot({path: path.join(OUT, "overview-dark.png")});
@@ -132,9 +188,11 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await dark.close();
 
         // ---- 移动端亮色：总览 ----
-        const mobile = await browser.newContext({viewport: {width: 390, height: 844}, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: "zh-CN", timezoneId: "Asia/Shanghai"});
+        const mobile = await browser.newContext({viewport: {width: 390, height: 844}, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: "zh-CN", timezoneId: "Asia/Shanghai", serviceWorkers: "block"});
         await mobile.addInitScript(initScript("light"));
         const mobilePage = await openApp(mobile);
+        await mobilePage.click('[data-cal-mode="day"]');
+        await sleep(400);
         await mobilePage.screenshot({path: path.join(OUT, "overview-mobile.png")});
         console.log("shot overview-mobile.png");
         await mobile.close();

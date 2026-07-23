@@ -78,6 +78,29 @@ function proxyWebdav(req, res) {
   });
 }
 
+// 每日一言代理：api.quotable.io 的 HTTPS 证书长期过期，浏览器无法直连，
+// 服务端改走明文 HTTP 转发（内容为公开格言，不含敏感信息）。
+function proxyQuote(res) {
+  const sendJson = (code, obj) => {
+    if (res.headersSent) return;
+    res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+    res.end(JSON.stringify(obj));
+  };
+  const request = http.get("http://api.quotable.io/quotes/random?maxLength=120", { timeout: 6000 }, upstream => {
+    const chunks = [];
+    upstream.on("data", chunk => chunks.push(chunk));
+    upstream.on("end", () => {
+      try {
+        sendJson(200, JSON.parse(Buffer.concat(chunks).toString("utf-8")));
+      } catch {
+        sendJson(502, { error: "格言服务响应异常" });
+      }
+    });
+  });
+  request.on("timeout", () => request.destroy(new Error("timeout")));
+  request.on("error", () => sendJson(502, { error: "无法连接格言服务" }));
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   let pathname;
@@ -91,6 +114,11 @@ const server = http.createServer((req, res) => {
 
   if (req.method === "POST" && pathname === "/__webdav") {
     proxyWebdav(req, res);
+    return;
+  }
+
+  if (req.method === "GET" && pathname === "/__quote") {
+    proxyQuote(res);
     return;
   }
 

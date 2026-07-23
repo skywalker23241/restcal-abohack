@@ -21,7 +21,7 @@
         "搜索与筛选": "Search and filters", "切换主题": "Switch theme", "设置": "Settings", "使用说明": "Help", "CSV 备份与导入": "CSV backup and import",
         "主题：跟随系统": "Theme: System", "主题：浅色": "Theme: Light", "主题：深色": "Theme: Dark",
         "关闭": "Close", "完成": "Done", "取消": "Cancel", "保存": "Save", "删除": "Delete", "清除": "Clear", "展开": "Expand", "收起": "Collapse", "选择": "Select",
-        "本月统计": "This month", "年度统计": "Yearly stats", "购票提醒": "Ticket reminders", "假期额度": "Leave allowance", "票据与工具": "Receipts and tools",
+        "本月统计": "This month", "月度": "Monthly", "年度": "Yearly", "月度统计": "Monthly stats", "年度统计": "Yearly stats", "统计周期": "Statistics period", "购票提醒": "Ticket reminders", "假期额度": "Leave allowance", "票据与工具": "Receipts and tools",
         "RestCal · 今日概览": "RestCal · Today", "欢迎使用 RestCal": "Welcome to RestCal", "把请假、出勤、工资和节假日安排放在一个日历里。": "Keep leave, attendance, pay and holidays together in one calendar.",
         "本月工作日": "Workdays", "已请假": "Leave taken", "剩余年假": "Annual leave left", "预计实发": "Estimated net pay", "下个节假日": "Next holiday", "最近请假": "Latest leave",
         "暂无记录": "No records yet", "暂无数据": "No data", "暂无安排": "None scheduled", "暂无": "None", "未设置": "Not set", "待设置": "Set up first", "未填写": "Not provided", "未标记": "Not marked",
@@ -30,7 +30,7 @@
         "应出勤": "Expected", "已出勤": "Attended", "总请假": "Total leave", "事假": "Personal leave", "病假": "Sick leave", "年假": "Annual leave", "调休": "Comp leave", "周末": "Weekend", "节假日": "Holiday", "工作日": "Workday", "出勤": "Present", "调休上班": "Make-up workday",
         "设置": "Settings", "工资、假期额度和请假条默认内容会自动保存在本机浏览器。": "Pay, leave allowance and leave-note defaults are saved in this browser.",
         "个人与工作制度": "Profile and work schedule", "工资与扣款": "Pay and deductions", "假期额度": "Leave allowance", "请假条默认值": "Leave note defaults", "数据管理": "Data management", "WebDav 云备份": "WebDAV cloud backup",
-        "姓名或昵称": "Name or nickname", "工作单位": "Company", "入职日期": "Start date", "每周工作天数": "Workdays per week", "每日标准工作时长": "Standard hours per day", "小时": "hours", "工资计算方式": "Pay calculation", "默认休息日": "Default rest days",
+        "姓名或昵称": "Name or nickname", "工作单位": "Company", "入职日期": "Start date", "每周工作天数": "Workdays per week", "每日标准工作时长": "Standard hours per day", "每日标准工作时长（小时）": "Standard hours per day", "小时": "hours", "工资计算方式": "Pay calculation", "默认休息日": "Default rest days",
         "按月薪计算": "Monthly salary", "按日薪计算": "Daily salary", "排班制": "Shift schedule", "选填": "optional",
         "月薪": "Monthly salary", "五险一金或固定扣除": "Insurance, housing fund or fixed deductions", "个税预估": "Estimated tax", "发薪日": "Payday",
         "事假扣款比例": "Personal leave deduction", "病假扣款比例": "Sick leave deduction", "年假扣款比例": "Annual leave deduction", "调休扣款比例": "Comp leave deduction",
@@ -94,6 +94,76 @@
         "暂无购票提醒": "No ticket reminders", "本月没有节假日火车票开售节点。": "No holiday train-ticket sale dates this month.", "设置后可自动计算已用和剩余额度。": "Set an allowance to calculate used and remaining days.",
         "每月请假天数": "Leave days by month", "横轴为月份，柱高表示当月请假天数；切换到“每一天”可查看全年每日状态热力图。": "The horizontal axis shows months and bar height shows leave days. Switch to Day to view the yearly heatmap.",
         "按当前月份居中预览，并下载为图片": "Preview the current month and download it as an image", "填写请假时间和理由，预览并下载为图片": "Enter leave dates and a reason, then preview and download an image",
+        "日历": "Calendar", "统计": "Statistics", "工具": "Tools", "主导航": "Main navigation", "本月概览": "Month overview", "设置分类": "Settings sections",
+        "日": "Day", "周": "Week", "日历视图": "Calendar view",
+        "上一天": "Previous day", "下一天": "Next day", "上一周": "Previous week", "下一周": "Next week", "上一年": "Previous year", "下一年": "Next year",
+        "点击编辑当天记录": "Tap to edit this day", "今天还没有记录": "No record for today yet",
+        "假期 · 好好休息": "Holiday · enjoy the break", "周末 · 无需打卡": "Weekend · no check-in required",
+        "1月": "Jan", "2月": "Feb", "3月": "Mar", "4月": "Apr", "5月": "May", "6月": "Jun", "7月": "Jul", "8月": "Aug", "9月": "Sep", "10月": "Oct", "11月": "Nov", "12月": "Dec",
+        "本月与全年的出勤、请假和额度使用情况。": "Attendance, leave and allowance usage for this month and the year.",
+        "票据生成、数据备份和出行提醒。": "Receipts, data backup and travel reminders.",
+        "处理请假、工资核算和假期出行。": "Create leave notes, calculate pay and plan holiday travel.",
+        "工资核算与工资条": "Pay calculation & payslip", "核算本月扣款与实发工资，预览并下载工资条": "Calculate this month's deductions and net pay, then preview and download a payslip.",
+        "开始核算": "Calculate pay", "填写请假日期和理由，预览并下载请假条": "Enter leave dates and a reason, then preview and download a leave note.", "创建请假条": "Create leave note",
+        "查看本年度法定节假日火车票开售时间": "View train-ticket sale dates for this year's public holidays.", "查看提醒": "View reminders", "收起提醒": "Hide reminders",
+        "本年度暂无购票提醒": "No ticket reminders this year", "本年度购票提醒均已结束": "This year's ticket reminders have ended", "本年度暂无节假日火车票开售节点。": "No public-holiday train-ticket sale dates this year.",
+        "年度趋势": "Yearly trend", "最近记录": "Recent records", "设置额度": "Set allowance", "查看额度": "View allowance", "查看": "View", "去备份": "Back up", "撤销": "Undo",
+        "还没有记录，点击日历中的日期开始标记。": "No records yet. Select a date in the calendar to start.",
+        "完成初始设置": "Finish setting up", "填写工作制度、工资和假期额度，统计会更准确。": "Add your work schedule, pay and leave allowances for more accurate statistics.",
+        "继续设置": "Continue setup", "暂不需要": "Not now",
+        "今年的年假额度已用完": "This year's annual leave allowance is used up",
+        "距上次云端备份已超过 30 天": "More than 30 days since the last cloud backup",
+        "已配置 WebDAV，但还没有云端备份": "WebDAV is set up, but no cloud backup exists yet",
+        "文档工具": "Documents", "数据工具": "Data", "出行工具": "Travel", "帮助": "Help",
+        "生成请假条…": "Generate leave note…", "按当前月份预览，并下载为图片": "Preview the current month and download as an image",
+        "下载全部记录和设置，用于备份或迁移": "Download all records and settings for backup or migration",
+        "校验通过后与现有记录合并，不会覆盖数据": "Validated, then merged with existing records without overwriting",
+        "跨设备备份和恢复数据": "Back up and restore data across devices",
+        "法定节假日火车票开售提醒（按开售日前 15 天推算）。": "Train-ticket sale reminders for public holidays (sales open 15 days ahead).",
+        "月份查看、请假管理、工资计算和数据备份": "Browse months, manage leave, estimate pay and back up data",
+        "个人资料": "Profile", "薪资与扣款": "Pay and deductions", "请假条模板": "Leave note template", "数据与同步": "Data and sync", "外观": "Appearance", "高级设置": "Advanced",
+        "‹ 设置": "‹ Settings", "返回设置目录": "Back to settings list", "关闭设置": "Close settings",
+        "用于请假条署名和个性化显示，全部选填。": "Used for leave-note signatures and personalization. All fields are optional.",
+        "决定日历中的应出勤天数和日薪折算。": "Determines expected workdays and the daily-pay conversion.",
+        "用于估算请假扣款和实发工资，数据仅保存在本机。": "Used to estimate leave deductions and net pay. Data stays on this device.",
+        "请假扣款比例（%）": "Leave deduction rates (%)",
+        "设置每年可用的年假和调休天数，自动统计已用与剩余。": "Set yearly annual and comp leave allowances; used and remaining days are tracked automatically.",
+        "生成请假条时的默认署名、称呼和理由。": "Default signature, salutation and reasons for generated leave notes.",
+        "所有数据保存在本机浏览器，可通过 CSV 或 WebDAV 备份。": "All data lives in this browser and can be backed up via CSV or WebDAV.",
+        "CSV 备份": "CSV backup",
+        "适合手动备份和迁移。导入前会校验字段和日期格式，校验失败不会覆盖现有数据。": "Best for manual backup and migration. Fields and dates are validated before import; invalid files never overwrite existing data.",
+        "主题与语言偏好保存在本机。": "Theme and language preferences are stored on this device.",
+        "主题": "Theme", "深色模式会跟随此处设置": "Dark mode follows this setting", "跟随系统": "System", "浅色": "Light", "深色": "Dark", "语言": "Language", "界面显示语言": "Interface language",
+        "引导、设置导出和数据清理。": "Onboarding, settings export and data cleanup.",
+        "危险操作": "Danger zone",
+        "重置资料、工作制度和工资配置，请假记录保留。": "Resets profile, schedule and pay settings. Leave records are kept.",
+        "删除全部请假记录、设置和 WebDAV 配置，无法恢复。": "Deletes all leave records, settings and WebDAV config. This cannot be undone.",
+        "全部清除": "Erase everything", "更改会自动保存在本机浏览器": "Changes are saved automatically in this browser",
+        "年假额度（天 / 年）": "Annual leave allowance (days / year)", "调休额度（天 / 年）": "Comp leave allowance (days / year)",
+        "填写上方额度后，会自动计算已用和剩余天数。": "Enter an allowance above to track used and remaining days automatically.",
+        "未配置": "Not set up", "已配置": "Configured", "已连接": "Connected", "上次备份：暂无": "Last backup: none",
+        "跨设备备份和恢复 RestCal 数据。": "Back up and restore RestCal data across devices.",
+        "立即备份": "Back up now", "恢复数据": "Restore data", "配置 WebDAV": "Set up WebDAV", "管理配置": "Manage settings", "连接帮助": "Connection help",
+        "建议地址末尾带一层子目录（如 /dav/xiuli/），首次备份会自动创建。坚果云等服务请使用「应用专用密码」，不要使用登录密码。": "Use a dedicated subfolder at the end of the URL (e.g. /dav/xiuli/); it is created on the first backup. For services like Jianguoyun, use an app-specific password instead of your login password.",
+        "恢复采用「合并」策略，不会删除本机已有记录。桌面版、本地服务及 Netlify 在线版均已绕过浏览器跨域限制。": "Restore merges remote data without deleting local records. The desktop, local-server and Netlify versions handle browser cross-origin restrictions.",
+        "请先填写服务器地址、用户名和密码。": "Enter the server URL, username and password first.",
+        "正在测试连接…": "Testing connection…", "连接成功，可以备份。": "Connection successful. Ready to back up.",
+        "连接正常，但目标目录还不存在，首次「立即备份」会自动创建。": "Connected, but the target folder does not exist yet. It will be created on the first backup.",
+        "WebDAV 连接成功": "WebDAV connection successful", "WebDAV 连接失败，请检查配置": "WebDAV connection failed. Check your settings.",
+        "正在上传备份…": "Uploading backup…", "云端备份成功": "Cloud backup successful", "云端备份失败，请查看状态说明": "Cloud backup failed. See the status message.",
+        "正在从云端恢复…": "Restoring from the cloud…", "云端还没有备份文件，请先点「立即备份」。": "No backup file in the cloud yet. Use “Back up now” first.",
+        "云端数据恢复成功": "Cloud data restored", "云端恢复失败，请查看状态说明": "Cloud restore failed. See the status message.",
+        "云端恢复失败，文件格式无法识别": "Cloud restore failed: unrecognized file format", "云端恢复失败，文件缺少记录数据": "Cloud restore failed: the file has no record data",
+        "从云端恢复数据？": "Restore data from the cloud?",
+        "云端记录将与本机记录合并，同一天以较新的修改为准，不会删除本机已有记录。": "Cloud records merge with local records; for the same day the newer change wins. Nothing local is deleted.",
+        "开始恢复": "Restore", "确认操作": "Confirm action", "确定": "OK",
+        "清除个人设置？": "Clear personal settings?",
+        "将重置个人资料、工作制度和工资配置。请假记录不会被删除。": "This resets your profile, work schedule and pay settings. Leave records are not deleted.",
+        "清除所有本地数据？": "Clear all local data?",
+        "将删除全部请假记录、个人与工资设置、主题与语言偏好以及 WebDAV 配置，且无法恢复。建议先导出 CSV 备份。": "This deletes all leave records, personal and pay settings, theme and language preferences, and the WebDAV config. It cannot be undone. Export a CSV backup first.",
+        "记录已保存": "Record saved", "CSV 已导出": "CSV exported",
+        "选择状态": "Choose status", "理由": "Reason", "仅自己可见": "Only visible to you", "清除记录": "Clear record", "请选择有效的日期范围": "Choose a valid date range",
+        "选择范围后保存，会应用到范围内所有工作日，自动跳过周末和节假日。": "Saving with a range applies to every workday in it; weekends and holidays are skipped automatically.",
         "元旦": "New Year's Day", "春节": "Spring Festival", "清明节": "Qingming Festival", "劳动节": "Labour Day", "端午节": "Dragon Boat Festival", "中秋": "Mid-Autumn Festival", "中秋节": "Mid-Autumn Festival", "国庆节": "National Day",
         "小寒": "Minor Cold", "大寒": "Major Cold", "立春": "Start of Spring", "雨水": "Rain Water", "惊蛰": "Awakening of Insects", "春分": "Spring Equinox", "清明": "Pure Brightness", "谷雨": "Grain Rain", "立夏": "Start of Summer", "小满": "Grain Buds", "芒种": "Grain in Ear", "夏至": "Summer Solstice", "小暑": "Minor Heat", "大暑": "Major Heat", "立秋": "Start of Autumn", "处暑": "End of Heat", "白露": "White Dew", "秋分": "Autumn Equinox", "寒露": "Cold Dew", "霜降": "Frost Descent", "立冬": "Start of Winter", "小雪": "Minor Snow", "大雪": "Major Snow", "冬至": "Winter Solstice"
     };
@@ -115,6 +185,14 @@
             if (setAllowance) translated = `Set ${EN[setAllowance[1]].toLowerCase()} allowance`;
             const holidayDate = trimmed.match(/^(中秋|中秋节|国庆节|春节|元旦|劳动节|清明节|端午节) · (.+)$/);
             if (holidayDate) translated = `${EN[holidayDate[1]]} · ${holidayDate[2]}`;
+            const ticketToday = trimmed.match(/^(.+?)火车票今天开售，假期首日 (.+)$/);
+            if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]} train tickets go on sale today; the holiday starts ${translateCore(ticketToday[2])}`;
+            const ticketSoon = trimmed.match(/^(.+?)火车票 (\d+) 天后开售（(.+)）$/);
+            if (ticketSoon) translated = `${EN[ticketSoon[1]] || ticketSoon[1]} train tickets go on sale in ${ticketSoon[2]} days (${translateCore(ticketSoon[3])})`;
+            const ticketOnSale = trimmed.match(/^(.+?)火车票已开售，假期首日 (.+)$/);
+            if (ticketOnSale) translated = `${EN[ticketOnSale[1]] || ticketOnSale[1]} train tickets are on sale; the holiday starts ${translateCore(ticketOnSale[2])}`;
+            const weekdayToday = trimmed.match(/^(周[一二三四五六日]) · 今天$/);
+            if (weekdayToday && EN[weekdayToday[1]]) translated = `${EN[weekdayToday[1]]} · Today`;
         }
         if (!translated) {
             const greeting = trimmed.match(/^(夜深了|早上好|上午好|下午好|晚上好)，(.+)$/);
@@ -159,7 +237,16 @@
                 [/^导入失败：(.+)$/, "Import failed: $1"],
                 [/^连接失败：(.+)$/, "Connection failed: $1"],
                 [/^上传失败：(.+)$/, "Upload failed: $1"],
-                [/^恢复失败：(.+)$/, "Restore failed: $1"]
+                [/^恢复失败：(.+)$/, "Restore failed: $1"],
+                [/^上次备份：今天 (\d{2}:\d{2})$/, "Last backup: today $1"],
+                [/^上次备份：(.+)$/, "Last backup: $1"],
+                [/^已清除 (\d+) 条记录$/, "Cleared $1 records"],
+                [/^已保存 (\d+) 天记录$/, "Saved records for $1 days"],
+                [/^共 (\d+) 条记录$/, "$1 records"],
+                [/^额度 (\d+(?:\.\d+)?) 天$/, "Allowance: $1 days"],
+                [/^今天 (\d{2}:\d{2})$/, "Today $1"],
+                [/^(\d{1,2})月(\d{1,2})日$/, "$1/$2"],
+                [/^：已用 (\d+(?:\.\d+)?) 天 \/ 额度 (\d+(?:\.\d+)?) 天 \/ 剩余 (\d+(?:\.\d+)?) 天$/, ": $1 used / $2 total / $3 left"]
             ];
             for (const [pattern, replacement] of rules) {
                 if (pattern.test(trimmed)) { translated = trimmed.replace(pattern, replacement); break; }
