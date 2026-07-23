@@ -4193,7 +4193,7 @@ html.theme-anim #themeToggle .icon {
 
     .settings-panels {
         display: none;
-        padding: 16px 16px 28px;
+        padding: 16px 16px calc(28px + env(safe-area-inset-bottom));
     }
 
     /* 进入二级页：隐藏目录、显示分类内容和返回键 */
@@ -4469,7 +4469,8 @@ html.theme-anim #themeToggle .icon {
         padding: 12px;
         padding-left: max(12px, env(safe-area-inset-left));
         padding-right: max(12px, env(safe-area-inset-right));
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        /* 底部导航为 fixed，必须保留让位空间，否则页面尾部内容被遮住滑不到底 */
+        padding-bottom: calc(70px + env(safe-area-inset-bottom));
     }
 
     .calendar-grid {

@@ -3656,7 +3656,7 @@
             onboardingStep = 0;
             els.onboardingBackdrop.classList.add("open");
             openBackdrops.add(els.onboardingBackdrop);
-            document.body.classList.add("modal-open");
+            updateScrollLock();
             renderOnboardingStep();
         }
 
