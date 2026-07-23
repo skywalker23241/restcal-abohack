@@ -14,9 +14,15 @@ export default async function handler() {
             return Response.json({error: `格言服务返回 ${upstream.status}`}, {status: 502});
         }
         const data = await upstream.json();
-        return Response.json(data, {
-            headers: {"Cache-Control": "no-store"}
-        });
+        // 确保返回的是正确格式（API 既可能返回对象也可能返回数组）
+        const quote = Array.isArray(data) ? data[0] : data;
+        if (quote?.content) {
+            return Response.json(quote, {
+                headers: {"Cache-Control": "no-store"}
+            });
+        } else {
+            return Response.json({error: "格言服务响应异常"}, {status: 502});
+        }
     } catch (error) {
         const message = error && error.name === "AbortError" ? "连接格言服务超时" : "无法连接格言服务";
         return Response.json({error: message}, {status: 502});

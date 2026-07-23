@@ -91,7 +91,14 @@ function proxyQuote(res) {
     upstream.on("data", chunk => chunks.push(chunk));
     upstream.on("end", () => {
       try {
-        sendJson(200, JSON.parse(Buffer.concat(chunks).toString("utf-8")));
+        const data = JSON.parse(Buffer.concat(chunks).toString("utf-8"));
+        // 确保返回的是数组格式（API 既可能返回对象也可能返回数组）
+        const quote = Array.isArray(data) ? data[0] : data;
+        if (quote?.content) {
+          sendJson(200, quote);
+        } else {
+          sendJson(502, { error: "格言服务响应异常" });
+        }
       } catch {
         sendJson(502, { error: "格言服务响应异常" });
       }

@@ -1355,6 +1355,7 @@
                 button.addEventListener("click", () => window.RestCalI18n?.setLanguage(button.dataset.languageChoice));
             });
             window.addEventListener("restcal:languagechange", syncAppearanceControls);
+            window.addEventListener("restcal:languagechange", refreshQuoteForLanguageChange);
             syncAppearanceControls();
         }
 
@@ -1956,7 +1957,7 @@
         // ===== 日视图·每日一言（Quotable API + 本地兜底） =====
         const QUOTE_CACHE_KEY = "xiuli-day-quotes-v1";
         const QUOTE_CACHE_LIMIT = 90;
-        const FALLBACK_QUOTES = [
+        const FALLBACK_QUOTES_ZH = [
             {content: "不积跬步，无以至千里。", author: "《荀子》"},
             {content: "逝者如斯夫，不舍昼夜。", author: "《论语》"},
             {content: "一张一弛，文武之道也。", author: "《礼记》"},
@@ -1972,7 +1973,31 @@
             {content: "静以修身，俭以养德。", author: "诸葛亮"},
             {content: "流水不争先，争的是滔滔不绝。", author: "《道德经》衍语"}
         ];
+        const FALLBACK_QUOTES_EN = [
+            {content: "The early bird gets the worm.", author: "Proverb"},
+            {content: "Every cloud has a silver lining.", author: "Proverb"},
+            {content: "No pain, no gain.", author: "Proverb"},
+            {content: "Time flies when you're having fun.", author: "Proverb"},
+            {content: "Where there's a will, there's a way.", author: "Proverb"},
+            {content: "A picture is worth a thousand words.", author: "Proverb"},
+            {content: "Actions speak louder than words.", author: "Proverb"},
+            {content: "All's well that ends well.", author: "William Shakespeare"},
+            {content: "Fortune favors the bold.", author: "Virgil"},
+            {content: "The only way out is through.", author: "Robert Frost"},
+            {content: "Be the change you wish to see.", author: "Mahatma Gandhi"},
+            {content: "Life is what you make it.", author: "Proverb"},
+            {content: "Success is a journey, not a destination.", author: "Arthur Ashe"},
+            {content: "Dream big and dare to fail.", author: "Norman Vaughan"}
+        ];
         const quoteInflight = new Set();
+
+        function getLanguage() {
+            return window.RestCalI18n?.getLanguage() || "zh";
+        }
+
+        function getFallbackQuotes() {
+            return getLanguage() === "en" ? FALLBACK_QUOTES_EN : FALLBACK_QUOTES_ZH;
+        }
 
         function loadQuoteCache() {
             try {
@@ -2001,7 +2026,8 @@
         function fallbackQuote(iso) {
             let hash = 0;
             for (const ch of iso) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-            return FALLBACK_QUOTES[hash % FALLBACK_QUOTES.length];
+            const quotes = getFallbackQuotes();
+            return quotes[hash % quotes.length];
         }
 
         async function fetchQuoteRaw(url, signal) {
@@ -2015,6 +2041,10 @@
 
         async function requestQuote(iso) {
             if (getCachedQuote(iso) || quoteInflight.has(iso)) return;
+            // 中文版本只使用本地格言，不从 API 请求
+            const language = getLanguage();
+            if (language === "zh") return;
+
             quoteInflight.add(iso);
             const controller = new AbortController();
             const timer = window.setTimeout(() => controller.abort(), 6000);
@@ -2050,6 +2080,21 @@
             } finally {
                 window.clearTimeout(timer);
                 quoteInflight.delete(iso);
+            }
+        }
+
+        function refreshQuoteForLanguageChange() {
+            // 语言切换时刷新当前日期的格言
+            if (calendarMode === "day") {
+                const iso = toISO(anchorDate);
+                // 清除缓存以便重新获取
+                const cache = loadQuoteCache();
+                delete cache[iso];
+                saveQuoteCache(cache);
+                // 清空进行中的请求标记
+                quoteInflight.delete(iso);
+                // 重新渲染日视图，会触发 requestQuote
+                renderDay();
             }
         }
 
