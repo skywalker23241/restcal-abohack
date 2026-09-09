@@ -56,8 +56,15 @@ function inRange(value, [min, max]) {
 }
 
 async function capture(win, name) {
+    // 隐藏窗口的动画可能被节流；截图前结束有限动画，避免截到半透明中间帧。
+    await win.webContents.executeJavaScript(`
+        document.getAnimations().forEach(animation => {
+            if (Number.isFinite(animation.effect?.getComputedTiming().endTime)) animation.finish();
+        });
+        undefined
+    `);
     win.webContents.invalidate();
-    await wait(120);
+    await wait(350);
     const image = await win.webContents.capturePage();
     fs.writeFileSync(path.join(shotsDir, `${name}.png`), image.toPNG());
     console.log(`saved ${name}.png`);
@@ -71,7 +78,7 @@ async function run() {
     const win = new BrowserWindow({
         show: false,
         useContentSize: true,
-        webPreferences: { contextIsolation: true }
+        webPreferences: { contextIsolation: true, backgroundThrottling: false, partition: `mobile-audit-${process.pid}` }
     });
     win.webContents.on("console-message", (_event, level, message, line, source) => {
         if (level >= 2) console.log(`renderer-console[${level}] ${message} (${source}:${line})`);
@@ -85,10 +92,37 @@ async function run() {
         win.setContentSize(w, h);
         await win.loadURL(URL);
         await wait(1200);
+        await win.webContents.executeJavaScript('window.RestCalI18n.setLanguage("zh"); undefined');
         // 应用首次打开会展示引导；本脚本测试主应用功能时明确跳过它。
         await win.webContents.executeJavaScript("if (typeof skipOnboarding === 'function') skipOnboarding(); undefined");
         await wait(300);
         if (w === 360) {
+            const failedSaveAudit = await win.webContents.executeJavaScript(`
+                (() => {
+                    const originalSetItem = Storage.prototype.setItem;
+                    const originalRecords = structuredClone(state.records);
+                    try {
+                        openModal("2026-08-26");
+                        chooseStatus("work");
+                        document.getElementById("toastRegion").replaceChildren();
+                        Storage.prototype.setItem = () => { throw new DOMException("Full", "QuotaExceededError"); };
+                        saveModalRecord();
+                        return {
+                            open: document.getElementById("dayModal").classList.contains("open"),
+                            error: Boolean(document.querySelector("#toastRegion .toast.error")),
+                            success: Boolean(document.querySelector("#toastRegion .toast.success"))
+                        };
+                    } finally {
+                        Storage.prototype.setItem = originalSetItem;
+                        state.records = originalRecords;
+                        closeModal();
+                        document.getElementById("toastRegion").replaceChildren();
+                    }
+                })()
+            `);
+            if (!failedSaveAudit.open || !failedSaveAudit.error || failedSaveAudit.success) {
+                throw new Error(`Failed save feedback audit failed: ${JSON.stringify(failedSaveAudit)}`);
+            }
             const overtimeAudit = await win.webContents.executeJavaScript(`
                 (() => {
                     const iso = "2026-08-26";
@@ -562,18 +596,17 @@ async function run() {
         const statusButtons = await win.webContents.executeJavaScript(`
             [...document.querySelectorAll(".action-grid-primary .action-btn")].map(button => {
                 const buttonRect = button.getBoundingClientRect();
-                const icon = button.querySelector(".icon");
-                const iconRect = icon.getBoundingClientRect();
+                const marker = getComputedStyle(button, "::before");
                 return {
                     width: Math.round(buttonRect.width),
                     height: Math.round(buttonRect.height),
-                    icon: Math.round(iconRect.width),
-                    href: icon.querySelector("use").getAttribute("href")
+                    icons: button.querySelectorAll(".icon").length,
+                    marker: Math.round(parseFloat(marker.width))
                 };
             })
         `);
         if (statusButtons.length !== 6 || statusButtons.some(item =>
-            item.width < 50 || item.height < 42 || item.icon < 15 || !item.href.startsWith("#i-status-")
+            item.width < 50 || item.height < 42 || item.icons !== 0 || item.marker < 5
         )) {
             throw new Error(`${w}px status button layout failed: ${JSON.stringify(statusButtons)}`);
         }
@@ -584,7 +617,7 @@ async function run() {
                 href: button.querySelector("use")?.getAttribute("href")
             }))
         `);
-        if (dayActionIcons.length !== 3 || dayActionIcons.some(item =>
+        if (dayActionIcons.length !== 1 || dayActionIcons.some(item =>
             !item.label || !item.title || !item.href?.startsWith("#i-action-")
         )) {
             throw new Error(`${w}px day action icon audit failed: ${JSON.stringify(dayActionIcons)}`);
@@ -608,7 +641,7 @@ async function run() {
             })()
         `);
         if (!dayFooterAudit.clearVisible || !dayFooterAudit.sameRow || !dayFooterAudit.order
-            || dayFooterAudit.trash !== "#i-action-trash" || dayFooterAudit.footerHeight > 78) {
+            || dayFooterAudit.trash || dayFooterAudit.footerHeight > 78) {
             throw new Error(`${w}px day footer layout failed: ${JSON.stringify(dayFooterAudit)}`);
         }
         await capture(win, `day-${w}`);
@@ -720,6 +753,56 @@ async function run() {
         await capture(win, `settings-${w}`);
         await win.webContents.executeJavaScript("document.getElementById('closeSettings').click(); undefined");
         await wait(400);
+        for (const language of ["zh", "en"]) {
+            await win.webContents.executeJavaScript(`
+                window.RestCalI18n.setLanguage(${JSON.stringify(language)});
+                switchView("tools");
+                undefined
+            `);
+            await wait(400);
+            const toolsAudit = await win.webContents.executeJavaScript(`
+                ({
+                    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                    cards: [...document.querySelectorAll('.tool-card')].map(card => {
+                        const rect = card.getBoundingClientRect();
+                        return {width: rect.width, height: rect.height};
+                    })
+                })
+            `);
+            if (toolsAudit.overflow > 0 || !toolsAudit.cards.length
+                || toolsAudit.cards.some(card => card.width < 44 || card.height < 44)) {
+                throw new Error(`${w}px ${language} tools audit failed: ${JSON.stringify(toolsAudit)}`);
+            }
+            await capture(win, `tools-${language}-${w}`);
+            await win.webContents.executeJavaScript('document.getElementById("ticketToolToggle").click(); undefined');
+            await wait(350);
+            const ticketAudit = await win.webContents.executeJavaScript(`
+                (() => {
+                    const modal = document.getElementById("ticketToolPanel");
+                    const box = modal.firstElementChild.getBoundingClientRect();
+                    const body = modal.querySelector(".ticket-dialog-body");
+                    const sample = getTicketReminders(2026).find(item => toISO(item.departure) === "2026-10-01");
+                    return {
+                        open: modal.classList.contains("open"),
+                        focused: modal.contains(document.activeElement),
+                        inside: box.left >= 0 && box.right <= innerWidth + 1 && box.top >= 0 && box.bottom <= innerHeight + 1,
+                        overflow: body.scrollWidth - body.clientWidth,
+                        saleDate: toISO(sample.saleDate),
+                        ics: XiuliIcs.generateIcs({ticketReminders: [sample]}).includes("DTSTART:20260917T010000Z")
+                    };
+                })()
+            `);
+            if (!ticketAudit.open || !ticketAudit.focused || !ticketAudit.inside || ticketAudit.overflow > 1
+                || ticketAudit.saleDate !== "2026-09-17" || !ticketAudit.ics) {
+                throw new Error(`Ticket dialog audit failed: ${JSON.stringify(ticketAudit)}`);
+            }
+            await capture(win, `tickets-${language}-${w}`);
+            await win.webContents.executeJavaScript('document.dispatchEvent(new KeyboardEvent("keydown", {key: "Escape", bubbles: true})); undefined');
+            await wait(300);
+            const ticketClosed = await win.webContents.executeJavaScript('!document.getElementById("ticketToolPanel").classList.contains("open") && document.activeElement.id === "ticketToolToggle"');
+            if (!ticketClosed) throw new Error("Ticket dialog did not close and restore focus");
+        }
+        await win.webContents.executeJavaScript('window.RestCalI18n.setLanguage("zh"); switchView("calendar"); undefined');
     }
     app.exit(0);
 }

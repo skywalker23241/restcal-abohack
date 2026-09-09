@@ -237,7 +237,7 @@
                 `DTSTART:${dtStartUtc}`,
                 `DTEND:${dtEndUtc}`,
                 `SUMMARY:🚄 [抢票提醒] ${escapeIcsText(t.name)} 火车票今日开售`,
-                `DESCRIPTION:${escapeIcsText(`假期首日为 ${departureStr}，12306 提前 15 天开售，请记得提前准备抢票。`)}`,
+                `DESCRIPTION:${escapeIcsText(`假期首日为 ${departureStr}，预售期 15 天（含当天），开售日为出发前 14 天。此提醒默认北京时间 09:00，具体起售时间以车站及车次为准。`)}`,
                 "BEGIN:VALARM",
                 "ACTION:DISPLAY",
                 `DESCRIPTION:${escapeIcsText(`${t.name}火车票开售提醒`)}`,

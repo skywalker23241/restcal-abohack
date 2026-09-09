@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v1.5.37";
+const CACHE_VERSION = "v1.5.43";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";
@@ -22,7 +22,14 @@ const PRECACHE = [
     "assets/icons/icon-192.png",
     "assets/icons/icon-512.png",
     "assets/icons/maskable-512.png",
-    "assets/icons/apple-touch-icon.png"
+    "assets/icons/apple-touch-icon.png",
+    "assets/images/holiday/spring-festival.png",
+    "assets/images/holiday/qingming-festival.png",
+    "assets/images/holiday/new-years-day.png",
+    "assets/images/holiday/labor-day.png",
+    "assets/images/holiday/national-day.png",
+    "assets/images/holiday/dragon-boat-festival.png",
+    "assets/images/holiday/mid-autumn-festival.png"
 ];
 
 self.addEventListener("install", event => {

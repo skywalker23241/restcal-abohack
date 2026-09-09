@@ -63,6 +63,41 @@
         <symbol id="i-ticket" viewBox="0 0 256 256">
             <path d="M232,104a8,8,0,0,0,8-8V64a16,16,0,0,0-16-16H32A16,16,0,0,0,16,64V96a8,8,0,0,0,8,8,24,24,0,0,1,0,48,8,8,0,0,0-8,8v32a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V160a8,8,0,0,0-8-8,24,24,0,0,1,0-48ZM32,167.2a40,40,0,0,0,0-78.4V64H88V192H32Zm192,0V192H104V64H224V88.8a40,40,0,0,0,0,78.4Z" />
         </symbol>
+        <!-- 节日插画：柔和双色图形，供购票提醒使用。 -->
+        <symbol id="i-holiday-new-year" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".1"/><circle cx="32" cy="34" r="10" opacity=".3"/>
+            <path d="M30 8h4v10h-4zM30 50h4v7h-4zM7 30h10v4H7zM47 30h10v4H47zM14 14l3-3 7 7-3 3zM43 43l3-3 6 6-3 3zM43 21l-3-3 7-7 3 3zM14 49l-3-3 7-7 3 3z" opacity=".72"/>
+            <path d="M18 43c5-5 9-7 14-4 5-5 10-3 15 4H18z" opacity=".52"/>
+        </g></symbol>
+        <symbol id="i-holiday-spring" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".1"/><path d="M23 18h18l5 8-3 19H21l-3-19 5-8z" opacity=".58"/>
+            <path d="M25 14h14v4H25zM24 27h16v3H24zM30 45h4v8h-4zM27 53h10l-5 5z" opacity=".82"/>
+            <circle cx="32" cy="36" r="5" opacity=".2"/>
+        </g></symbol>
+        <symbol id="i-holiday-qingming" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".09"/>
+            <path d="M18 10c8 12 8 25 4 43M23 22c7-1 11-4 14-9M23 30c8 0 13-3 18-8M22 39c8 1 14-1 20-6" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round" opacity=".72"/>
+            <path d="M33 13c5 0 7 2 8 5-5 1-8-1-8-5zM37 24c5 0 8 2 9 5-5 1-8-1-9-5zM38 35c5 0 8 2 9 5-5 1-8-1-9-5z" opacity=".42"/>
+        </g></symbol>
+        <symbol id="i-holiday-labor" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".1"/>
+            <path d="M32 13v39M31 23c-8-1-11-5-11-10 7 1 11 4 11 10zM33 29c8-1 11-5 11-10-7 1-11 4-11 10zM31 36c-8-1-11-5-11-10 7 1 11 4 11 10zM33 42c8-1 11-5 11-10-7 1-11 4-11 10z" opacity=".62"/>
+            <path d="M22 51h20v4H22z" opacity=".82"/>
+        </g></symbol>
+        <symbol id="i-holiday-dragon-boat" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".09"/><path d="M14 39h38l-7 10H22z" opacity=".62"/>
+            <path d="M18 35h28l6 4H14zM42 26c7-2 11 1 12 6-5 2-9 1-12-2z" opacity=".82"/>
+            <circle cx="49" cy="29" r="1.6" fill="var(--card)"/><path d="M12 53c6-3 11-3 17 0 6 3 11 3 17 0" style="fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round" opacity=".42"/>
+        </g></symbol>
+        <symbol id="i-holiday-mid-autumn" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="30" r="19" opacity=".32"/><path d="M38 14c-7 5-8 14-3 20 4 5 10 7 16 5-4 7-11 11-19 10-11-1-19-10-19-21 0-10 8-18 18-19 3 0 5 1 7 2z" opacity=".58"/>
+            <path d="M14 47c7-4 13-4 20 0 6 3 11 3 17 0v5H14z" opacity=".22"/>
+        </g></symbol>
+        <symbol id="i-holiday-national" viewBox="0 0 256 256"><g transform="scale(4)">
+            <circle cx="32" cy="32" r="27" opacity=".09"/><path d="M18 31h28v18H18z" opacity=".46"/>
+            <path d="M13 49h38v5H13zM16 27h32v5H16zM22 21h20l4 6H18zM28 13h8v8h-8z" opacity=".82"/>
+            <path d="M25 36h14v13H25zM15 18l2 2 3-1-2 3 1 3-3-2-3 2 1-3-2-3 3 1z" opacity=".58"/>
+        </g></symbol>
         <symbol id="i-month-prev" viewBox="0 0 256 256">
             <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
         </symbol>
@@ -217,22 +252,6 @@
                 <div class="overview-strip" id="monthSummary" aria-label="本月概览"></div>
             </div>
 
-            <div class="home-alerts" id="homeAlerts" hidden></div>
-
-            <section class="setup-banner" id="welcomeCard" aria-label="完成初始设置" hidden>
-                <svg class="icon setup-banner-icon" aria-hidden="true">
-                    <use href="#i-settings" />
-                </svg>
-                <div class="setup-banner-copy">
-                    <strong id="welcomeTitle">完成初始设置</strong>
-                    <span id="welcomeSubtitle">填写工作制度、工资和假期额度，统计会更准确。</span>
-                </div>
-                <div class="setup-banner-actions">
-                    <button class="btn primary compact-btn" id="setupBannerStart" type="button">继续设置</button>
-                    <button class="btn ghost compact-btn" id="setupBannerDismiss" type="button" aria-label="暂不需要" title="暂不需要">暂不需要</button>
-                </div>
-            </section>
-
             <div class="panel calendar-panel">
                 <div class="weekday-row" aria-hidden="true">
                     <div class="weekday">周一</div>
@@ -249,6 +268,22 @@
                     <span class="api-state" id="calendarSource">正在加载日历数据</span>
                 </div>
             </div>
+
+            <div class="home-alerts" id="homeAlerts" hidden></div>
+
+            <section class="setup-banner" id="welcomeCard" aria-label="完成初始设置" hidden>
+                <svg class="icon setup-banner-icon" aria-hidden="true">
+                    <use href="#i-settings" />
+                </svg>
+                <div class="setup-banner-copy">
+                    <strong id="welcomeTitle">完成初始设置</strong>
+                    <span id="welcomeSubtitle">补充工作与薪资信息</span>
+                </div>
+                <div class="setup-banner-actions">
+                    <button class="btn primary compact-btn" id="setupBannerStart" type="button">继续设置</button>
+                    <button class="btn ghost compact-btn" id="setupBannerDismiss" type="button" aria-label="暂不需要" title="暂不需要">暂不需要</button>
+                </div>
+            </section>
 
             <div class="home-secondary">
                 <section class="subpanel" aria-label="年度趋势">
@@ -270,10 +305,7 @@
         <section class="view" id="viewStats" data-view-panel="stats" aria-label="统计" hidden>
             <header class="view-head stats-view-head">
                 <div class="stats-view-heading">
-                    <div>
-                        <h2>统计</h2>
-                        <p>本月与全年的出勤、请假和额度使用情况。</p>
-                    </div>
+                    <h2>统计</h2>
                     <div class="segmented" id="statsPeriodMode" aria-label="统计周期">
                         <button class="seg-btn active" type="button" data-stats-period="month"
                             aria-pressed="true">月度</button>
@@ -326,9 +358,9 @@
                             </svg></span>
                         <span class="tool-card-copy">
                             <strong id="salaryReceiptLabel">工资核算与工资条</strong>
-                            <small>选择月份核算扣款与实发工资，预览并下载工资条</small>
+                            <small>核算工资，生成工资条</small>
                         </span>
-                        <span class="tool-card-action">开始核算 <span aria-hidden="true">→</span></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
                     </button>
                     <button class="tool-card" data-generate-leave-receipt type="button">
                         <span class="tool-card-icon"><svg class="icon">
@@ -336,21 +368,20 @@
                             </svg></span>
                         <span class="tool-card-copy">
                             <strong>生成请假条</strong>
-                            <small>填写请假日期和理由，预览并下载请假条</small>
+                            <small>填写信息，生成请假条</small>
                         </span>
-                        <span class="tool-card-action">创建请假条 <span aria-hidden="true">→</span></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
                     </button>
-                    <button class="tool-card" id="ticketToolToggle" type="button" aria-expanded="false"
+                    <button class="tool-card" id="ticketToolToggle" type="button" aria-haspopup="dialog"
                         aria-controls="ticketToolPanel">
                         <span class="tool-card-icon"><svg class="icon">
                                 <use href="#i-alert" />
                             </svg></span>
                         <span class="tool-card-copy">
                             <strong>购票提醒</strong>
-                            <small id="ticketToolHint">查看本年度法定节假日火车票开售时间</small>
+                            <small id="ticketToolHint">查看节假日火车票开售日</small>
                         </span>
-                        <span class="tool-card-action" id="ticketToolAction">查看提醒 <span
-                                aria-hidden="true">→</span></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
                     </button>
                     <button class="tool-card" id="icsToolBtn" type="button">
                         <span class="tool-card-icon"><svg class="icon">
@@ -358,25 +389,36 @@
                             </svg></span>
                         <span class="tool-card-copy">
                             <strong>日历导出 (.ics)</strong>
-                            <small>导出请假、节假日与抢票提醒至系统日历</small>
+                            <small>同步事项到系统日历</small>
                         </span>
-                        <span class="tool-card-action">导出日历 <span aria-hidden="true">→</span></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
                     </button>
                 </div>
-                <section class="tool-detail" id="ticketToolPanel" aria-label="购票提醒" hidden>
-                    <div class="section-head">
-                        <div>
-                            <h2>购票提醒</h2>
-                            <p>法定节假日火车票开售提醒（按开售日前 15 天推算）。</p>
-                        </div>
-                    </div>
-                    <div class="reminder-list" id="ticketReminders"></div>
-                </section>
                 <div class="salary-snapshot" id="salaryResult" hidden></div>
             </div>
         </section>
 
     </main>
+
+    <div class="modal-backdrop" id="ticketToolPanel" role="dialog" aria-modal="true" aria-labelledby="ticketDialogTitle">
+        <div class="ticket-window">
+            <div class="modal-head">
+                <h2 id="ticketDialogTitle">购票提醒</h2>
+                <button class="btn ghost modal-close-text" id="closeTicketTool" type="button">关闭</button>
+            </div>
+            <div class="ticket-dialog-body">
+                    <div class="reminder-list" id="ticketReminders"></div>
+                    <aside class="ticket-guide">
+                        <p>提醒默认 09:00，实际起售时间以 12306 为准。</p>
+                        <div class="ticket-links">
+                            <a class="btn" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">查询起售时间</a>
+                            <a class="btn primary" href="https://www.12306.cn/" target="_blank" rel="noopener noreferrer">前往 12306</a>
+                        </div>
+                    </aside>
+            </div>
+        </div>
+    </div>
+
 
     <nav class="bottom-nav" aria-label="主导航">
         <button class="bottom-nav-btn" data-nav="calendar" type="button" aria-current="page"><svg class="icon"><use href="#i-nav-calendar-fill" /></svg><span>日历</span></button>
@@ -407,7 +449,7 @@
             <div class="modal-head">
                 <div>
                     <h2 id="searchTitle">搜索与筛选</h2>
-                    <div class="subtitle">查找请假、出勤、备注、农历和节假日，并跳转到日期。</div>
+                    <div class="subtitle">搜索记录并跳转日期</div>
                 </div>
                 <button class="btn ghost icon-only" id="closeSearch" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
             </div>
@@ -456,12 +498,7 @@
             <div class="modal-body tour-intro-body">
                 <span class="tour-intro-eyebrow">快速上手</span>
                 <h2 id="guideTitle">用 2 分钟认识 RestCal</h2>
-                <p id="guideDescription">跟随高亮提示认识日历记录、批量标记、统计、实用工具、外观设置和数据备份。</p>
-                <div class="tour-intro-points" aria-hidden="true">
-                    <span>真实界面操作</span>
-                    <span>不会保存演示记录</span>
-                    <span>随时可以退出</span>
-                </div>
+                <p id="guideDescription">跟随提示快速浏览主要功能。</p>
             </div>
             <div class="modal-foot">
                 <button class="btn" id="closeGuide" type="button">暂不体验</button>
@@ -493,7 +530,6 @@
                     <section class="settings-panel" data-settings-panel="profile" hidden>
                         <header class="settings-panel-head">
                             <h3>个人资料</h3>
-                            <p>用于请假条署名和个性化显示，全部选填。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field"><label for="profileNameInput">姓名或昵称</label><input id="profileNameInput" autocomplete="name" placeholder="例如：小明"></div>
@@ -504,7 +540,6 @@
                     <section class="settings-panel" data-settings-panel="schedule" hidden>
                         <header class="settings-panel-head">
                             <h3>工作制度</h3>
-                            <p>决定日历中的应出勤天数和日薪折算。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field"><label for="workdaysInput">每周工作天数</label><input id="workdaysInput" inputmode="numeric" type="number" min="1" max="7" step="1" placeholder="5"></div>
@@ -516,7 +551,6 @@
                     <section class="settings-panel" data-settings-panel="salary" hidden>
                         <header class="settings-panel-head">
                             <h3>薪资与扣款</h3>
-                            <p>用于估算请假扣款和实发工资，数据仅保存在本机。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -561,7 +595,6 @@
                     <section class="settings-panel" data-settings-panel="quota" hidden>
                         <header class="settings-panel-head">
                             <h3>假期额度</h3>
-                            <p>设置每年可用的年假和调休天数，自动统计已用与剩余。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -598,7 +631,6 @@
                     <section class="settings-panel" data-settings-panel="leave-doc" hidden>
                         <header class="settings-panel-head">
                             <h3>请假条模板</h3>
-                            <p>生成请假条时的默认署名、称呼和理由。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -626,14 +658,13 @@
                     <section class="settings-panel" data-settings-panel="data" hidden>
                         <header class="settings-panel-head">
                             <h3>数据与同步</h3>
-                            <p>所有数据保存在本机浏览器，可通过 CSV 或 WebDAV 备份。</p>
                         </header>
                         <div class="settings-card">
                             <div class="settings-card-head">
                                 <strong>CSV 备份</strong>
                                 <span class="settings-card-meta" id="dataStatusLine"></span>
                             </div>
-                            <p class="notice">适合手动备份和迁移。导入前会校验字段和日期格式，校验失败不会覆盖现有数据。</p>
+                            <p class="notice">手动备份或迁移，导入前会自动校验。</p>
                             <div class="csv-actions">
                                 <button class="btn" id="exportCsv" type="button">导出 CSV</button>
                                 <label class="btn" for="importCsv">导入 CSV</label>
@@ -646,7 +677,7 @@
                                 <strong>日历文件导出 (.ics)</strong>
                                 <span class="settings-card-meta">RFC 5545</span>
                             </div>
-                            <p class="notice">将请假、出勤、节假日调休和抢票提醒导出为标准日历文件，支持导入 Apple 日历、Google 日历、飞书与企微。</p>
+                            <p class="notice">导出标准日历文件，可导入常用日历应用。</p>
                             <div class="ics-options" aria-label="日历导出内容">
                                 <label><input type="checkbox" data-ics-category="leave" checked> 请假</label>
                                 <label><input type="checkbox" data-ics-category="overtime" checked> 加班</label>
@@ -679,12 +710,10 @@
                     <section class="settings-panel" data-settings-panel="appearance" hidden>
                         <header class="settings-panel-head">
                             <h3>外观</h3>
-                            <p>主题与语言偏好保存在本机。</p>
                         </header>
                         <div class="appearance-row">
                             <div class="appearance-label">
                                 <strong>主题</strong>
-                                <span>深色模式会跟随此处设置</span>
                             </div>
                             <div class="segmented" id="themeChoice" role="group" aria-label="主题">
                                 <button class="seg-btn" data-theme-choice="auto" type="button">跟随系统</button>
@@ -695,7 +724,6 @@
                         <div class="appearance-row">
                             <div class="appearance-label">
                                 <strong>语言</strong>
-                                <span>界面显示语言</span>
                             </div>
                             <div class="segmented" id="languageChoice" role="group" aria-label="语言">
                                 <button class="seg-btn" data-language-choice="zh" type="button">中文</button>
@@ -706,7 +734,6 @@
                     <section class="settings-panel" data-settings-panel="advanced" hidden>
                         <header class="settings-panel-head">
                             <h3>高级设置</h3>
-                            <p>引导、设置导出和数据清理。</p>
                         </header>
                         <div class="csv-actions">
                             <button class="btn" id="rerunOnboarding" type="button">重新运行首次引导</button>
@@ -742,10 +769,7 @@
     <div class="modal-backdrop" id="webdavConfigModal" role="dialog" aria-modal="true" aria-labelledby="webdavConfigTitle">
         <div class="modal webdav-config-modal">
             <div class="modal-head">
-                <div>
-                    <h2 id="webdavConfigTitle">配置 WebDAV</h2>
-                    <div class="subtitle">连接坚果云、Nextcloud、群晖等 WebDAV 服务。</div>
-                </div>
+                <h2 id="webdavConfigTitle">配置 WebDAV</h2>
                 <button class="btn ghost icon-only" id="closeWebdavConfig" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
             </div>
             <div class="modal-body webdav-config" id="webdavConfigArea">
@@ -802,8 +826,8 @@
             </div>
             <div class="modal-body" id="receiptModalBody"></div>
             <div class="modal-foot">
-                <button class="btn" id="downloadReceipt" type="button">打印/下载图片</button>
-                <button class="btn primary icon-only" id="receiptDone" type="button" title="完成" aria-label="完成"><svg class="icon" aria-hidden="true"><use href="#i-action-done" /></svg></button>
+                <button class="btn" id="downloadReceipt" type="button">下载图片</button>
+                <button class="btn primary" id="receiptDone" type="button">完成</button>
             </div>
         </div>
     </div>
@@ -859,13 +883,13 @@
                 </section>
                 <section class="leave-preview-panel" aria-label="请假条小票预览">
                     <div class="receipt-preview empty" id="leaveReceipt">
-                        <div class="receipt-empty">填写左侧信息后点击生成</div>
+                        <div class="receipt-empty">填写信息后生成</div>
                     </div>
                 </section>
             </div>
             <div class="modal-foot">
-                <button class="btn" id="downloadLeaveReceipt" type="button">下载小票图片</button>
-                <button class="btn primary icon-only" id="leaveGeneratorDone" type="button" title="完成" aria-label="完成"><svg class="icon" aria-hidden="true"><use href="#i-action-done" /></svg></button>
+                <button class="btn" id="downloadLeaveReceipt" type="button">下载图片</button>
+                <button class="btn primary" id="leaveGeneratorDone" type="button">完成</button>
             </div>
         </div>
     </div>
@@ -883,12 +907,12 @@
                 <div class="field-group" role="group" aria-labelledby="statusChoiceLabel">
                     <div class="field-group-label" id="statusChoiceLabel">选择状态</div>
                     <div class="action-grid action-grid-primary">
-                        <button class="action-btn work" data-action="work" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-work" /></svg><span>出勤</span></button>
-                        <button class="action-btn overtime" data-action="overtime" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-overtime" /></svg><span>加班</span></button>
-                        <button class="action-btn comp" data-action="comp" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-comp" /></svg><span>调休</span></button>
-                        <button class="action-btn annual" data-action="annual" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-annual" /></svg><span>年假</span></button>
-                        <button class="action-btn personal" data-action="personal" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-personal" /></svg><span>事假</span></button>
-                        <button class="action-btn sick" data-action="sick" type="button"><svg class="icon" aria-hidden="true"><use href="#i-status-sick" /></svg><span>病假</span></button>
+                        <button class="action-btn work" data-action="work" type="button"><span>出勤</span></button>
+                        <button class="action-btn overtime" data-action="overtime" type="button"><span>加班</span></button>
+                        <button class="action-btn comp" data-action="comp" type="button"><span>调休</span></button>
+                        <button class="action-btn annual" data-action="annual" type="button"><span>年假</span></button>
+                        <button class="action-btn personal" data-action="personal" type="button"><span>事假</span></button>
+                        <button class="action-btn sick" data-action="sick" type="button"><span>病假</span></button>
                     </div>
                 </div>
                 <div class="field conditional-overtime" id="modalOvertimeField" hidden>
@@ -919,7 +943,7 @@
                             <input id="modalOvertimeReason" placeholder="例如：项目上线">
                         </div>
                     </div>
-                    <p class="notice">加班会作为附加记录保存，不会覆盖当天的出勤或请假状态。</p>
+                    <p class="notice">加班不会覆盖当天状态。</p>
                 </div>
                 <div class="field conditional-reason" id="modalReasonField" hidden>
                     <label for="modalReason">理由 <em>选填</em></label>
@@ -938,7 +962,7 @@
                                 <input id="modalEndDate" type="date">
                             </div>
                         </div>
-                        <p class="notice" id="modalRangeNotice">选择范围后保存，会应用到范围内所有工作日，自动跳过周末和节假日。</p>
+                        <p class="notice" id="modalRangeNotice">应用到范围内工作日，自动跳过周末和节假日。</p>
                         <div class="field">
                             <label for="modalNote">备注 <em>选填</em></label>
                             <input id="modalNote" placeholder="仅自己可见">
@@ -948,10 +972,10 @@
                 </details>
             </div>
             <div class="modal-foot day-modal-foot">
-                <button class="btn danger-ghost" id="modalClear" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-action-trash" /></svg><span>清除记录</span></button>
+                <button class="btn danger-ghost" id="modalClear" type="button" hidden>清除记录</button>
                 <span class="foot-spacer" aria-hidden="true"></span>
-                <button class="btn icon-only" id="modalCancel" type="button" title="取消" aria-label="取消"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
-                <button class="btn primary icon-only" id="modalSave" type="button" title="保存" aria-label="保存"><svg class="icon" aria-hidden="true"><use href="#i-action-save" /></svg></button>
+                <button class="btn" id="modalCancel" type="button">取消</button>
+                <button class="btn primary" id="modalSave" type="button">保存</button>
             </div>
         </div>
     </div>
@@ -1191,7 +1215,6 @@
             webdavConfigDone: document.getElementById("webdavConfigDone"),
             ticketToolToggle: document.getElementById("ticketToolToggle"),
             ticketToolHint: document.getElementById("ticketToolHint"),
-            ticketToolAction: document.getElementById("ticketToolAction"),
             ticketToolPanel: document.getElementById("ticketToolPanel"),
             ticketReminders: document.getElementById("ticketReminders"),
             applicantName: document.getElementById("applicantName"),
@@ -2384,7 +2407,13 @@
             darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
             initAppearanceControls();
             els.closeSettings.addEventListener("click", closeSettings);
-            els.settingsDone.addEventListener("click", () => { syncSettingsFromInputs(); saveState(); closeSettings(); renderHomeExtras(); showToast("设置已保存"); });
+            els.settingsDone.addEventListener("click", () => {
+                syncSettingsFromInputs();
+                if (!saveState()) return;
+                closeSettings();
+                renderHomeExtras();
+                showToast("设置已保存");
+            });
             els.settingsModal.addEventListener("click", event => {
                 if (event.target === els.settingsModal) closeSettings();
             });
@@ -2424,6 +2453,22 @@
                 button.addEventListener("click", () => openLeaveGenerator());
             });
             els.ticketToolToggle.addEventListener("click", toggleTicketTool);
+            document.getElementById("closeTicketTool").addEventListener("click", () => closeBackdrop(els.ticketToolPanel));
+            els.ticketToolPanel.addEventListener("click", event => {
+                if (event.target === els.ticketToolPanel) closeBackdrop(els.ticketToolPanel);
+            });
+            els.ticketReminders.addEventListener("click", event => {
+                const button = event.target.closest("[data-ticket-export]");
+                if (!button || !window.XiuliIcs) return;
+                const item = getTicketReminders(currentYear).find(item => toISO(item.departure) === button.dataset.ticketExport);
+                if (!item) return;
+                const content = XiuliIcs.generateIcs({
+                    ticketReminders: [item],
+                    ticketReminderTime: "09:00"
+                });
+                XiuliIcs.downloadIcs(content, `RestCal-${toISO(item.departure)}-购票提醒.ics`);
+                showToast("提醒文件已导出，请导入系统日历");
+            });
             document.addEventListener("click", event => {
                 const button = event.target instanceof Element ? event.target.closest("[data-open-settings-dynamic]") : null;
                 if (button) openSettings(button.dataset.openSettingsDynamic);
@@ -2561,6 +2606,7 @@
                 if (event.key !== "Escape") return;
                 if (productTour?.active) return skipProductTour();
                 if (els.confirmModal.classList.contains("open")) return resolveConfirm(false);
+                if (els.ticketToolPanel.classList.contains("open")) return closeBackdrop(els.ticketToolPanel);
                 if (els.searchModal.classList.contains("open")) return closeSearch();
                 if (els.webdavConfigModal.classList.contains("open")) return closeWebdavConfigModal();
                 if (els.dayModal.classList.contains("open")) return closeModal();
@@ -3570,11 +3616,12 @@
                 return;
             }
 
-            const nextReminder = reminders.find(item => diffDays(today, item.departure) >= 0);
+            const reference = new Date();
+            const nextReminder = reminders.find(item => diffDays(reference, item.departure) >= 0);
             if (!nextReminder) {
                 els.ticketToolHint.textContent = "本年度购票提醒均已结束";
             } else {
-                const saleDiff = diffDays(today, nextReminder.saleDate);
+                const saleDiff = diffDays(reference, nextReminder.saleDate);
                 els.ticketToolHint.textContent = saleDiff > 0
                     ? `${nextReminder.name}火车票 ${saleDiff} 天后开售（${formatMonthDay(nextReminder.saleDate)}）`
                     : saleDiff === 0
@@ -3582,31 +3629,54 @@
                         : `${nextReminder.name}火车票已开售，假期首日 ${formatMonthDay(nextReminder.departure)}`;
             }
 
-            els.ticketReminders.innerHTML = reminders.map(item => {
-                const diff = diffDays(today, item.saleDate);
-                const past = diffDays(today, item.departure) < 0;
-                const status = past ? "已过期" : diff > 0 ? `还有 ${diff} 天` : "已开售";
-                return `
-          <div class="ticket-card ${past ? "is-past" : ""}">
-            <div class="ticket-card-title">
-              <span>${escapeHtml(item.name)}</span>
-              <span class="ticket-status ${past ? "muted" : ""}">${status}</span>
-            </div>
-            <div class="ticket-meta">
-              <span>开售日：${formatMonthDay(item.saleDate)}</span>
-              <span>假期首日：${formatMonthDay(item.departure)}</span>
-            </div>
-          </div>
-        `;
-            }).join("");
+            const upcoming = reminders.filter(item => diffDays(reference, item.departure) >= 0);
+            const past = reminders.filter(item => diffDays(reference, item.departure) < 0);
+            const holidayIcon = name => {
+                if (name.includes("元旦")) return "i-holiday-new-year";
+                if (name.includes("春节")) return "i-holiday-spring";
+                if (name.includes("清明")) return "i-holiday-qingming";
+                if (name.includes("劳动")) return "i-holiday-labor";
+                if (name.includes("端午")) return "i-holiday-dragon-boat";
+                if (name.includes("中秋")) return "i-holiday-mid-autumn";
+                if (name.includes("国庆")) return "i-holiday-national";
+                return "i-ticket";
+            };
+            const holidayImage = name => {
+                if (name.includes("元旦")) return '<img src="assets/images/holiday/new-years-day.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("春节")) return '<img src="assets/images/holiday/spring-festival.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("清明")) return '<img src="assets/images/holiday/qingming-festival.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("劳动")) return '<img src="assets/images/holiday/labor-day.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("端午")) return '<img src="assets/images/holiday/dragon-boat-festival.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("中秋")) return '<img src="assets/images/holiday/mid-autumn-festival.png" alt="" loading="lazy" decoding="async">';
+                if (name.includes("国庆")) return '<img src="assets/images/holiday/national-day.png" alt="" loading="lazy" decoding="async">';
+                return "";
+            };
+            const card = (item, archived = false) => {
+                const days = diffDays(reference, item.saleDate);
+                const status = archived ? "出发日已过" : days > 0 ? `${days}天后开售` : days === 0 ? "今天开售" : "已到开售日";
+                const statusClass = archived ? "is-muted" : days > 0 ? "is-soon" : "is-open";
+                const imageMarkup = holidayImage(item.name);
+                return `<article class="travel-ticket ${archived ? "is-past" : ""}">
+                    <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<svg class="icon"><use href="#${holidayIcon(item.name)}" /></svg>`}</span>
+                    <div class="travel-ticket-main">
+                        <div class="travel-ticket-head"><h3>${escapeHtml(item.name)}</h3><span class="ticket-status ${statusClass}">${status}</span></div>
+                        <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
+                        <div class="ticket-departure"><span>出行日期</span><time datetime="${toISO(item.departure)}">${formatMonthDay(item.departure)}</time><small>${weekdayName(item.departure)}</small></div>
+                    </div>
+                    ${archived ? "" : `<button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${toISO(item.departure)}">导出提醒</button>`}
+                </article>`;
+            };
+            els.ticketReminders.innerHTML = `
+                <div class="ticket-upcoming">${upcoming.length ? upcoming.map(item => card(item)).join("") : `<div class="ticket-list-empty">暂无待出发行程</div>`}</div>
+                ${past.length ? `<details class="ticket-history"><summary><span>已结束的出行</span> · ${past.length}</summary><div class="ticket-upcoming ticket-history-list">${past.map(item => card(item, true)).join("")}</div></details>` : ""}
+            `;
         }
 
         function toggleTicketTool() {
-            const open = els.ticketToolPanel.hidden;
-            els.ticketToolPanel.hidden = !open;
-            els.ticketToolToggle.setAttribute("aria-expanded", String(open));
-            els.ticketToolAction.innerHTML = `${open ? "收起提醒" : "查看提醒"} <span aria-hidden="true">${open ? "↑" : "→"}</span>`;
-            if (open) els.ticketToolPanel.scrollIntoView({behavior: "smooth", block: "nearest"});
+            renderTicketReminders();
+            openBackdrop(els.ticketToolPanel);
+            modalReturnFocus.set(els.ticketToolPanel, els.ticketToolToggle);
+            document.getElementById("closeTicketTool").focus({preventScroll: true});
         }
 
         function openModal(iso) {
@@ -4540,7 +4610,7 @@
                 if (reason) els.leaveReasonDoc.value = reason;
             }
 
-            saveState();
+            if (!saveState()) return;
             if (!options.keepOpen) {
                 closeModal();
                 const changedDates = new Set([...statusDates, ...(pendingOvertime || overtimeTouched ? overtimeDates : [])]).size;
@@ -5895,7 +5965,7 @@
 
             return [...firstByName.entries()].map(([name, iso]) => {
                 const departure = fromISO(iso);
-                const saleDate = addDays(departure, -15);
+                const saleDate = addDays(departure, -14);
                 return {name, departure, saleDate};
             }).sort((a, b) => a.departure - b.departure);
         }
@@ -6372,7 +6442,14 @@
         }
 
         function saveState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                return true;
+            } catch (error) {
+                // 存储被禁用或空间不足时，保留当前会话状态，并明确告知用户。
+                showToast("本次修改仅保存在当前会话，无法写入本地存储", "error", {duration: 6000});
+                return false;
+            }
         }
     </script>
     <script>
