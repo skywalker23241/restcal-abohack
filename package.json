@@ -59,6 +59,7 @@
     },
     "dependencies": {
         "@capacitor/android": "^6.2.1",
-        "@capacitor/core": "^6.2.1"
+        "@capacitor/core": "^6.2.1",
+        "@phosphor-icons/web": "^2.1.2"
     }
 }

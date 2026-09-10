@@ -19,7 +19,11 @@
         "提醒默认 09:00，实际起售时间以 12306 为准。": "Reminder defaults to 09:00. Check 12306 for the actual sale time.",
         "开售日期": "Sales open",
         "出行日期": "Departure", "导出提醒": "Export reminder",
-        "假期首日出发": "Holiday departure",
+        "假期首日出发": "Depart on the first holiday day", "假期前一天晚上出发": "Depart the evening before the holiday",
+        "购票提醒偏好": "Ticket reminder preferences", "按你的出行习惯计算出发日和开售日。": "Calculate departure and sale dates around your travel habits.",
+        "计划出发时间": "Planned departure", "火车票提前售卖天数": "Advance ticket-sale days", "购票提醒时间": "Reminder time",
+        "将按计划出发日倒推开售日期；实际起售时间以 12306 为准。": "The sale date is calculated from your planned departure. Check 12306 for the actual sale time.",
+        "提前售卖天数应为 1–60": "Advance ticket-sale days must be between 1 and 60",
         "出发日已过": "Departure passed",
         "今天开售": "Sales open today",
         "已到开售日": "Booking window open",
@@ -239,6 +243,7 @@
         "记录已保存": "Record saved", "周末备注已保存": "Weekend note saved", "CSV 已导出": "CSV exported",
         "选择状态": "Choose status", "理由": "Reason", "仅自己可见": "Only visible to you", "清除记录": "Clear record", "请选择有效的日期范围": "Choose a valid date range",
         "选择范围后保存，会应用到范围内所有工作日，自动跳过周末和节假日。": "Saving with a range applies to every workday in it; weekends and holidays are skipped automatically.", "应用到范围内工作日，自动跳过周末和节假日。": "Applies to workdays in the range; weekends and holidays are skipped.",
+        "应用到所选范围内的每一天，包括周末和节假日。": "Applies to every date in the selected range, including weekends and holidays.", "所选范围没有可记录的日期。": "The selected range contains no dates to record.",
         "周末可添加备注，状态不可标记": "Weekends support notes only; status marking is unavailable.", "周末只能添加备注，不能标记出勤状态。": "Weekends support notes only; attendance status cannot be marked.",
         "可选择多个周末，保存后会将同一条备注应用到所选周末。": "Select multiple weekends to apply the same note to them.", "所选范围没有周末日期。": "The selected range contains no weekends.",
         "元旦": "New Year's Day", "春节": "Spring Festival", "清明节": "Qingming Festival", "劳动节": "Labour Day", "端午节": "Dragon Boat Festival", "中秋": "Mid-Autumn Festival", "中秋节": "Mid-Autumn Festival", "国庆节": "National Day",
@@ -249,6 +254,14 @@
         "半天 (4 小时)": "Half day (4h)", "全天 (8 小时)": "Full day (8h)", "1.5 天 (12 小时)": "1.5 days (12h)", "2.0 天 (16 小时)": "2.0 days (16h)",
         "1.0x (1:1 调休)": "1.0x (1:1 comp)", "2.0x (双倍调休)": "2.0x (2x comp)", "3.0x (三倍调休)": "3.0x (3x comp)",
         "日历导出 (.ics)": "Calendar Export (.ics)", "日历文件导出 (.ics)": "iCalendar File Export (.ics)", "导出日历": "Export calendar", "同步事项到系统日历": "Sync events to your calendar",
+        "习惯打卡": "Habit check-in", "新建习惯，记录每日完成": "Create habits and track daily progress", "新建习惯": "New habit", "习惯名称": "Habit name",
+        "培养稳定节奏，记录每日进步": "Build a steady rhythm and track daily progress", "习惯概览": "Habit overview", "今日进度": "Today's progress", "连续打卡": "Current streak", "本月完成率": "Monthly completion",
+        "选择习惯图标": "Choose a habit icon", "习惯图标": "Habit icons", "旗子": "Flag", "自然": "Nature", "坚持": "Consistency", "健康": "Health", "运动": "Exercise", "饮水": "Hydration", "睡眠": "Sleep", "早起": "Wake up", "音乐": "Music", "目标": "Goal", "学习": "Study",
+        "我的习惯": "My habits", "按创建时间": "By creation time", "例如：阅读 20 分钟": "e.g. Read for 20 minutes", "例如：阅读 20 分钟 / 晚间散步": "e.g. Read for 20 minutes / Evening walk", "暂无习惯，输入名称后新建": "No habits yet. Enter a name to create one.",
+        "今日打卡": "Check in today", "今日已打卡": "Checked in", "打卡": "Check in", "已打卡": "Checked in", "删除习惯": "Delete habit",
+        "✓ 已打卡": "✓ Checked in",
+        "习惯已创建": "Habit created", "习惯已删除": "Habit deleted", "这个习惯已经存在": "This habit already exists",
+        "今日打卡完成": "Today's check-in completed", "已取消今日打卡": "Today's check-in removed", "删除习惯？": "Delete habit?",
         "导出当前年 (.ics)": "Export current year (.ics)", "导出当前年日历 (.ics)": "Export current year (.ics)", "导出全部记录 (.ics)": "Export all records (.ics)",
         "导出请假、节假日与抢票提醒至系统日历": "Export leave, holidays and ticket reminders to calendar apps",
         "将请假、出勤、节假日调休和抢票提醒导出为标准日历文件，支持导入 Apple 日历、Google 日历、飞书与企微。": "Export leave, attendance, holidays and ticket reminders as RFC 5545 .ics for Apple Calendar, Google Calendar, Feishu and WeCom.",
@@ -277,12 +290,14 @@
             if (setAllowance) translated = `Set ${EN[setAllowance[1]].toLowerCase()} allowance`;
             const holidayDate = trimmed.match(/^(中秋|中秋节|国庆节|春节|元旦|劳动节|清明节|端午节) · (.+)$/);
             if (holidayDate) translated = `${EN[holidayDate[1]]} · ${holidayDate[2]}`;
-            const ticketToday = trimmed.match(/^(.+?)火车票今天开售，假期首日 (.+)$/);
-            if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]} train tickets go on sale today; the holiday starts ${translateCore(ticketToday[2])}`;
+            const ticketToday = trimmed.match(/^(.+?)火车票今天开售，(?:假期首日|计划出行) (.+)$/);
+            if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]} train tickets go on sale today; planned departure ${translateCore(ticketToday[2])}`;
             const ticketSoon = trimmed.match(/^(.+?)火车票 (\d+) 天后开售（(.+)）$/);
             if (ticketSoon) translated = `${EN[ticketSoon[1]] || ticketSoon[1]} train tickets go on sale in ${ticketSoon[2]} days (${translateCore(ticketSoon[3])})`;
-            const ticketOnSale = trimmed.match(/^(.+?)火车票已开售，假期首日 (.+)$/);
-            if (ticketOnSale) translated = `${EN[ticketOnSale[1]] || ticketOnSale[1]} train tickets are on sale; the holiday starts ${translateCore(ticketOnSale[2])}`;
+            const ticketOnSale = trimmed.match(/^(.+?)火车票已开售，(?:假期首日|计划出行) (.+)$/);
+            if (ticketOnSale) translated = `${EN[ticketOnSale[1]] || ticketOnSale[1]} train tickets are on sale; planned departure ${translateCore(ticketOnSale[2])}`;
+            const ticketGuide = trimmed.match(/^按(假期前一天晚上|假期首日)出发、提前 (\d+) 天计算，(\d{2}:\d{2}) 提醒；实际起售时间以 12306 为准。$/);
+            if (ticketGuide) translated = `Depart ${ticketGuide[1] === "假期前一天晚上" ? "the evening before the holiday" : "on the first holiday day"}; sales are calculated ${ticketGuide[2]} days ahead with a ${ticketGuide[3]} reminder. Check 12306 for the actual sale time.`;
             const weekdayToday = trimmed.match(/^(周[一二三四五六日]) · 今天$/);
             if (weekdayToday && EN[weekdayToday[1]]) translated = `${EN[weekdayToday[1]]} · Today`;
             const ticketSaleWeekday = trimmed.match(/^(周[一二三四五六日]) · 开售$/);
@@ -341,6 +356,8 @@
                 [/^当前查看：(\d+)月$/, "Viewing: month $1"],
                 [/^剩余年假 (.+)$/, "Annual leave left $1"],
                 [/^每周 (.+) 天 · 每天 (.+) 小时$/, "$1 days/week · $2 hours/day"],
+                [/^假期前一天晚上 · 提前 (\d+) 天 · (\d{2}:\d{2})$/, "Evening before holiday · $1 days ahead · $2"],
+                [/^假期首日 · 提前 (\d+) 天 · (\d{2}:\d{2})$/, "First holiday day · $1 days ahead · $2"],
                 [/^生成 (\d+) 月工资条$/, "Generate month $1 payslip"],
                 [/^(\d+)\s*天后开售$/, "On sale in $1 days"],
                 [/^还有 (\d+) 天$/, "$1 days"],
@@ -355,6 +372,12 @@
                 [/^已清除 (\d+) 条记录$/, "Cleared $1 records"],
                 [/^已保存 (\d+) 天记录$/, "Saved records for $1 days"],
                 [/^已保存 (\d+) 个周末备注$/, "Saved notes for $1 weekends"],
+                [/^(\d+) 个习惯 · 今日 (\d+)\/(\d+)$/, "$1 habits · Today $2/$3"],
+                [/^本月 (\d+) 次 · 连续 (\d+) 天$/, "$1 this month · $2-day streak"],
+                [/^习惯 · (.+)$/, "Habits · $1"],
+                [/^习惯已打卡：(.+)$/, "Habits checked in: $1"],
+                [/^删除习惯 (.+)$/, "Delete habit $1"],
+                [/^“(.+)”及其全部打卡记录都会被删除。$/, "“$1” and all its check-ins will be deleted."],
                 [/^共 (\d+) 条记录$/, "$1 records"],
                 [/^额度 (\d+(?:\.\d+)?) 天$/, "Allowance: $1 days"],
                 [/^今天 (\d{2}:\d{2})$/, "Today $1"],

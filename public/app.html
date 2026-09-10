@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-600.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bodoni-moda@5/latin-700.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/700.css">
+    <link rel="stylesheet" href="assets/vendor/phosphor/regular/style.css">
+    <link rel="stylesheet" href="assets/vendor/phosphor/fill/style.css">
     <title>休历 - 请假、出勤与购票提醒</title>
     <script>
         (function () {
@@ -34,170 +36,6 @@
 </head>
 
 <body>
-    <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Phosphor Icons 2.1.1 (Regular + selected navigation Fill), MIT License. -->
-        <symbol id="i-theme-auto" viewBox="0 0 256 256">
-            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z" />
-        </symbol>
-        <symbol id="i-theme-light" viewBox="0 0 256 256">
-            <path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z" />
-        </symbol>
-        <symbol id="i-theme-dark" viewBox="0 0 256 256">
-            <path d="M240,96a8,8,0,0,1-8,8H216v16a8,8,0,0,1-16,0V104H184a8,8,0,0,1,0-16h16V72a8,8,0,0,1,16,0V88h16A8,8,0,0,1,240,96ZM144,56h8v8a8,8,0,0,0,16,0V56h8a8,8,0,0,0,0-16h-8V32a8,8,0,0,0-16,0v8h-8a8,8,0,0,0,0,16Zm72.77,97a8,8,0,0,1,1.43,8A96,96,0,1,1,95.07,37.8a8,8,0,0,1,10.6,9.06A88.07,88.07,0,0,0,209.14,150.33,8,8,0,0,1,216.77,153Zm-19.39,14.88c-1.79.09-3.59.14-5.38.14A104.11,104.11,0,0,1,88,64c0-1.79,0-3.59.14-5.38A80,80,0,1,0,197.38,167.86Z" />
-        </symbol>
-        <symbol id="i-settings" viewBox="0 0 256 256">
-            <path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z" />
-        </symbol>
-        <symbol id="i-guide" viewBox="0 0 256 256">
-            <path d="M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64ZM160,88h40a8,8,0,0,1,0,16H160a8,8,0,0,1,0-16Zm48,40a8,8,0,0,1-8,8H160a8,8,0,0,1,0-16h40A8,8,0,0,1,208,128Zm0,32a8,8,0,0,1-8,8H160a8,8,0,0,1,0-16h40A8,8,0,0,1,208,160Z" />
-        </symbol>
-        <symbol id="i-csv" viewBox="0 0 256 256">
-            <path d="M48,180c0,11,7.18,20,16,20a14.24,14.24,0,0,0,10.22-4.66A8,8,0,0,1,85.78,206.4,30.06,30.06,0,0,1,64,216c-17.65,0-32-16.15-32-36s14.35-36,32-36a30.06,30.06,0,0,1,21.78,9.6,8,8,0,0,1-11.56,11.06A14.24,14.24,0,0,0,64,160C55.18,160,48,169,48,180Zm79.6-8.69c-4-1.16-8.14-2.35-10.45-3.84-1.25-.81-1.23-1-1.12-1.9a4.57,4.57,0,0,1,2-3.67c4.6-3.12,15.34-1.73,19.82-.56A8,8,0,0,0,142,145.86c-2.12-.55-21-5.22-32.84,2.76a20.58,20.58,0,0,0-9,14.95c-2,15.88,13.65,20.41,23,23.11,12.06,3.49,13.12,4.92,12.78,7.59-.31,2.41-1.26,3.34-2.14,3.93-4.6,3.06-15.17,1.56-19.55.36A8,8,0,0,0,109.94,214a61.34,61.34,0,0,0,15.19,2c5.82,0,12.3-1,17.49-4.46a20.82,20.82,0,0,0,9.19-15.23C154,179,137.49,174.17,127.6,171.31Zm83.09-26.84a8,8,0,0,0-10.23,4.84L188,184.21l-12.47-34.9a8,8,0,0,0-15.07,5.38l20,56a8,8,0,0,0,15.07,0l20-56A8,8,0,0,0,210.69,144.47ZM216,88v24a8,8,0,0,1-16,0V96H152a8,8,0,0,1-8-8V40H56v72a8,8,0,0,1-16,0V40A16,16,0,0,1,56,24h96a8,8,0,0,1,5.66,2.34l56,56A8,8,0,0,1,216,88Zm-27.31-8L160,51.31V80Z" />
-        </symbol>
-        <symbol id="i-search" viewBox="0 0 256 256">
-            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" />
-        </symbol>
-        <symbol id="i-filter" viewBox="0 0 256 256">
-            <path d="M230.6,49.53A15.81,15.81,0,0,0,216,40H40A16,16,0,0,0,28.19,66.76l.08.09L96,139.17V216a16,16,0,0,0,24.87,13.32l32-21.34A16,16,0,0,0,160,194.66V139.17l67.74-72.32.08-.09A15.8,15.8,0,0,0,230.6,49.53ZM40,56h0Zm106.18,74.58A8,8,0,0,0,144,136v58.66L112,216V136a8,8,0,0,0-2.16-5.47L40,56H216Z" />
-        </symbol>
-        <symbol id="i-ticket" viewBox="0 0 256 256">
-            <path d="M232,104a8,8,0,0,0,8-8V64a16,16,0,0,0-16-16H32A16,16,0,0,0,16,64V96a8,8,0,0,0,8,8,24,24,0,0,1,0,48,8,8,0,0,0-8,8v32a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V160a8,8,0,0,0-8-8,24,24,0,0,1,0-48ZM32,167.2a40,40,0,0,0,0-78.4V64H88V192H32Zm192,0V192H104V64H224V88.8a40,40,0,0,0,0,78.4Z" />
-        </symbol>
-        <!-- 节日插画：柔和双色图形，供购票提醒使用。 -->
-        <symbol id="i-holiday-new-year" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".1"/><circle cx="32" cy="34" r="10" opacity=".3"/>
-            <path d="M30 8h4v10h-4zM30 50h4v7h-4zM7 30h10v4H7zM47 30h10v4H47zM14 14l3-3 7 7-3 3zM43 43l3-3 6 6-3 3zM43 21l-3-3 7-7 3 3zM14 49l-3-3 7-7 3 3z" opacity=".72"/>
-            <path d="M18 43c5-5 9-7 14-4 5-5 10-3 15 4H18z" opacity=".52"/>
-        </g></symbol>
-        <symbol id="i-holiday-spring" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".1"/><path d="M23 18h18l5 8-3 19H21l-3-19 5-8z" opacity=".58"/>
-            <path d="M25 14h14v4H25zM24 27h16v3H24zM30 45h4v8h-4zM27 53h10l-5 5z" opacity=".82"/>
-            <circle cx="32" cy="36" r="5" opacity=".2"/>
-        </g></symbol>
-        <symbol id="i-holiday-qingming" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".09"/>
-            <path d="M18 10c8 12 8 25 4 43M23 22c7-1 11-4 14-9M23 30c8 0 13-3 18-8M22 39c8 1 14-1 20-6" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round" opacity=".72"/>
-            <path d="M33 13c5 0 7 2 8 5-5 1-8-1-8-5zM37 24c5 0 8 2 9 5-5 1-8-1-9-5zM38 35c5 0 8 2 9 5-5 1-8-1-9-5z" opacity=".42"/>
-        </g></symbol>
-        <symbol id="i-holiday-labor" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".1"/>
-            <path d="M32 13v39M31 23c-8-1-11-5-11-10 7 1 11 4 11 10zM33 29c8-1 11-5 11-10-7 1-11 4-11 10zM31 36c-8-1-11-5-11-10 7 1 11 4 11 10zM33 42c8-1 11-5 11-10-7 1-11 4-11 10z" opacity=".62"/>
-            <path d="M22 51h20v4H22z" opacity=".82"/>
-        </g></symbol>
-        <symbol id="i-holiday-dragon-boat" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".09"/><path d="M14 39h38l-7 10H22z" opacity=".62"/>
-            <path d="M18 35h28l6 4H14zM42 26c7-2 11 1 12 6-5 2-9 1-12-2z" opacity=".82"/>
-            <circle cx="49" cy="29" r="1.6" fill="var(--card)"/><path d="M12 53c6-3 11-3 17 0 6 3 11 3 17 0" style="fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round" opacity=".42"/>
-        </g></symbol>
-        <symbol id="i-holiday-mid-autumn" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="30" r="19" opacity=".32"/><path d="M38 14c-7 5-8 14-3 20 4 5 10 7 16 5-4 7-11 11-19 10-11-1-19-10-19-21 0-10 8-18 18-19 3 0 5 1 7 2z" opacity=".58"/>
-            <path d="M14 47c7-4 13-4 20 0 6 3 11 3 17 0v5H14z" opacity=".22"/>
-        </g></symbol>
-        <symbol id="i-holiday-national" viewBox="0 0 256 256"><g transform="scale(4)">
-            <circle cx="32" cy="32" r="27" opacity=".09"/><path d="M18 31h28v18H18z" opacity=".46"/>
-            <path d="M13 49h38v5H13zM16 27h32v5H16zM22 21h20l4 6H18zM28 13h8v8h-8z" opacity=".82"/>
-            <path d="M25 36h14v13H25zM15 18l2 2 3-1-2 3 1 3-3-2-3 2 1-3-2-3 3 1z" opacity=".58"/>
-        </g></symbol>
-        <symbol id="i-month-prev" viewBox="0 0 256 256">
-            <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
-        </symbol>
-        <symbol id="i-month-next" viewBox="0 0 256 256">
-            <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
-        </symbol>
-        <symbol id="i-salary-slip" viewBox="0 0 256 256">
-            <path d="M72,104a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,104Zm8,40h96a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16ZM232,56V208a8,8,0,0,1-11.58,7.15L192,200.94l-28.42,14.21a8,8,0,0,1-7.16,0L128,200.94,99.58,215.15a8,8,0,0,1-7.16,0L64,200.94,35.58,215.15A8,8,0,0,1,24,208V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Zm-16,0H40V195.06l20.42-10.22a8,8,0,0,1,7.16,0L96,199.06l28.42-14.22a8,8,0,0,1,7.16,0L160,199.06l28.42-14.22a8,8,0,0,1,7.16,0L216,195.06Z" />
-        </symbol>
-        <symbol id="i-leave-slip" viewBox="0 0 256 256">
-            <path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34ZM124.69,152H104V131.31l64-64L188.69,88ZM200,76.69,179.31,56,192,43.31,212.69,64ZM224,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h80a8,8,0,0,1,0,16H48V208H208V128a8,8,0,0,1,16,0Z" />
-        </symbol>
-        <symbol id="i-nav-calendar" viewBox="0 0 256 256">
-            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z" />
-        </symbol>
-        <symbol id="i-nav-calendar-fill" viewBox="0 0 256 256">
-            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,48H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24Z" />
-        </symbol>
-        <symbol id="i-nav-stats" viewBox="0 0 256 256">
-            <path d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z" />
-        </symbol>
-        <symbol id="i-nav-stats-fill" viewBox="0 0 256 256">
-            <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16h8V136a8,8,0,0,1,8-8H72a8,8,0,0,1,8,8v64H96V88a8,8,0,0,1,8-8h32a8,8,0,0,1,8,8V200h16V40a8,8,0,0,1,8-8h40a8,8,0,0,1,8,8V200h8A8,8,0,0,1,232,208Z" />
-        </symbol>
-        <symbol id="i-nav-tools" viewBox="0 0 256 256">
-            <path d="M224,64H176V56a24,24,0,0,0-24-24H104A24,24,0,0,0,80,56v8H32A16,16,0,0,0,16,80V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V80A16,16,0,0,0,224,64ZM96,56a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM224,80v32H192v-8a8,8,0,0,0-16,0v8H80v-8a8,8,0,0,0-16,0v8H32V80Zm0,112H32V128H64v8a8,8,0,0,0,16,0v-8h96v8a8,8,0,0,0,16,0v-8h32v64Z" />
-        </symbol>
-        <symbol id="i-nav-tools-fill" viewBox="0 0 256 256">
-            <path d="M224,64H176V56a24,24,0,0,0-24-24H104A24,24,0,0,0,80,56v8H32A16,16,0,0,0,16,80v28a4,4,0,0,0,4,4H64V96.27A8.17,8.17,0,0,1,71.47,88,8,8,0,0,1,80,96v16h96V96.27A8.17,8.17,0,0,1,183.47,88,8,8,0,0,1,192,96v16h44a4,4,0,0,0,4-4V80A16,16,0,0,0,224,64Zm-64,0H96V56a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Zm80,68v60a16,16,0,0,1-16,16H32a16,16,0,0,1-16-16V132a4,4,0,0,1,4-4H64v16a8,8,0,0,0,8.53,8A8.17,8.17,0,0,0,80,143.73V128h96v16a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V128h44A4,4,0,0,1,240,132Z" />
-        </symbol>
-        <symbol id="i-alert" viewBox="0 0 256 256">
-            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z" />
-        </symbol>
-        <symbol id="i-cloud" viewBox="0 0 256 256">
-            <path d="M178.34,165.66,160,147.31V208a8,8,0,0,1-16,0V147.31l-18.34,18.35a8,8,0,0,1-11.32-11.32l32-32a8,8,0,0,1,11.32,0l32,32a8,8,0,0,1-11.32,11.32ZM160,40A88.08,88.08,0,0,0,81.29,88.68,64,64,0,1,0,72,216h40a8,8,0,0,0,0-16H72a48,48,0,0,1,0-96c1.1,0,2.2,0,3.29.12A88,88,0,0,0,72,128a8,8,0,0,0,16,0,72,72,0,1,1,100.8,66,8,8,0,0,0,3.2,15.34,7.9,7.9,0,0,0,3.2-.68A88,88,0,0,0,160,40Z" />
-        </symbol>
-        <symbol id="i-status-work" viewBox="0 0 256 256">
-            <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
-        </symbol>
-        <symbol id="i-status-personal" viewBox="0 0 256 256">
-            <path d="M152,80a32,32,0,1,0-32-32A32,32,0,0,0,152,80Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,152,32Zm64,112a8,8,0,0,1-8,8c-35.31,0-52.95-17.81-67.12-32.12-2.74-2.77-5.36-5.4-8-7.84l-13.43,30.88,37.2,26.57A8,8,0,0,1,160,176v56a8,8,0,0,1-16,0V180.12l-31.07-22.2L79.34,235.19A8,8,0,0,1,72,240a7.84,7.84,0,0,1-3.19-.67,8,8,0,0,1-4.15-10.52l54.08-124.37c-9.31-1.65-20.92,1.2-34.7,8.58a163.88,163.88,0,0,0-30.57,21.77,8,8,0,0,1-10.95-11.66c2.5-2.35,61.69-57.23,98.72-25.08,3.83,3.32,7.48,7,11,10.57C166.19,122.7,179.36,136,208,136A8,8,0,0,1,216,144Z" />
-        </symbol>
-        <symbol id="i-status-sick" viewBox="0 0 256 256">
-            <path d="M216,88H168V40a16,16,0,0,0-16-16H104A16,16,0,0,0,88,40V88H40a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16H88v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V168h48a16,16,0,0,0,16-16V104A16,16,0,0,0,216,88Zm0,64H160a8,8,0,0,0-8,8v56H104V160a8,8,0,0,0-8-8H40V104H96a8,8,0,0,0,8-8V40h48V96a8,8,0,0,0,8,8h56Z" />
-        </symbol>
-        <symbol id="i-status-annual" viewBox="0 0 256 256">
-            <path d="M240,152H199.55a73.54,73.54,0,0,0,.45-8,72,72,0,0,0-144,0,73.54,73.54,0,0,0,.45,8H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM72,144a56,56,0,1,1,111.41,8H72.59A56.13,56.13,0,0,1,72,144Zm144,56a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16H208A8,8,0,0,1,216,200ZM72.84,43.58a8,8,0,0,1,14.32-7.16l8,16a8,8,0,0,1-14.32,7.16Zm-56,48.84a8,8,0,0,1,10.74-3.57l16,8a8,8,0,0,1-7.16,14.31l-16-8A8,8,0,0,1,16.84,92.42Zm192,15.16a8,8,0,0,1,3.58-10.73l16-8a8,8,0,1,1,7.16,14.31l-16,8a8,8,0,0,1-10.74-3.58Zm-48-55.16,8-16a8,8,0,0,1,14.32,7.16l-8,16a8,8,0,1,1-14.32-7.16Z" />
-        </symbol>
-        <symbol id="i-status-comp" viewBox="0 0 256 256">
-            <path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z" />
-        </symbol>
-        <symbol id="i-status-overtime" viewBox="0 0 256 256">
-            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z" />
-        </symbol>
-        <symbol id="i-export-ics" viewBox="0 0 256 256">
-            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-42.34-66.34a8,8,0,0,1,0,11.32l-32,32a8,8,0,0,1-11.32,0l-32-32a8,8,0,0,1,11.32-11.32L120,158.69V120a8,8,0,0,1,16,0v38.69l18.34-18.35A8,8,0,0,1,165.66,141.66Z" />
-        </symbol>
-        <symbol id="i-settings-profile" viewBox="0 0 256 256">
-            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM74.08,197.5a64,64,0,0,1,107.84,0,87.83,87.83,0,0,1-107.84,0ZM96,120a32,32,0,1,1,32,32A32,32,0,0,1,96,120Zm97.76,66.41a79.66,79.66,0,0,0-36.06-28.75,48,48,0,1,0-59.4,0,79.66,79.66,0,0,0-36.06,28.75,88,88,0,1,1,131.52,0Z" />
-        </symbol>
-        <symbol id="i-settings-schedule" viewBox="0 0 256 256">
-            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z" />
-        </symbol>
-        <symbol id="i-settings-salary" viewBox="0 0 256 256">
-            <path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z" />
-        </symbol>
-        <symbol id="i-settings-quota" viewBox="0 0 256 256">
-            <path d="M128,24a8,8,0,0,0-8,8V88a8,8,0,0,0,8,8,32,32,0,1,1-27.72,16,8,8,0,0,0-2.93-10.93l-48.5-28A8,8,0,0,0,37.92,76,104,104,0,1,0,128,24ZM48.09,91.1,83,111.26A48.09,48.09,0,0,0,80,128c0,1.53.08,3,.22,4.52L41.28,143A88.16,88.16,0,0,1,48.09,91.1Zm-2.67,67.31,39-10.44A48.1,48.1,0,0,0,120,175.32v40.31A88.2,88.2,0,0,1,45.42,158.41ZM136,215.63V175.32a48,48,0,0,0,0-94.65V40.36a88,88,0,0,1,0,175.27Z" />
-        </symbol>
-        <symbol id="i-settings-appearance" viewBox="0 0 256 256">
-            <path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z" />
-        </symbol>
-        <symbol id="i-settings-advanced" viewBox="0 0 256 256">
-            <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z" />
-        </symbol>
-        <symbol id="i-action-close" viewBox="0 0 256 256">
-            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
-        </symbol>
-        <symbol id="i-action-done" viewBox="0 0 256 256">
-            <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
-        </symbol>
-        <symbol id="i-action-save" viewBox="0 0 256 256">
-            <path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z" />
-        </symbol>
-        <symbol id="i-action-trash" viewBox="0 0 256 256">
-            <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z" />
-        </symbol>
-        <symbol id="i-action-back" viewBox="0 0 256 256">
-            <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z" />
-        </symbol>
-        <symbol id="i-month-prev-year" viewBox="0 0 256 256">
-            <path d="M205.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L131.31,128ZM51.31,128l74.35-74.34a8,8,0,0,0-11.32-11.32l-80,80a8,8,0,0,0,0,11.32l80,80a8,8,0,0,0,11.32-11.32Z" />
-        </symbol>
-        <symbol id="i-month-next-year" viewBox="0 0 256 256">
-            <path d="M141.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L124.69,128,50.34,53.66A8,8,0,0,1,61.66,42.34l80,80A8,8,0,0,1,141.66,133.66Zm80-11.32-80-80a8,8,0,0,0-11.32,11.32L204.69,128l-74.35,74.34a8,8,0,0,0,11.32,11.32l80-80A8,8,0,0,0,221.66,122.34Z" />
-        </symbol>
-        <symbol id="i-note" viewBox="0 0 256 256">
-            <path d="M88,96a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,96Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM224,48V156.69A15.86,15.86,0,0,1,219.31,168L168,219.31A15.86,15.86,0,0,1,156.69,224H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H152V160a8,8,0,0,1,8-8h48V48H48Zm120-40v28.7L196.69,168Z" />
-        </symbol>
-    </svg>
     <main class="app">
         <header class="topbar">
             <div class="brand">
@@ -206,41 +44,29 @@
             </div>
             <nav class="app-nav" aria-label="主导航">
                 <span class="app-nav-indicator" aria-hidden="true"></span>
-                <button class="app-nav-btn" data-nav="calendar" type="button" aria-current="page"><svg class="icon"><use href="#i-nav-calendar-fill" /></svg><span>日历</span></button>
-                <button class="app-nav-btn" data-nav="stats" type="button"><svg class="icon"><use href="#i-nav-stats" /></svg><span>统计</span></button>
-                <button class="app-nav-btn" data-nav="tools" type="button"><svg class="icon"><use href="#i-nav-tools" /></svg><span>工具</span></button>
+                <button class="app-nav-btn" data-nav="calendar" type="button" aria-current="page"><i class="ph-fill ph-calendar-blank icon"></i><span>日历</span></button>
+                <button class="app-nav-btn" data-nav="stats" type="button"><i class="ph ph-chart-bar icon"></i><span>统计</span></button>
+                <button class="app-nav-btn" data-nav="tools" type="button"><i class="ph ph-toolbox icon"></i><span>工具</span></button>
             </nav>
             <div class="topbar-actions">
-                <button class="btn icon-btn" id="searchToggle" type="button" title="搜索与筛选" aria-label="搜索与筛选"><svg class="icon">
-                        <use href="#i-search" />
-                    </svg></button>
-                <button class="btn icon-btn" id="themeToggle" type="button" title="主题：跟随系统" aria-label="切换主题"><svg class="icon">
-                        <use href="#i-theme-auto" />
-                    </svg></button>
+                <button class="btn icon-btn" id="searchToggle" type="button" title="搜索与筛选" aria-label="搜索与筛选"><i class="ph ph-magnifying-glass icon"></i></button>
+                <button class="btn icon-btn" id="themeToggle" type="button" title="主题：跟随系统" aria-label="切换主题"><i class="ph ph-circle-half icon"></i></button>
                 <button class="btn icon-btn language-btn" id="languageToggle" type="button" title="Switch to English" aria-label="Switch to English">EN</button>
                 <button class="btn icon-btn" id="guideToggle" type="button" title="界面引导" aria-label="界面引导"
-                    hidden><svg class="icon">
-                        <use href="#i-guide" />
-                    </svg></button>
-                <button class="btn icon-btn" id="settingsToggle" type="button" title="设置" aria-label="设置"><svg class="icon">
-                        <use href="#i-settings" />
-                    </svg></button>
+                    hidden><i class="ph ph-book-open icon"></i></button>
+                <button class="btn icon-btn" id="settingsToggle" type="button" title="设置" aria-label="设置"><i class="ph ph-sliders-horizontal icon"></i></button>
             </div>
         </header>
 
         <section class="view" id="viewCalendar" data-view-panel="calendar" aria-label="日历">
             <div class="calendar-toolbar">
                 <div class="month-switcher" aria-label="月份切换">
-                    <button class="btn ghost month-nav-btn" id="prevMonth" type="button" title="上月" aria-label="上月"><svg class="icon">
-                            <use href="#i-month-prev" />
-                        </svg></button>
+                    <button class="btn ghost month-nav-btn" id="prevMonth" type="button" title="上月" aria-label="上月"><i class="ph ph-caret-left icon"></i></button>
                     <div class="picker-group" aria-label="年月选择">
                         <select class="control" id="yearSelect" aria-label="年份"></select>
                         <select class="control" id="monthSelect" aria-label="月份"></select>
                     </div>
-                    <button class="btn ghost month-nav-btn" id="nextMonth" type="button" title="下月" aria-label="下月"><svg class="icon">
-                            <use href="#i-month-next" />
-                        </svg></button>
+                    <button class="btn ghost month-nav-btn" id="nextMonth" type="button" title="下月" aria-label="下月"><i class="ph ph-caret-right icon"></i></button>
                     <button class="btn" id="todayBtn" type="button">今天</button>
                 </div>
                 <div class="segmented view-switcher" role="group" aria-label="日历视图">
@@ -272,9 +98,7 @@
             <div class="home-alerts" id="homeAlerts" hidden></div>
 
             <section class="setup-banner" id="welcomeCard" aria-label="完成初始设置" hidden>
-                <svg class="icon setup-banner-icon" aria-hidden="true">
-                    <use href="#i-settings" />
-                </svg>
+                <i class="ph ph-sliders-horizontal icon setup-banner-icon" aria-hidden="true"></i>
                 <div class="setup-banner-copy">
                     <strong id="welcomeTitle">完成初始设置</strong>
                     <span id="welcomeSubtitle">补充工作与薪资信息</span>
@@ -353,45 +177,46 @@
             <div class="tools-layout">
                 <div class="tools-grid">
                     <button class="tool-card" data-open-receipt="salary" type="button">
-                        <span class="tool-card-icon"><svg class="icon">
-                                <use href="#i-salary-slip" />
-                            </svg></span>
+                        <span class="tool-card-icon"><i class="ph ph-receipt icon"></i></span>
                         <span class="tool-card-copy">
                             <strong id="salaryReceiptLabel">工资核算与工资条</strong>
                             <small>核算工资，生成工资条</small>
                         </span>
-                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
                     <button class="tool-card" data-generate-leave-receipt type="button">
-                        <span class="tool-card-icon"><svg class="icon">
-                                <use href="#i-leave-slip" />
-                            </svg></span>
+                        <span class="tool-card-icon"><i class="ph ph-note-pencil icon"></i></span>
                         <span class="tool-card-copy">
                             <strong>生成请假条</strong>
                             <small>填写信息，生成请假条</small>
                         </span>
-                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
                     <button class="tool-card" id="ticketToolToggle" type="button" aria-haspopup="dialog"
                         aria-controls="ticketToolPanel">
-                        <span class="tool-card-icon"><svg class="icon">
-                                <use href="#i-alert" />
-                            </svg></span>
+                        <span class="tool-card-icon"><i class="ph ph-warning-circle icon"></i></span>
                         <span class="tool-card-copy">
                             <strong>购票提醒</strong>
                             <small id="ticketToolHint">查看节假日火车票开售日</small>
                         </span>
-                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
+                    </button>
+                    <button class="tool-card" id="habitToolToggle" type="button" aria-haspopup="dialog"
+                        aria-controls="habitToolPanel">
+                        <span class="tool-card-icon"><i class="ph ph-check-circle icon"></i></span>
+                        <span class="tool-card-copy">
+                            <strong>习惯打卡</strong>
+                            <small id="habitToolHint">新建习惯，记录每日完成</small>
+                        </span>
+                        <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
                     <button class="tool-card" id="icsToolBtn" type="button">
-                        <span class="tool-card-icon"><svg class="icon">
-                                <use href="#i-export-ics" />
-                            </svg></span>
+                        <span class="tool-card-icon"><i class="ph ph-export icon"></i></span>
                         <span class="tool-card-copy">
                             <strong>日历导出 (.ics)</strong>
                             <small>同步事项到系统日历</small>
                         </span>
-                        <span class="tool-card-arrow" aria-hidden="true"><svg class="icon"><use href="#i-month-next" /></svg></span>
+                        <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
                 </div>
                 <div class="salary-snapshot" id="salaryResult" hidden></div>
@@ -409,7 +234,7 @@
             <div class="ticket-dialog-body">
                     <div class="reminder-list" id="ticketReminders"></div>
                     <aside class="ticket-guide">
-                        <p>提醒默认 09:00，实际起售时间以 12306 为准。</p>
+                        <p id="ticketGuideText">提醒默认 09:00，实际起售时间以 12306 为准。</p>
                         <div class="ticket-links">
                             <a class="btn" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">查询起售时间</a>
                             <a class="btn primary" href="https://www.12306.cn/" target="_blank" rel="noopener noreferrer">前往 12306</a>
@@ -419,11 +244,41 @@
         </div>
     </div>
 
+    <div class="modal-backdrop" id="habitToolPanel" role="dialog" aria-modal="true" aria-labelledby="habitDialogTitle">
+        <div class="habit-window">
+            <div class="modal-head habit-dialog-head">
+                <span class="habit-head-mark" aria-hidden="true"><i class="ph ph-check-circle icon"></i></span>
+                <span class="habit-head-copy"><h2 id="habitDialogTitle">习惯打卡</h2><small>培养稳定节奏，记录每日进步</small></span>
+                <button class="btn ghost icon-only" id="closeHabitTool" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
+            </div>
+            <div class="habit-dialog-body">
+                <div class="habit-summary" aria-label="习惯概览">
+                    <div class="habit-summary-item"><span class="habit-summary-icon"><i class="ph ph-check-circle icon"></i></span><span><small>今日进度</small><strong id="habitTodaySummary">0 / 0</strong></span></div>
+                    <div class="habit-summary-item"><span class="habit-summary-icon"><i class="ph ph-fire icon"></i></span><span><small>连续打卡</small><strong><span id="habitStreakSummary">0</span><em>天</em></strong></span></div>
+                    <div class="habit-summary-item"><span class="habit-summary-icon"><i class="ph ph-chart-bar icon"></i></span><span><small>本月完成率</small><strong id="habitRateSummary">0%</strong></span></div>
+                </div>
+                <form class="habit-create-form" id="habitCreateForm">
+                    <label class="sr-only" for="habitNameCreate">习惯名称</label>
+                    <div class="habit-create-control" id="habitCreateControl">
+                        <span class="habit-create-input">
+                            <button class="habit-icon-toggle" id="habitIconToggle" type="button" aria-label="选择习惯图标" aria-haspopup="listbox" aria-expanded="false" aria-controls="habitIconMenu"><i id="habitIconPreview" class="ph ph-flag icon" aria-hidden="true"></i></button>
+                            <input id="habitNameCreate" maxlength="40" autocomplete="off" placeholder="例如：阅读 20 分钟 / 晚间散步">
+                        </span>
+                        <div class="habit-icon-menu" id="habitIconMenu" role="listbox" aria-label="习惯图标" hidden></div>
+                    </div>
+                    <button class="btn primary" type="submit">新建习惯</button>
+                </form>
+                <div class="habit-list-head"><strong>我的习惯 <span id="habitCountLabel">(0)</span></strong><small>按创建时间</small></div>
+                <div class="habit-list" id="habitList" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
 
     <nav class="bottom-nav" aria-label="主导航">
-        <button class="bottom-nav-btn" data-nav="calendar" type="button" aria-current="page"><svg class="icon"><use href="#i-nav-calendar-fill" /></svg><span>日历</span></button>
-        <button class="bottom-nav-btn" data-nav="stats" type="button"><svg class="icon"><use href="#i-nav-stats" /></svg><span>统计</span></button>
-        <button class="bottom-nav-btn" data-nav="tools" type="button"><svg class="icon"><use href="#i-nav-tools" /></svg><span>工具</span></button>
+        <button class="bottom-nav-btn" data-nav="calendar" type="button" aria-current="page"><i class="ph-fill ph-calendar-blank icon"></i><span>日历</span></button>
+        <button class="bottom-nav-btn" data-nav="stats" type="button"><i class="ph ph-chart-bar icon"></i><span>统计</span></button>
+        <button class="bottom-nav-btn" data-nav="tools" type="button"><i class="ph ph-toolbox icon"></i><span>工具</span></button>
     </nav>
 
     <div class="onboarding-backdrop" id="onboardingBackdrop" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
@@ -451,7 +306,7 @@
                     <h2 id="searchTitle">搜索与筛选</h2>
                     <div class="subtitle">搜索记录并跳转日期</div>
                 </div>
-                <button class="btn ghost icon-only" id="closeSearch" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeSearch" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body search-body">
                 <div class="field search-field">
@@ -494,7 +349,7 @@
 
     <div class="modal-backdrop tour-intro-backdrop" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle" aria-describedby="guideDescription">
         <div class="modal tour-intro-modal">
-            <div class="tour-intro-mark" aria-hidden="true"><svg class="icon"><use href="#i-guide" /></svg></div>
+            <div class="tour-intro-mark" aria-hidden="true"><i class="ph ph-book-open icon"></i></div>
             <div class="modal-body tour-intro-body">
                 <span class="tour-intro-eyebrow">快速上手</span>
                 <h2 id="guideTitle">用 2 分钟认识 RestCal</h2>
@@ -511,20 +366,21 @@
         <div class="settings-page">
             <header class="settings-topbar">
                 <button class="btn ghost icon-only settings-back" id="settingsBack" type="button"
-                    title="返回设置目录" aria-label="返回设置目录"><svg class="icon" aria-hidden="true"><use href="#i-action-back" /></svg></button>
+                    title="返回设置目录" aria-label="返回设置目录"><i class="ph ph-arrow-left icon" aria-hidden="true"></i></button>
                 <h2 id="settingsTitle">设置</h2>
-                <button class="btn ghost icon-only" id="closeSettings" type="button" title="关闭设置" aria-label="关闭设置"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeSettings" type="button" title="关闭设置" aria-label="关闭设置"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </header>
             <div class="settings-layout">
                 <nav class="settings-nav" id="settingsNav" aria-label="设置分类">
-                    <button class="settings-nav-btn" data-settings-nav="profile" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-profile" /></svg><span>个人资料</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="schedule" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-schedule" /></svg><span>工作制度</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="salary" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-salary" /></svg><span>薪资与扣款</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="quota" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-quota" /></svg><span>假期额度</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="leave-doc" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-leave-slip" /></svg><span>请假条模板</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="data" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-cloud" /></svg><span>数据与同步</span></span></button>
-                    <button class="settings-nav-btn" data-settings-nav="appearance" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-appearance" /></svg><span>外观</span></span></button>
-                    <button class="settings-nav-btn settings-nav-advanced" data-settings-nav="advanced" type="button"><span class="settings-nav-label"><svg class="icon" aria-hidden="true"><use href="#i-settings-advanced" /></svg><span>高级设置</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="profile" type="button"><span class="settings-nav-label"><i class="ph ph-user-circle icon" aria-hidden="true"></i><span>个人资料</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="schedule" type="button"><span class="settings-nav-label"><i class="ph ph-calendar-dots icon" aria-hidden="true"></i><span>工作制度</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="salary" type="button"><span class="settings-nav-label"><i class="ph ph-wallet icon" aria-hidden="true"></i><span>薪资与扣款</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="quota" type="button"><span class="settings-nav-label"><i class="ph ph-chart-donut icon" aria-hidden="true"></i><span>假期额度</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="tickets" type="button"><span class="settings-nav-label"><i class="ph ph-train icon" aria-hidden="true"></i><span>购票提醒</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="leave-doc" type="button"><span class="settings-nav-label"><i class="ph ph-note-pencil icon" aria-hidden="true"></i><span>请假条模板</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="data" type="button"><span class="settings-nav-label"><i class="ph ph-cloud-arrow-up icon" aria-hidden="true"></i><span>数据与同步</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="appearance" type="button"><span class="settings-nav-label"><i class="ph ph-palette icon" aria-hidden="true"></i><span>外观</span></span></button>
+                    <button class="settings-nav-btn settings-nav-advanced" data-settings-nav="advanced" type="button"><span class="settings-nav-label"><i class="ph ph-gear-six icon" aria-hidden="true"></i><span>高级设置</span></span></button>
                 </nav>
                 <div class="settings-panels" id="settingsPanels">
                     <section class="settings-panel" data-settings-panel="profile" hidden>
@@ -628,6 +484,26 @@
                         </div>
                         <div class="quota-line" id="settingsQuotaStatus" aria-live="polite"></div>
                     </section>
+                    <section class="settings-panel" data-settings-panel="tickets" hidden>
+                        <header class="settings-panel-head">
+                            <h3>购票提醒</h3>
+                        </header>
+                        <div class="settings-grid">
+                            <div class="field wide-field">
+                                <label for="ticketDepartureRule">计划出发时间</label>
+                                <select id="ticketDepartureRule"><option value="holiday-start">假期首日出发</option><option value="holiday-eve">假期前一天晚上出发</option></select>
+                            </div>
+                            <div class="field">
+                                <label for="ticketAdvanceDays">火车票提前售卖天数</label>
+                                <input id="ticketAdvanceDays" inputmode="numeric" type="number" min="1" max="60" step="1" placeholder="14">
+                            </div>
+                            <div class="field">
+                                <label for="icsTicketTime">购票提醒时间</label>
+                                <select id="icsTicketTime" aria-label="购票提醒时间"></select>
+                            </div>
+                        </div>
+                        <p class="notice">将按计划出发日倒推开售日期；实际起售时间以 12306 为准。</p>
+                    </section>
                     <section class="settings-panel" data-settings-panel="leave-doc" hidden>
                         <header class="settings-panel-head">
                             <h3>请假条模板</h3>
@@ -686,7 +562,6 @@
                                 <label><input type="checkbox" data-ics-category="holidays" checked> 法定节假日</label>
                                 <label><input type="checkbox" data-ics-category="makeups" checked> 调休补班</label>
                                 <label><input type="checkbox" data-ics-category="tickets" checked> 抢票提醒</label>
-                                <label class="ics-time" for="icsTicketTime">抢票提醒时间 <select id="icsTicketTime" aria-label="抢票提醒时间"></select></label>
                             </div>
                             <div class="csv-actions">
                                 <button class="btn" id="exportIcsCurrentYear" type="button">导出当前年 (.ics)</button>
@@ -761,7 +636,7 @@
             </div>
             <footer class="settings-foot">
                 <span class="settings-foot-note">更改会自动保存在本机浏览器</span>
-                <button class="btn primary icon-only" id="settingsDone" type="button" title="完成" aria-label="完成"><svg class="icon" aria-hidden="true"><use href="#i-action-done" /></svg></button>
+                <button class="btn primary icon-only" id="settingsDone" type="button" title="完成" aria-label="完成"><i class="ph ph-check icon" aria-hidden="true"></i></button>
             </footer>
         </div>
     </div>
@@ -770,7 +645,7 @@
         <div class="modal webdav-config-modal">
             <div class="modal-head">
                 <h2 id="webdavConfigTitle">配置 WebDAV</h2>
-                <button class="btn ghost icon-only" id="closeWebdavConfig" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeWebdavConfig" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body webdav-config" id="webdavConfigArea">
                 <div class="settings-grid">
@@ -809,7 +684,7 @@
                 <div>
                     <h2 id="receiptModalTitle">票据预览</h2>
                 </div>
-                <button class="btn ghost icon-only" id="closeReceipt" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeReceipt" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </div>
             <div class="receipt-period" id="salaryReceiptPeriod" hidden>
                 <div class="receipt-period-copy">
@@ -817,11 +692,11 @@
                 </div>
                 <div class="receipt-period-controls">
                     <button class="btn ghost receipt-period-nav" id="salaryReceiptPrev" type="button"
-                        title="上一个月" aria-label="上一个月"><svg class="icon" aria-hidden="true"><use href="#i-month-prev" /></svg></button>
+                        title="上一个月" aria-label="上一个月"><i class="ph ph-caret-left icon" aria-hidden="true"></i></button>
                     <select id="salaryReceiptYear" aria-label="工资年份"></select>
                     <select id="salaryReceiptMonth" aria-label="工资月份"></select>
                     <button class="btn ghost receipt-period-nav" id="salaryReceiptNext" type="button"
-                        title="下一个月" aria-label="下一个月"><svg class="icon" aria-hidden="true"><use href="#i-month-next" /></svg></button>
+                        title="下一个月" aria-label="下一个月"><i class="ph ph-caret-right icon" aria-hidden="true"></i></button>
                 </div>
             </div>
             <div class="modal-body" id="receiptModalBody"></div>
@@ -839,7 +714,7 @@
                 <div>
                     <h2 id="leaveGeneratorTitle">生成请假条</h2>
                 </div>
-                <button class="btn ghost icon-only" id="closeLeaveGenerator" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeLeaveGenerator" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body leave-generator-body">
                 <section class="leave-form-panel" aria-label="请假条信息">
@@ -901,9 +776,13 @@
                     <h2 id="modalTitle">选择日期状态</h2>
                     <div class="subtitle" id="modalSubtitle"></div>
                 </div>
-                <button class="btn ghost icon-only" id="closeModal" type="button" title="关闭" aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-action-close" /></svg></button>
+                <button class="btn ghost icon-only" id="closeModal" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body">
+                <section class="modal-habits" id="modalHabits" hidden>
+                    <div class="field-group-label">习惯打卡</div>
+                    <div class="modal-habit-list" id="modalHabitList"></div>
+                </section>
                 <div class="field-group" role="group" aria-labelledby="statusChoiceLabel">
                     <div class="field-group-label" id="statusChoiceLabel">选择状态</div>
                     <div class="action-grid action-grid-primary">
@@ -962,7 +841,7 @@
                                 <input id="modalEndDate" type="date">
                             </div>
                         </div>
-                        <p class="notice" id="modalRangeNotice">应用到范围内工作日，自动跳过周末和节假日。</p>
+                        <p class="notice" id="modalRangeNotice">应用到所选范围内的每一天，包括周末和节假日。</p>
                         <div class="field">
                             <label for="modalNote">备注 <em>选填</em></label>
                             <input id="modalNote" placeholder="仅自己可见">
@@ -1009,10 +888,11 @@
         const THEME_SEQUENCE = ["auto", "light", "dark"];
         const PRODUCT_TOUR_VERSION = 2;
         const THEME_META = {
-            auto: {icon: "i-theme-auto", label: "主题：跟随系统"},
-            light: {icon: "i-theme-light", label: "主题：浅色"},
-            dark: {icon: "i-theme-dark", label: "主题：深色"}
+            auto: {icon: "circle-half", label: "主题：跟随系统"},
+            light: {icon: "sun", label: "主题：浅色"},
+            dark: {icon: "moon", label: "主题：深色"}
         };
+        const NAV_ICONS = {calendar: "calendar-blank", stats: "chart-bar", tools: "toolbox"};
         const darkSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
         const CALENDAR_API = {
             sourceName: "Chinese Days",
@@ -1031,6 +911,20 @@
             overtime: "加班"
         };
         const LEAVE_STATUSES = ["personal", "sick", "annual", "comp"];
+        const HABIT_ICONS = [
+            {id: "flag", icon: "flag", label: "旗子"},
+            {id: "book", icon: "book-open", label: "阅读"},
+            {id: "leaf", icon: "plant", label: "自然"},
+            {id: "flame", icon: "fire", label: "坚持"},
+            {id: "heart", icon: "heart", label: "健康"},
+            {id: "dumbbell", icon: "barbell", label: "运动"},
+            {id: "cup", icon: "coffee", label: "饮水"},
+            {id: "moon", icon: "moon", label: "睡眠"},
+            {id: "sun", icon: "sun", label: "早起"},
+            {id: "music", icon: "music-notes", label: "音乐"},
+            {id: "star", icon: "star", label: "目标"},
+            {id: "pencil", icon: "pencil-simple", label: "学习"}
+        ];
         const TAX_BRACKETS = [
             { limit: 36000, rate: 0.03, quick: 0 },
             { limit: 144000, rate: 0.10, quick: 2520 },
@@ -1051,6 +945,8 @@
             workSchedule: {workdaysPerWeek: 5, restDays: [0, 6], dailyWorkHours: 8, scheduleType: "standard"},
             salary: {monthlySalary: 0, fixedDeductions: 0, estimatedTax: 0, specialDeductions: 0, taxMode: "simple", payday: null},
             quotaRules: {annualExpireRule: "next-03-31", compExpireRule: "none"},
+            ticketPreferences: {departureRule: "holiday-start", reminderTime: "09:00", advanceDays: 14},
+            habits: [],
             onboardingCompleted: false,
             onboardingSkipped: false
         };
@@ -1093,6 +989,9 @@
         let pendingStatus = null;
         let pendingOvertime = false;
         let overtimeTouched = false;
+        let pendingHabitCheckins = new Set();
+        let habitTouched = false;
+        let selectedHabitIcon = "flag";
         let renderVersion = 0;
         let settingsRenderTimer = 0;
         let statsPeriodMode = "month";
@@ -1217,6 +1116,20 @@
             ticketToolHint: document.getElementById("ticketToolHint"),
             ticketToolPanel: document.getElementById("ticketToolPanel"),
             ticketReminders: document.getElementById("ticketReminders"),
+            ticketGuideText: document.getElementById("ticketGuideText"),
+            ticketDepartureRule: document.getElementById("ticketDepartureRule"),
+            ticketAdvanceDays: document.getElementById("ticketAdvanceDays"),
+            icsTicketTime: document.getElementById("icsTicketTime"),
+            habitToolToggle: document.getElementById("habitToolToggle"),
+            habitToolHint: document.getElementById("habitToolHint"),
+            habitToolPanel: document.getElementById("habitToolPanel"),
+            habitCreateForm: document.getElementById("habitCreateForm"),
+            habitCreateControl: document.getElementById("habitCreateControl"),
+            habitNameCreate: document.getElementById("habitNameCreate"),
+            habitIconToggle: document.getElementById("habitIconToggle"),
+            habitIconPreview: document.getElementById("habitIconPreview"),
+            habitIconMenu: document.getElementById("habitIconMenu"),
+            habitList: document.getElementById("habitList"),
             applicantName: document.getElementById("applicantName"),
             leaveGeneratorModal: document.getElementById("leaveGeneratorModal"),
             closeLeaveGenerator: document.getElementById("closeLeaveGenerator"),
@@ -1280,6 +1193,8 @@
             modalTitle: document.getElementById("modalTitle"),
             modalSubtitle: document.getElementById("modalSubtitle"),
             modalAdvanced: document.getElementById("modalAdvanced"),
+            modalHabits: document.getElementById("modalHabits"),
+            modalHabitList: document.getElementById("modalHabitList"),
             modalStartDate: document.getElementById("modalStartDate"),
             modalEndDate: document.getElementById("modalEndDate"),
             modalReasonField: document.getElementById("modalReasonField"),
@@ -1405,7 +1320,7 @@
             const dark = pref === "dark" || (pref === "auto" && darkSchemeQuery.matches);
             document.documentElement.dataset.theme = dark ? "dark" : "light";
             const meta = THEME_META[pref] || THEME_META.auto;
-            els.themeToggle.innerHTML = `<svg class="icon"><use href="#${meta.icon}"/></svg>`;
+            els.themeToggle.innerHTML = `<i class="ph ph-${meta.icon} icon" aria-hidden="true"></i>`;
             els.themeToggle.title = meta.label;
             document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#171411" : "#f6f3ed");
             document.querySelectorAll("[data-theme-choice]").forEach(button => {
@@ -1588,7 +1503,8 @@
                 if (!button.dataset.nav) return;
                 const active = button.dataset.nav === name;
                 button.classList.toggle("active", active);
-                button.querySelector("use")?.setAttribute("href", `#i-nav-${button.dataset.nav}${active ? "-fill" : ""}`);
+                const icon = button.querySelector(".icon");
+                if (icon) icon.className = `${active ? "ph-fill" : "ph"} ph-${NAV_ICONS[button.dataset.nav]} icon`;
                 if (active) button.setAttribute("aria-current", "page");
                 else button.removeAttribute("aria-current");
             });
@@ -1650,10 +1566,13 @@
             // 跨越紧凑断点时日期格副标题的取值规则会变，需要重绘日历。
             compactMonthQuery.addEventListener("change", () => renderCalendarView());
             window.addEventListener("restcal:languagechange", () => {
-                // 重渲染写回的是中文原文，而 apply(document) 已在派发事件前跑完，
-                // 这里必须补一次同步翻译，否则要等 MutationObserver 的异步回调。
                 renderMonthSummary(calculateStats(currentYear, currentMonth));
                 window.RestCalI18n?.apply(els.monthSummary);
+                if (activeDate && els.dayModal.classList.contains("open")) {
+                    const date = fromISO(activeDate);
+                    renderModalHeading(date, getDayInfo(date));
+                    window.RestCalI18n?.apply(els.dayModal);
+                }
                 requestAnimationFrame(() => syncAllSegmentedIndicators(false));
             });
         }
@@ -2158,11 +2077,11 @@
             // 标题拆成两个文本节点：“7月”命中词典（→ Jul），“2026 年”走 i18n 正则
             view.menu.innerHTML = `
           <div class="date-menu-head">
-            <button type="button" class="date-nav date-nav-year" data-date-nav="-12" title="上一年" aria-label="上一年"><svg class="icon" aria-hidden="true"><use href="#i-month-prev-year" /></svg></button>
-            <button type="button" class="date-nav" data-date-nav="-1" title="上月" aria-label="上月"><svg class="icon" aria-hidden="true"><use href="#i-month-prev" /></svg></button>
+            <button type="button" class="date-nav date-nav-year" data-date-nav="-12" title="上一年" aria-label="上一年"><i class="ph ph-caret-double-left icon" aria-hidden="true"></i></button>
+            <button type="button" class="date-nav" data-date-nav="-1" title="上月" aria-label="上月"><i class="ph ph-caret-left icon" aria-hidden="true"></i></button>
             <span class="date-menu-title"><span>${view.viewYear} 年</span> <span>${view.viewMonth}月</span></span>
-            <button type="button" class="date-nav" data-date-nav="1" title="下月" aria-label="下月"><svg class="icon" aria-hidden="true"><use href="#i-month-next" /></svg></button>
-            <button type="button" class="date-nav date-nav-year" data-date-nav="12" title="下一年" aria-label="下一年"><svg class="icon" aria-hidden="true"><use href="#i-month-next-year" /></svg></button>
+            <button type="button" class="date-nav" data-date-nav="1" title="下月" aria-label="下月"><i class="ph ph-caret-right icon" aria-hidden="true"></i></button>
+            <button type="button" class="date-nav date-nav-year" data-date-nav="12" title="下一年" aria-label="下一年"><i class="ph ph-caret-double-right icon" aria-hidden="true"></i></button>
           </div>
           ${range?.start || range?.end ? `<div class="date-range-summary"><span>范围</span><strong>${escapeHtml(range.start || "…")} → ${escapeHtml(range.end || "…")}</strong></div>` : ""}
           <div class="date-menu-week">${weekdays.map(day => `<span>${day}</span>`).join("")}</div>
@@ -2402,6 +2321,10 @@
                 const button = event.target instanceof Element ? event.target.closest("[data-open-search-panel]") : null;
                 if (button) openSearch();
             });
+            document.addEventListener("click", event => {
+                const button = event.target instanceof Element ? event.target.closest("[data-open-ticket-reminders]") : null;
+                if (button) toggleTicketTool(button);
+            });
             els.themeToggle.addEventListener("click", cycleTheme);
             els.languageToggle.addEventListener("click", () => window.RestCalI18n?.toggle());
             darkSchemeQuery.addEventListener("change", () => applyTheme(getThemePreference(), true));
@@ -2412,6 +2335,7 @@
                 if (!saveState()) return;
                 closeSettings();
                 renderHomeExtras();
+                renderTicketReminders();
                 showToast("设置已保存");
             });
             els.settingsModal.addEventListener("click", event => {
@@ -2452,11 +2376,29 @@
             document.querySelectorAll("[data-generate-leave-receipt]").forEach(button => {
                 button.addEventListener("click", () => openLeaveGenerator());
             });
-            els.ticketToolToggle.addEventListener("click", toggleTicketTool);
+            els.ticketToolToggle.addEventListener("click", () => toggleTicketTool(els.ticketToolToggle));
             document.getElementById("closeTicketTool").addEventListener("click", () => closeBackdrop(els.ticketToolPanel));
             els.ticketToolPanel.addEventListener("click", event => {
                 if (event.target === els.ticketToolPanel) closeBackdrop(els.ticketToolPanel);
             });
+            els.habitToolToggle.addEventListener("click", openHabitTool);
+            document.getElementById("closeHabitTool").addEventListener("click", () => closeBackdrop(els.habitToolPanel));
+            els.habitToolPanel.addEventListener("click", event => {
+                if (event.target === els.habitToolPanel) closeBackdrop(els.habitToolPanel);
+            });
+            els.habitCreateForm.addEventListener("submit", createHabit);
+            els.habitIconToggle.addEventListener("click", event => {
+                event.stopPropagation();
+                toggleHabitIconMenu();
+            });
+            els.habitIconMenu.addEventListener("click", event => {
+                const button = event.target.closest("[data-habit-icon]");
+                if (button) selectHabitIcon(button.dataset.habitIcon);
+            });
+            document.addEventListener("click", event => {
+                if (!els.habitCreateControl.contains(event.target)) closeHabitIconMenu();
+            });
+            els.habitList.addEventListener("click", handleHabitListClick);
             els.ticketReminders.addEventListener("click", event => {
                 const button = event.target.closest("[data-ticket-export]");
                 if (!button || !window.XiuliIcs) return;
@@ -2464,7 +2406,8 @@
                 if (!item) return;
                 const content = XiuliIcs.generateIcs({
                     ticketReminders: [item],
-                    ticketReminderTime: "09:00"
+                    ticketReminderTime: state.ticketPreferences.reminderTime,
+                    ticketAdvanceDays: state.ticketPreferences.advanceDays
                 });
                 XiuliIcs.downloadIcs(content, `RestCal-${toISO(item.departure)}-购票提醒.ics`);
                 showToast("提醒文件已导出，请导入系统日历");
@@ -2604,8 +2547,10 @@
             window.addEventListener("scroll", () => hideNoteTooltip(), true);
             document.addEventListener("keydown", event => {
                 if (event.key !== "Escape") return;
+                if (!els.habitIconMenu.hidden) return closeHabitIconMenu(true);
                 if (productTour?.active) return skipProductTour();
                 if (els.confirmModal.classList.contains("open")) return resolveConfirm(false);
+                if (els.habitToolPanel.classList.contains("open")) return closeBackdrop(els.habitToolPanel);
                 if (els.ticketToolPanel.classList.contains("open")) return closeBackdrop(els.ticketToolPanel);
                 if (els.searchModal.classList.contains("open")) return closeSearch();
                 if (els.webdavConfigModal.classList.contains("open")) return closeWebdavConfigModal();
@@ -2649,6 +2594,10 @@
                 button.addEventListener("click", () => chooseStatus(button.dataset.action));
             });
             els.modalGenerateDoc.addEventListener("click", generateLeaveDocFromModal);
+            els.modalHabitList.addEventListener("click", event => {
+                const button = event.target.closest("[data-modal-habit-id]");
+                if (button) togglePendingHabit(button.dataset.modalHabitId);
+            });
             els.modalClear.addEventListener("click", clearActiveRecord);
             els.modalSave.addEventListener("click", saveModalRecord);
             els.confirmCancel.addEventListener("click", () => resolveConfirm(false));
@@ -2688,10 +2637,161 @@
         function renderHomeExtras() {
             renderSetupBanner();
             renderGuideEntry();
+            renderHabitToolHint();
             renderHomeAlerts();
             renderRecentRecords();
             renderDataStatus();
             renderWebdavCard();
+        }
+
+        function isHabitChecked(habitId, iso) {
+            return Boolean(state.habitCheckins?.[habitId]?.[iso]);
+        }
+
+        function checkedHabitsForDate(iso) {
+            return state.habits.filter(habit => isHabitChecked(habit.id, iso));
+        }
+
+        function habitCheckinCountForDate(iso) {
+            return checkedHabitsForDate(iso).length;
+        }
+
+        function habitMonthCount(habitId, year = currentYear, month = currentMonth) {
+            const prefix = `${year}-${String(month).padStart(2, "0")}-`;
+            return Object.keys(state.habitCheckins?.[habitId] || {}).filter(iso => iso.startsWith(prefix)).length;
+        }
+
+        function habitStreak(habitId, reference = today) {
+            let cursor = new Date(reference.getFullYear(), reference.getMonth(), reference.getDate());
+            if (!isHabitChecked(habitId, toISO(cursor))) cursor.setDate(cursor.getDate() - 1);
+            let count = 0;
+            while (count < 3660 && isHabitChecked(habitId, toISO(cursor))) {
+                count += 1;
+                cursor.setDate(cursor.getDate() - 1);
+            }
+            return count;
+        }
+
+        function renderHabitToolHint() {
+            const count = state.habits.length;
+            els.habitToolHint.textContent = count ? `${count} 个习惯 · 今日 ${habitCheckinCountForDate(toISO(today))}/${count}` : "新建习惯，记录每日完成";
+        }
+
+        function habitIconDefinition(iconId) {
+            return HABIT_ICONS.find(icon => icon.id === iconId) || HABIT_ICONS[0];
+        }
+
+        function renderHabitIconMenu() {
+            els.habitIconMenu.innerHTML = HABIT_ICONS.map(icon => `<button class="habit-icon-option" type="button" role="option" data-habit-icon="${icon.id}" aria-label="${icon.label}" aria-selected="${icon.id === selectedHabitIcon}"><i class="ph ph-${icon.icon} icon" aria-hidden="true"></i></button>`).join("");
+        }
+
+        function toggleHabitIconMenu() {
+            if (!els.habitIconMenu.hidden) return closeHabitIconMenu();
+            renderHabitIconMenu();
+            els.habitIconMenu.hidden = false;
+            els.habitIconToggle.setAttribute("aria-expanded", "true");
+            window.RestCalI18n?.apply?.(els.habitIconMenu);
+            window.setTimeout(() => els.habitIconMenu.querySelector('[aria-selected="true"]')?.focus({preventScroll: true}), 0);
+        }
+
+        function closeHabitIconMenu(returnFocus = false) {
+            els.habitIconMenu.hidden = true;
+            els.habitIconToggle.setAttribute("aria-expanded", "false");
+            if (returnFocus) els.habitIconToggle.focus({preventScroll: true});
+        }
+
+        function selectHabitIcon(iconId) {
+            const icon = habitIconDefinition(iconId);
+            selectedHabitIcon = icon.id;
+            els.habitIconPreview.className = `ph ph-${icon.icon} icon`;
+            closeHabitIconMenu();
+            els.habitNameCreate.focus({preventScroll: true});
+        }
+
+        function renderHabitTool() {
+            renderHabitToolHint();
+            const todayIso = toISO(today);
+            const monthYear = today.getFullYear();
+            const month = today.getMonth() + 1;
+            const todayDone = habitCheckinCountForDate(todayIso);
+            const totalMonthDone = state.habits.reduce((sum, habit) => sum + habitMonthCount(habit.id, monthYear, month), 0);
+            const elapsedDays = today.getDate();
+            const rate = state.habits.length ? Math.round(totalMonthDone / (state.habits.length * elapsedDays) * 100) : 0;
+            document.getElementById("habitTodaySummary").textContent = `${todayDone} / ${state.habits.length}`;
+            document.getElementById("habitStreakSummary").textContent = String(Math.max(0, ...state.habits.map(habit => habitStreak(habit.id))));
+            document.getElementById("habitRateSummary").textContent = `${Math.min(100, rate)}%`;
+            document.getElementById("habitCountLabel").textContent = `(${state.habits.length})`;
+            if (!state.habits.length) {
+                els.habitList.innerHTML = `<div class="habit-empty">暂无习惯，输入名称后新建</div>`;
+                return;
+            }
+            els.habitList.innerHTML = state.habits.map(habit => {
+                const done = isHabitChecked(habit.id, todayIso);
+                const icon = habitIconDefinition(habit.icon);
+                const dots = Array.from({length: 7}, (_, offset) => {
+                    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6 + offset);
+                    return `<i class="${isHabitChecked(habit.id, toISO(date)) ? "is-done" : ""}"></i>`;
+                }).join("");
+                return `<div class="habit-item">
+                    <span class="habit-item-icon" aria-hidden="true"><i class="ph ph-${icon.icon} icon"></i></span>
+                    <span class="habit-item-copy"><strong>${escapeHtml(habit.name)}</strong><span class="habit-item-meta"><span class="habit-week-dots" aria-hidden="true">${dots}</span><span>本月 ${habitMonthCount(habit.id, monthYear, month)} 次 · 连续 ${habitStreak(habit.id)} 天</span></span></span>
+                    <button class="btn habit-today-btn${done ? " is-done" : ""}" type="button" data-habit-today="${escapeHtml(habit.id)}" aria-pressed="${done}">${done ? '<i class="ph ph-check icon" aria-hidden="true"></i> 已打卡' : "今日打卡"}</button>
+                    <button class="btn ghost habit-delete-btn" type="button" data-habit-delete="${escapeHtml(habit.id)}" aria-label="删除习惯 ${escapeHtml(habit.name)}" title="删除习惯"><i class="ph ph-dots-three icon" aria-hidden="true"></i></button>
+                </div>`;
+            }).join("");
+            window.RestCalI18n?.apply?.(els.habitList);
+        }
+
+        function openHabitTool() {
+            closeHabitIconMenu();
+            renderHabitTool();
+            openBackdrop(els.habitToolPanel);
+            modalReturnFocus.set(els.habitToolPanel, els.habitToolToggle);
+            (state.habits.length ? document.getElementById("closeHabitTool") : els.habitNameCreate).focus({preventScroll: true});
+        }
+
+        function createHabit(event) {
+            event.preventDefault();
+            const name = els.habitNameCreate.value.trim().slice(0, 40);
+            if (!name) return els.habitNameCreate.focus();
+            if (state.habits.some(habit => habit.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                showToast("这个习惯已经存在");
+                return;
+            }
+            const id = globalThis.crypto?.randomUUID?.() || `habit-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+            state.habits.push({id, name, icon: selectedHabitIcon, createdAt: new Date().toISOString()});
+            state.habitCheckins[id] = {};
+            if (!saveState()) return;
+            els.habitNameCreate.value = "";
+            selectHabitIcon("flag");
+            renderHabitTool();
+            renderCalendarView();
+        }
+
+        async function handleHabitListClick(event) {
+            const todayButton = event.target.closest("[data-habit-today]");
+            if (todayButton) {
+                const habitId = todayButton.dataset.habitToday;
+                const iso = toISO(today);
+                state.habitCheckins[habitId] ||= {};
+                if (isHabitChecked(habitId, iso)) delete state.habitCheckins[habitId][iso];
+                else state.habitCheckins[habitId][iso] = new Date().toISOString();
+                if (!saveState()) return;
+                renderHabitTool();
+                renderCalendarView();
+                return;
+            }
+            const deleteButton = event.target.closest("[data-habit-delete]");
+            if (!deleteButton) return;
+            const habit = state.habits.find(item => item.id === deleteButton.dataset.habitDelete);
+            if (!habit) return;
+            const ok = await showConfirm({title: "删除习惯？", message: `“${habit.name}”及其全部打卡记录都会被删除。`, confirmText: "删除", danger: true});
+            if (!ok) return;
+            state.habits = state.habits.filter(item => item.id !== habit.id);
+            delete state.habitCheckins[habit.id];
+            if (!saveState()) return;
+            renderHabitTool();
+            renderCalendarView();
         }
 
         function updateSalaryReceiptButton() {
@@ -2742,7 +2842,10 @@
 
         function daySubHtml(sub) {
             if (!sub) return `<span class="day-sub"></span>`;
-            return `<span class="day-sub kind-${sub.kind}${sub.rest ? " rest-day" : ""}">${escapeHtml(sub.text)}</span>`;
+            const content = sub.kind === "work" && sub.text === "✓"
+                ? '<i class="ph ph-check icon" aria-hidden="true"></i>'
+                : escapeHtml(sub.text);
+            return `<span class="day-sub kind-${sub.kind}${sub.rest ? " rest-day" : ""}">${content}</span>`;
         }
 
         function showNoteTooltip(card) {
@@ -2800,6 +2903,7 @@
                 record?.status ? `status-${record.status}` : "",
                 record?.overtime ? "has-overtime" : "",
                 record?.note ? "has-note" : "",
+                habitCheckinCountForDate(iso) ? "habit-done" : "",
                 "clickable"
             ].filter(Boolean).join(" ");
             card.dataset.date = iso;
@@ -2816,7 +2920,8 @@
             card.innerHTML = `
           <span class="solar">${date.getDate()}</span>
           ${daySubHtml(sub)}
-          ${record?.note ? `<span class="note-marker" aria-hidden="true"><svg class="icon"><use href="#i-note" /></svg></span>` : ""}
+          ${record?.note ? `<span class="note-marker" aria-hidden="true"><i class="ph ph-note icon"></i></span>` : ""}
+          ${habitCheckinCountForDate(iso) ? `<span class="habit-marker" aria-hidden="true">${habitCheckinCountForDate(iso) > 1 ? habitCheckinCountForDate(iso) : '<i class="ph ph-check icon"></i>'}</span>` : ""}
         `;
             return card;
         }
@@ -2861,6 +2966,7 @@
                     record?.status ? `status-${record.status}` : "",
                     record?.overtime ? "has-overtime" : "",
                     record?.note ? "has-note" : "",
+                    habitCheckinCountForDate(iso) ? "habit-done" : "",
                     "clickable"
                 ].filter(Boolean).join(" ");
                 row.dataset.date = iso;
@@ -2877,7 +2983,8 @@
           ${daySubHtml(daySubInfo(date, info, record))}
           <span class="week-detail">${detailHtml}</span>
           <span class="week-dow">${weekdayName(date)}</span>
-          ${record?.note ? `<span class="note-marker" aria-hidden="true"><svg class="icon"><use href="#i-note" /></svg></span>` : ""}
+          ${record?.note ? `<span class="note-marker" aria-hidden="true"><i class="ph ph-note icon"></i></span>` : ""}
+          ${habitCheckinCountForDate(iso) ? `<span class="habit-marker" aria-hidden="true">${habitCheckinCountForDate(iso) > 1 ? habitCheckinCountForDate(iso) : '<i class="ph ph-check icon"></i>'}</span>` : ""}
         `;
                 fragment.appendChild(row);
             }
@@ -3053,6 +3160,8 @@
             const statusTags = [];
             if (record?.status) statusTags.push(tag(STATUS_LABELS[record.status], `${record.status} primary-state`));
             if (record?.overtime) statusTags.push(tag(`加班 ${record.overtime.hours} 小时`, "overtime"));
+            const checkedHabits = checkedHabitsForDate(iso);
+            if (checkedHabits.length) statusTags.push(tag(`习惯 · ${checkedHabits.map(habit => habit.name).join("、")}`, "habit"));
             if (info.makeupName) statusTags.push(tag("调休上班", "makeup primary-state"));
 
             const emptyText = info.isHoliday ? "假期 · 好好休息"
@@ -3085,7 +3194,7 @@
           <div class="page-status">
             ${statusTags.length ? `<div class="tags">${statusTags.join("")}</div>` : ""}
             ${record?.reason ? `<div class="page-reason">${escapeHtml(record.reason)}</div>` : ""}
-            ${record?.note ? `<div class="page-note"><svg class="icon" aria-hidden="true"><use href="#i-note" /></svg><span>${escapeHtml(record.note)}</span></div>` : ""}
+            ${record?.note ? `<div class="page-note"><i class="ph ph-note icon" aria-hidden="true"></i><span>${escapeHtml(record.note)}</span></div>` : ""}
             ${!record?.status && !record?.overtime && emptyText ? `<div class="page-empty">${emptyText}</div>` : ""}
           </div>
           <figure class="page-quote">
@@ -3121,7 +3230,8 @@
                         : info.isHoliday ? "st-holiday"
                             : info.makeupName ? "st-makeup"
                                 : info.isWeekend ? "st-weekend" : "";
-                    cells.push(`<span class="mini-day ${cls}${isSameDate(date, today) ? " today" : ""}">${day}</span>`);
+                    const habitClass = habitCheckinCountForDate(toISO(date)) ? " habit-done" : "";
+                    cells.push(`<span class="mini-day ${cls}${isSameDate(date, today) ? " today" : ""}${habitClass}">${day}</span>`);
                 }
                 mini.innerHTML = `<span class="mini-month-title">${month}月</span><span class="mini-grid">${cells.join("")}</span>`;
                 fragment.appendChild(mini);
@@ -3174,6 +3284,8 @@
             if (record?.reason) labels.push(record.reason);
             if (record?.overtime) labels.push(`加班 ${record.overtime.hours} 小时${record.overtime.reason ? `，${record.overtime.reason}` : ""}`);
             if (record?.note) labels.push(record.note);
+            const checkedHabitNames = checkedHabitsForDate(iso).map(habit => habit.name);
+            if (checkedHabitNames.length) labels.push(`习惯已打卡：${checkedHabitNames.join("、")}`);
             return labels.filter(Boolean).join("，");
         }
 
@@ -3221,31 +3333,36 @@
         function renderMonthSummary(monthStats) {
             const salary = calculateSalarySnapshot(monthStats);
             const nextHoliday = findNextHoliday();
-            // compact 只产出中文原文，英文交给 app-i18n 的 translateCore 规则处理，
-            // 与其余带数字的插值文案（如“已出勤 N 天”）保持同一套机制。
+            const english = getLanguage() === "en";
+            const holidayName = nextHoliday
+                ? (window.RestCalI18n?.t(nextHoliday.name) || nextHoliday.name)
+                : "";
+            const holidayDate = nextHoliday && english
+                ? new Intl.DateTimeFormat("en-US", {month: "short", day: "numeric"}).format(nextHoliday.date)
+                : nextHoliday ? formatMonthDay(nextHoliday.date) : "";
             const items = [
                 {
-                    label: "请假 / 出勤",
-                    value: `${monthStats.totalLeave} / ${monthStats.actualWorkdays} 天`,
-                    compact: `${monthStats.totalLeave} 请假 · ${monthStats.actualWorkdays} 出勤`,
-                    meta: "请假天数 / 已出勤天数"
+                    label: english ? "Leave / attendance" : "请假 / 出勤",
+                    value: english ? `${monthStats.totalLeave} / ${monthStats.actualWorkdays} days` : `${monthStats.totalLeave} / ${monthStats.actualWorkdays} 天`,
+                    compact: english ? `${monthStats.totalLeave} leave · ${monthStats.actualWorkdays} attended` : `${monthStats.totalLeave} 请假 · ${monthStats.actualWorkdays} 出勤`,
+                    meta: english ? "Leave days / attended days" : "请假天数 / 已出勤天数"
                 },
                 {
-                    label: "请假每日扣款",
-                    value: salary.salary ? `${formatMoney(salary.daily)} / 天` : "未设置",
-                    compact: salary.salary ? `扣款 ${formatMoney(salary.daily)} / 天` : "扣款未设置",
+                    label: english ? "Daily leave deduction" : "请假每日扣款",
+                    value: salary.salary ? `${formatMoney(salary.daily)} / ${english ? "day" : "天"}` : (english ? "Not set" : "未设置"),
+                    compact: salary.salary ? (english ? `Deduction ${formatMoney(salary.daily)}/day` : `扣款 ${formatMoney(salary.daily)} / 天`) : (english ? "Deduction not set" : "扣款未设置"),
                     action: salary.salary ? "" : "salary",
-                    meta: salary.salary ? "按本月应出勤天数折算，实际按请假类型比例计算" : ""
+                    meta: salary.salary ? (english ? "Based on this month's expected workdays; actual deduction varies by leave type" : "按本月应出勤天数折算，实际按请假类型比例计算") : ""
                 },
                 {
-                    label: "距下个节假日",
-                    value: nextHoliday ? (nextHoliday.days === 0 ? "今天" : `${nextHoliday.days} 天`) : "暂无数据",
+                    label: english ? "Next holiday in" : "距下个节假日",
+                    value: nextHoliday ? (nextHoliday.days === 0 ? (english ? "Today" : "今天") : `${nextHoliday.days} ${english ? "days" : "天"}`) : (english ? "No holiday data" : "暂无数据"),
                     compact: nextHoliday
                         ? (nextHoliday.days === 0
-                            ? `${nextHoliday.name} · 今天`
-                            : `${nextHoliday.name} · 还有 ${nextHoliday.days} 天`)
-                        : "节假日暂无数据",
-                    meta: nextHoliday ? `${nextHoliday.name} · ${formatMonthDay(nextHoliday.date)}` : ""
+                            ? `${holidayName} · ${english ? "Today" : "今天"}`
+                            : (english ? `${holidayName} · in ${nextHoliday.days} days` : `${holidayName} · 还有 ${nextHoliday.days} 天`))
+                        : (english ? "No holiday data" : "节假日暂无数据"),
+                    meta: nextHoliday ? `${holidayName} · ${holidayDate}` : ""
                 }
             ];
             els.monthSummary.innerHTML = items.map(item => {
@@ -3276,24 +3393,25 @@
         function renderHomeAlerts() {
             if (!els.homeAlerts) return;
             const alerts = [];
+            const ticketPreferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
             getTicketReminders(today.getFullYear()).forEach(item => {
                 const diff = diffDays(today, item.saleDate);
-                if (diff < 0 || diff > 14) return;
+                if (diff < 0 || diff > Math.max(14, ticketPreferences.advanceDays)) return;
                 alerts.push({
                     tone: "info",
-                    icon: "i-ticket",
+                    icon: "train",
                     text: diff === 0
-                        ? `${item.name}火车票今天开售，假期首日 ${formatMonthDay(item.departure)}`
+                        ? `${item.name}火车票今天开售，计划出行 ${formatMonthDay(item.departure)}`
                         : `${item.name}火车票 ${diff} 天后开售（${formatMonthDay(item.saleDate)}）`,
                     actionLabel: "查看",
-                    nav: "tools"
+                    ticketReminder: true
                 });
             });
             const annualQuota = cleanNumber(els.annualQuotaInput.value);
             if (annualQuota > 0 && calculateStats(today.getFullYear()).annualLeave >= annualQuota) {
                 alerts.push({
                     tone: "warn",
-                    icon: "i-alert",
+                    icon: "warning-circle",
                     text: "今年的年假额度已用完",
                     actionLabel: "查看额度",
                     settings: "quota"
@@ -3313,7 +3431,7 @@
                     if (diff >= 0 && diff <= 30 && remainingAnnual > 0) {
                         alerts.push({
                             tone: "warn",
-                            icon: "i-alert",
+                            icon: "warning-circle",
                             text: `年假即将于 ${expMonth}月${expDay}日 清零，还剩 ${remainingAnnual} 天未使用`,
                             actionLabel: "去规划",
                             settings: "quota"
@@ -3327,7 +3445,7 @@
                 if (stale) {
                     alerts.push({
                         tone: "warn",
-                        icon: "i-cloud",
+                        icon: "cloud-arrow-up",
                         text: webdavConfig.lastBackupAt ? "距上次云端备份已超过 30 天" : "已配置 WebDAV，但还没有云端备份",
                         actionLabel: "去备份",
                         settings: "webdav"
@@ -3335,14 +3453,22 @@
                 }
             }
             els.homeAlerts.hidden = alerts.length === 0;
-            els.homeAlerts.innerHTML = alerts.map(alert => `
-        <div class="alert-row ${alert.tone}">
-          <svg class="icon" aria-hidden="true"><use href="#${alert.icon}"/></svg>
-          <span class="alert-text">${escapeHtml(alert.text)}</span>
-          ${alert.nav ? `<button class="btn ghost compact-btn" data-nav="${alert.nav}" type="button">${escapeHtml(alert.actionLabel)}</button>` : ""}
-          ${alert.settings ? `<button class="btn ghost compact-btn" data-open-settings-dynamic="${alert.settings}" type="button">${escapeHtml(alert.actionLabel)}</button>` : ""}
-        </div>
-      `).join("");
+            els.homeAlerts.innerHTML = alerts.map(alert => {
+                const content = `
+                    <i class="ph ph-${alert.icon} icon" aria-hidden="true"></i>
+                    <span class="alert-text">${escapeHtml(alert.text)}</span>`;
+                if (alert.ticketReminder) return `
+                    <button class="alert-row alert-row-action ${alert.tone}" data-open-ticket-reminders type="button" aria-haspopup="dialog" aria-controls="ticketToolPanel">
+                        ${content}
+                        <span class="alert-link">${escapeHtml(alert.actionLabel)}<i class="ph ph-caret-right icon" aria-hidden="true"></i></span>
+                    </button>`;
+                return `
+                    <div class="alert-row ${alert.tone}">
+                        ${content}
+                        ${alert.nav ? `<button class="btn ghost compact-btn" data-nav="${alert.nav}" type="button">${escapeHtml(alert.actionLabel)}</button>` : ""}
+                        ${alert.settings ? `<button class="btn ghost compact-btn" data-open-settings-dynamic="${alert.settings}" type="button">${escapeHtml(alert.actionLabel)}</button>` : ""}
+                    </div>`;
+            }).join("");
         }
 
         function renderRecentRecords() {
@@ -3609,6 +3735,9 @@
 
         function renderTicketReminders() {
             const reminders = getTicketReminders(currentYear);
+            const ticketPreferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
+            const departureLabel = ticketPreferences.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日";
+            if (els.ticketGuideText) els.ticketGuideText.textContent = `按${departureLabel}出发、提前 ${ticketPreferences.advanceDays} 天计算，${ticketPreferences.reminderTime} 提醒；实际起售时间以 12306 为准。`;
 
             if (!reminders.length) {
                 els.ticketToolHint.textContent = "本年度暂无购票提醒";
@@ -3625,21 +3754,21 @@
                 els.ticketToolHint.textContent = saleDiff > 0
                     ? `${nextReminder.name}火车票 ${saleDiff} 天后开售（${formatMonthDay(nextReminder.saleDate)}）`
                     : saleDiff === 0
-                        ? `${nextReminder.name}火车票今天开售，假期首日 ${formatMonthDay(nextReminder.departure)}`
-                        : `${nextReminder.name}火车票已开售，假期首日 ${formatMonthDay(nextReminder.departure)}`;
+                        ? `${nextReminder.name}火车票今天开售，计划出行 ${formatMonthDay(nextReminder.departure)}`
+                        : `${nextReminder.name}火车票已开售，计划出行 ${formatMonthDay(nextReminder.departure)}`;
             }
 
             const upcoming = reminders.filter(item => diffDays(reference, item.departure) >= 0);
             const past = reminders.filter(item => diffDays(reference, item.departure) < 0);
             const holidayIcon = name => {
-                if (name.includes("元旦")) return "i-holiday-new-year";
-                if (name.includes("春节")) return "i-holiday-spring";
-                if (name.includes("清明")) return "i-holiday-qingming";
-                if (name.includes("劳动")) return "i-holiday-labor";
-                if (name.includes("端午")) return "i-holiday-dragon-boat";
-                if (name.includes("中秋")) return "i-holiday-mid-autumn";
-                if (name.includes("国庆")) return "i-holiday-national";
-                return "i-ticket";
+                if (name.includes("元旦")) return "confetti";
+                if (name.includes("春节")) return "gift";
+                if (name.includes("清明")) return "plant";
+                if (name.includes("劳动")) return "hammer";
+                if (name.includes("端午")) return "sailboat";
+                if (name.includes("中秋")) return "moon-stars";
+                if (name.includes("国庆")) return "flag";
+                return "ticket";
             };
             const holidayImage = name => {
                 if (name.includes("元旦")) return '<img src="assets/images/holiday/new-years-day.png" alt="" loading="lazy" decoding="async">';
@@ -3657,7 +3786,7 @@
                 const statusClass = archived ? "is-muted" : days > 0 ? "is-soon" : "is-open";
                 const imageMarkup = holidayImage(item.name);
                 return `<article class="travel-ticket ${archived ? "is-past" : ""}">
-                    <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<svg class="icon"><use href="#${holidayIcon(item.name)}" /></svg>`}</span>
+                    <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<i class="ph ph-${holidayIcon(item.name)} icon"></i>`}</span>
                     <div class="travel-ticket-main">
                         <div class="travel-ticket-head"><h3>${escapeHtml(item.name)}</h3><span class="ticket-status ${statusClass}">${status}</span></div>
                         <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
@@ -3672,10 +3801,10 @@
             `;
         }
 
-        function toggleTicketTool() {
+        function toggleTicketTool(trigger = els.ticketToolToggle) {
             renderTicketReminders();
             openBackdrop(els.ticketToolPanel);
-            modalReturnFocus.set(els.ticketToolPanel, els.ticketToolToggle);
+            modalReturnFocus.set(els.ticketToolPanel, trigger);
             document.getElementById("closeTicketTool").focus({preventScroll: true});
         }
 
@@ -3683,58 +3812,60 @@
             const date = fromISO(iso);
             const info = getDayInfo(date);
             const record = state.records[iso] || {};
-            const editable = isConfiguredWorkday(date, info);
-            const weekendNoteOnly = info.isWeekend;
-            const noteEditable = editable || weekendNoteOnly;
+            const scheduledWorkday = isConfiguredWorkday(date, info);
+            const restDay = !scheduledWorkday;
             dayModalBackdropPress = false;
             activeDate = iso;
             selectedDate = iso;
-            pendingStatus = record.status || (editable ? "work" : "");
+            pendingStatus = record.status || (scheduledWorkday ? "work" : "");
             pendingOvertime = Boolean(record.overtime);
             overtimeTouched = false;
+            pendingHabitCheckins = new Set(checkedHabitsForDate(iso).map(habit => habit.id));
+            habitTouched = false;
             document.querySelectorAll(".day-card.selected").forEach(card => card.classList.remove("selected"));
             document.querySelector(`[data-date="${iso}"]`)?.classList.add("selected");
-            els.modalTitle.textContent = `${date.getMonth() + 1}月${date.getDate()}日 ${weekdayName(date)}`;
-            els.modalSubtitle.textContent = modalSubtitleText(date, info, editable, noteEditable);
+            renderModalHeading(date, info);
             els.modalStartDate.value = iso;
             els.modalEndDate.value = iso;
             els.modalReason.value = record.reason || "";
             els.modalNote.value = record.note || "";
-            els.modalNote.disabled = !noteEditable;
+            els.modalNote.disabled = false;
             document.querySelectorAll("[data-action]").forEach(button => {
                 const isOvertime = button.dataset.action === "overtime";
-                button.disabled = !(editable || isOvertime);
+                button.disabled = false;
                 button.classList.toggle("active", isOvertime ? pendingOvertime : button.dataset.action === pendingStatus);
             });
             if (els.modalOvertimeHours) els.modalOvertimeHours.value = String(record.overtime?.hours || 2);
             if (els.modalOvertimeRate) els.modalOvertimeRate.value = String(record.overtime?.rate || 1);
-            if (els.modalOvertimeScope) els.modalOvertimeScope.value = editable ? "workdays" : "rest-days";
+            if (els.modalOvertimeScope) els.modalOvertimeScope.value = scheduledWorkday ? "workdays" : "rest-days";
             if (els.modalOvertimeReason) els.modalOvertimeReason.value = record.overtime?.reason || "";
+            renderModalHabits();
             updateReasonFieldVisibility(pendingStatus);
-            els.modalSave.disabled = !noteEditable && !pendingOvertime;
-            els.modalClear.hidden = !record.status && !record.reason && !record.note && !record.overtime;
-            els.modalAdvanced.open = weekendNoteOnly;
-            if (els.modalRangeNotice) {
-                els.modalRangeNotice.textContent = weekendNoteOnly
-                    ? "可选择多个周末，保存后会将同一条备注应用到所选周末。"
-                    : "选择范围后保存，会应用到范围内所有工作日，自动跳过周末和节假日。";
-            }
+            els.modalSave.disabled = false;
+            els.modalClear.hidden = !record.status && !record.reason && !record.note && !record.overtime && !pendingHabitCheckins.size;
+            els.modalAdvanced.open = restDay || Boolean(record.note);
+            if (els.modalRangeNotice) els.modalRangeNotice.textContent = "应用到所选范围内的每一天，包括周末和节假日。";
             updateModalDocButton();
             openBackdrop(els.dayModal);
-            const initialFocus = weekendNoteOnly
+            const initialFocus = restDay
                 ? els.modalNote
                 : els.dayModal.querySelector(".action-btn:not(:disabled)");
             initialFocus?.focus({preventScroll: true});
         }
 
-        function modalSubtitleText(date, info, editable, noteEditable = editable) {
+        function modalSubtitleText(date, info) {
             const parts = [toISO(date), getLunarText(date)];
             if (info.holidayName) parts.push(info.holidayName);
             if (info.makeupName) parts.push(info.makeupName);
             if (!info.holidayName && !info.makeupName && info.isWeekend) parts.push("周末");
-            if (noteEditable && !editable) parts.push("可添加备注或加班记录");
-            else if (!editable) parts.push("休息日仅展示详情");
             return parts.filter(Boolean).join(" · ");
+        }
+
+        function renderModalHeading(date, info) {
+            els.modalTitle.textContent = getLanguage() === "en"
+                ? `${new Intl.DateTimeFormat("en-US", {month: "short", day: "numeric"}).format(date)} · ${weekdayName(date)}`
+                : `${date.getMonth() + 1}月${date.getDate()}日 ${weekdayName(date)}`;
+            els.modalSubtitle.textContent = modalSubtitleText(date, info);
         }
 
         function closeModal() {
@@ -3743,6 +3874,8 @@
             pendingStatus = null;
             pendingOvertime = false;
             overtimeTouched = false;
+            pendingHabitCheckins = new Set();
+            habitTouched = false;
             closeBackdrop(els.dayModal);
         }
 
@@ -3774,12 +3907,20 @@
                 annualExpireRule: els.annualExpireRule?.value || "next-03-31",
                 compExpireRule: els.compExpireRule?.value || "none"
             };
+            state.ticketPreferences = normalizeTicketPreferences({
+                departureRule: els.ticketDepartureRule?.value,
+                reminderTime: els.icsTicketTime?.value,
+                advanceDays: els.ticketAdvanceDays?.value
+            });
             state.settings.estimatedTax = state.salary.estimatedTax;
             state.settings.specialDeductions = state.salary.specialDeductions;
             state.settings.taxMode = state.salary.taxMode;
             state.settings.annualExpireRule = state.quotaRules.annualExpireRule;
             state.settings.compExpireRule = state.quotaRules.compExpireRule;
             state.settings.payday = state.salary.payday;
+            state.settings.ticketDepartureRule = state.ticketPreferences.departureRule;
+            state.settings.ticketReminderTime = state.ticketPreferences.reminderTime;
+            state.settings.ticketAdvanceDays = state.ticketPreferences.advanceDays;
         }
 
         function fillSettingsInputs() {
@@ -3808,22 +3949,54 @@
             els.workdaysInput.value = state.workSchedule.workdaysPerWeek;
             els.dailyHoursInput.value = state.workSchedule.dailyWorkHours;
             els.scheduleTypeInput.value = state.workSchedule.scheduleType;
+            if (els.ticketDepartureRule) els.ticketDepartureRule.value = state.ticketPreferences.departureRule;
+            if (els.ticketAdvanceDays) els.ticketAdvanceDays.value = state.ticketPreferences.advanceDays;
+            if (els.icsTicketTime) els.icsTicketTime.value = state.ticketPreferences.reminderTime;
             renderRestDaysPicker();
         }
 
         function showToast(message, tone = "success", options = {}) {
             const toast = document.createElement("div");
-            toast.className = `toast ${tone}`;
+            const normalizedTone = tone === "danger" ? "error" : tone;
+            const toastIcons = {
+                success: "check-circle",
+                error: "warning-circle",
+                warning: "warning",
+                info: "info"
+            };
+            toast.className = `toast ${normalizedTone}`;
+            toast.setAttribute("role", normalizedTone === "error" ? "alert" : "status");
+            const icon = document.createElement("span");
+            icon.className = "toast-icon";
+            icon.setAttribute("aria-hidden", "true");
+            icon.innerHTML = `<i class="ph ph-${toastIcons[normalizedTone] || toastIcons.info} icon"></i>`;
             const text = document.createElement("span");
             text.className = "toast-text";
             text.textContent = message;
+            toast.appendChild(icon);
             toast.appendChild(text);
             let dismissed = false;
+            let dismissTimer = 0;
+            let remaining = options.duration || (options.actionLabel ? 6000 : 3200);
+            let timerStartedAt = 0;
             const dismiss = () => {
                 if (dismissed) return;
                 dismissed = true;
+                window.clearTimeout(dismissTimer);
                 toast.classList.remove("show");
                 window.setTimeout(() => toast.remove(), 220);
+            };
+            const startDismissTimer = () => {
+                if (dismissed) return;
+                window.clearTimeout(dismissTimer);
+                timerStartedAt = performance.now();
+                dismissTimer = window.setTimeout(dismiss, remaining);
+            };
+            const pauseDismissTimer = () => {
+                if (dismissed || !dismissTimer) return;
+                window.clearTimeout(dismissTimer);
+                dismissTimer = 0;
+                remaining = Math.max(0, remaining - (performance.now() - timerStartedAt));
             };
             if (options.actionLabel && typeof options.onAction === "function") {
                 const action = document.createElement("button");
@@ -3836,9 +4009,11 @@
                 });
                 toast.appendChild(action);
             }
+            toast.addEventListener("mouseenter", pauseDismissTimer);
+            toast.addEventListener("mouseleave", startDismissTimer);
             els.toastRegion.appendChild(toast);
             window.setTimeout(() => toast.classList.add("show"), 10);
-            window.setTimeout(dismiss, options.duration || (options.actionLabel ? 6000 : 3200));
+            startDismissTimer();
         }
 
         let confirmResolver = null;
@@ -3865,7 +4040,7 @@
             resolve(result);
         }
 
-        function exportPersonalSettings() { syncSettingsFromInputs(); const blob = new Blob([JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary}, null, 2)], {type: "application/json"}); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "restcal-personal-settings.json"; link.click(); URL.revokeObjectURL(link.href); showToast("个人设置已导出"); }
+        function exportPersonalSettings() { syncSettingsFromInputs(); const blob = new Blob([JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences, habits: state.habits, habitCheckins: state.habitCheckins}, null, 2)], {type: "application/json"}); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "restcal-personal-settings.json"; link.click(); URL.revokeObjectURL(link.href); showToast("个人设置已导出"); }
 
         async function clearPersonalSettings() {
             const ok = await showConfirm({
@@ -4401,22 +4576,39 @@
             downloadCurrentReceiptImage();
         }
 
+        function renderModalHabits() {
+            els.modalHabits.hidden = !state.habits.length;
+            if (!state.habits.length) {
+                els.modalHabitList.innerHTML = "";
+                return;
+            }
+            els.modalHabitList.innerHTML = state.habits.map(habit => {
+                const done = pendingHabitCheckins.has(habit.id);
+                return `<button class="habit-check-row" type="button" data-modal-habit-id="${escapeHtml(habit.id)}" aria-pressed="${done}">
+                    <span class="habit-check-mark" aria-hidden="true"><i class="ph ph-check icon"></i></span>
+                    <span class="habit-check-copy"><strong>${escapeHtml(habit.name)}</strong></span>
+                    <span class="habit-check-state">${done ? "已打卡" : "打卡"}</span>
+                </button>`;
+            }).join("");
+        }
+
+        function togglePendingHabit(habitId) {
+            if (!activeDate || !state.habits.some(habit => habit.id === habitId)) return;
+            if (pendingHabitCheckins.has(habitId)) pendingHabitCheckins.delete(habitId);
+            else pendingHabitCheckins.add(habitId);
+            habitTouched = true;
+            renderModalHabits();
+            els.modalSave.disabled = false;
+        }
+
         function chooseStatus(status) {
             if (!activeDate) return;
-            const date = fromISO(activeDate);
-            const info = getDayInfo(date);
             if (status === "overtime") {
                 pendingOvertime = !pendingOvertime;
                 overtimeTouched = true;
                 document.querySelector('[data-action="overtime"]')?.classList.toggle("active", pendingOvertime);
                 updateReasonFieldVisibility(pendingStatus);
                 els.modalSave.disabled = false;
-                return;
-            }
-            if (!isConfiguredWorkday(date, info)) {
-                els.modalSubtitle.textContent = info.isWeekend
-                    ? "周末只能添加备注或加班记录，不能标记请假/出勤状态。"
-                    : "休息日仅展示详情，状态保存会跳过非工作日。";
                 return;
             }
             pendingStatus = status;
@@ -4445,7 +4637,6 @@
 
         function clearActiveRecord() {
             if (!activeDate) return;
-            const weekendNoteOnly = getDayInfo(fromISO(activeDate)).isWeekend;
             // 默认只清除当前日期；展开「更多选项」并填写有效范围时按范围清除
             let start = activeDate;
             let end = activeDate;
@@ -4458,14 +4649,22 @@
                 }
             }
             const removed = {};
-            const dates = rangeDates(start, end).filter(iso => !weekendNoteOnly || getDayInfo(fromISO(iso)).isWeekend);
+            const removedHabitCheckins = {};
+            const dates = rangeDates(start, end);
             dates.forEach(iso => {
                 if (state.records[iso]) {
                     removed[iso] = state.records[iso];
                     delete state.records[iso];
                 }
+                state.habits.forEach(habit => {
+                    if (!state.habitCheckins?.[habit.id]?.[iso]) return;
+                    removedHabitCheckins[habit.id] ||= {};
+                    removedHabitCheckins[habit.id][iso] = state.habitCheckins[habit.id][iso];
+                    delete state.habitCheckins[habit.id][iso];
+                });
             });
-            const count = Object.keys(removed).length;
+            const removedHabitDates = Object.values(removedHabitCheckins).flatMap(checkins => Object.keys(checkins));
+            const count = new Set([...Object.keys(removed), ...removedHabitDates]).size;
             saveState();
             closeModal();
             render();
@@ -4474,6 +4673,10 @@
                 actionLabel: "撤销",
                 onAction: () => {
                     Object.assign(state.records, removed);
+                    Object.entries(removedHabitCheckins).forEach(([habitId, checkins]) => {
+                        state.habitCheckins[habitId] ||= {};
+                        Object.assign(state.habitCheckins[habitId], checkins);
+                    });
                     saveState();
                     render();
                 }
@@ -4481,7 +4684,7 @@
         }
 
         function updateModalDocButton() {
-            const canGenerate = getDayInfo(fromISO(activeDate || toISO(today))).isWorkday && ["personal", "sick"].includes(pendingStatus);
+            const canGenerate = ["personal", "sick"].includes(pendingStatus);
             els.modalGenerateDoc.hidden = !canGenerate;
             els.modalGenerateDoc.disabled = !canGenerate;
         }
@@ -4513,9 +4716,6 @@
 
         function saveModalRecord(options = {}) {
             if (!activeDate) return;
-            const activeInfo = getDayInfo(fromISO(activeDate));
-            const weekendNoteOnly = activeInfo.isWeekend;
-            if ((!pendingStatus || pendingStatus === "clear") && !weekendNoteOnly && !overtimeTouched) return;
             const start = els.modalStartDate.value || activeDate;
             const end = els.modalEndDate.value || start;
             if (!isValidISODate(start) || !isValidISODate(end) || start > end) {
@@ -4524,10 +4724,10 @@
             }
             const reason = LEAVE_STATUSES.includes(pendingStatus) ? els.modalReason.value.trim() : "";
             const note = els.modalNote.value.trim();
+            const hasStatus = Boolean(pendingStatus && pendingStatus !== "clear");
+            if (!hasStatus && !note && !pendingOvertime && !overtimeTouched && !habitTouched) return;
             const allDates = rangeDates(start, end);
-            const statusDates = allDates.filter(iso => weekendNoteOnly
-                ? getDayInfo(fromISO(iso)).isWeekend
-                : isConfiguredWorkday(fromISO(iso)));
+            const statusDates = allDates;
             const overtimeScope = els.modalOvertimeScope?.value || "all";
             const overtimeDates = allDates.filter(iso => {
                 const isWorkday = isConfiguredWorkday(fromISO(iso));
@@ -4536,9 +4736,7 @@
                 return true;
             });
             if (!statusDates.length && !((pendingOvertime || overtimeTouched) && overtimeDates.length)) {
-                els.modalSubtitle.textContent = weekendNoteOnly
-                    ? "所选范围没有周末日期。"
-                    : "所选范围没有可标记的工作日。";
+                els.modalSubtitle.textContent = "所选范围没有可记录的日期。";
                 return;
             }
             const overtimeHours = Number(els.modalOvertimeHours?.value);
@@ -4548,38 +4746,24 @@
                 return;
             }
             const updatedAt = new Date().toISOString();
-            if (weekendNoteOnly) {
-                statusDates.forEach(iso => {
-                    const existing = state.records[iso] || {};
-                    if (note) {
-                        state.records[iso] = {
-                            ...existing,
-                            status: existing.status || "",
-                            leaveType: existing.leaveType || "",
-                            reason: existing.reason || "",
-                            note,
-                            updatedAt
-                        };
-                    } else if (!existing.status && !existing.leaveType && !existing.reason) {
-                        if (existing.overtime) state.records[iso] = {...existing, note: "", updatedAt};
-                        else delete state.records[iso];
-                    } else {
-                        state.records[iso] = {...existing, note: "", updatedAt};
-                    }
-                });
-            } else {
-                statusDates.forEach(iso => {
-                    const existing = state.records[iso] || {};
-                    state.records[iso] = {
-                        ...existing,
-                        status: pendingStatus,
-                        leaveType: LEAVE_STATUSES.includes(pendingStatus) ? STATUS_LABELS[pendingStatus] : "",
-                        reason,
-                        note,
-                        updatedAt
-                    };
+            if (habitTouched) {
+                state.habits.forEach(habit => {
+                    state.habitCheckins[habit.id] ||= {};
+                    if (pendingHabitCheckins.has(habit.id)) state.habitCheckins[habit.id][activeDate] ||= updatedAt;
+                    else delete state.habitCheckins[habit.id][activeDate];
                 });
             }
+            statusDates.forEach(iso => {
+                const existing = state.records[iso] || {};
+                if (!hasStatus && !note && !existing.status && !existing.reason && !existing.note) return;
+                const next = {...existing, note, updatedAt};
+                if (hasStatus) {
+                    next.status = pendingStatus;
+                    next.leaveType = LEAVE_STATUSES.includes(pendingStatus) ? STATUS_LABELS[pendingStatus] : "";
+                    next.reason = reason;
+                }
+                state.records[iso] = next;
+            });
 
             if (pendingOvertime) {
                 const overtimeReason = els.modalOvertimeReason?.value.trim() || "";
@@ -4613,7 +4797,11 @@
             if (!saveState()) return;
             if (!options.keepOpen) {
                 closeModal();
-                const changedDates = new Set([...statusDates, ...(pendingOvertime || overtimeTouched ? overtimeDates : [])]).size;
+                const changedDates = new Set([
+                    ...(hasStatus || note ? statusDates : []),
+                    ...(pendingOvertime || overtimeTouched ? overtimeDates : []),
+                    ...(habitTouched ? [activeDate] : [])
+                ]).size;
                 showToast(changedDates > 1 ? `已保存 ${changedDates} 天记录` : "记录已保存");
             }
             render();
@@ -4712,7 +4900,8 @@
                 targetYear,
                 statusLabels: STATUS_LABELS,
                 include: Object.fromEntries([...document.querySelectorAll("[data-ics-category]")].map(input => [input.dataset.icsCategory, input.checked])),
-                ticketReminderTime: document.getElementById("icsTicketTime")?.value || "09:00"
+                ticketReminderTime: els.icsTicketTime?.value || state.ticketPreferences.reminderTime,
+                ticketAdvanceDays: state.ticketPreferences.advanceDays
             });
 
             const filename = targetYear ? `RestCal-${targetYear}年度日历.ics` : `RestCal-全量日历.ics`;
@@ -4787,6 +4976,7 @@
         }
 
         function yearLeaveChartHtml(yearStats, compact = false) {
+            const english = getLanguage() === "en";
             const monthly = [];
             for (let month = 1; month <= 12; month++) {
                 const stats = calculateStats(currentYear, month);
@@ -4818,7 +5008,7 @@
             if (compact) {
                 return `
         <div class="year-chart compact">
-          <div class="chart-title">每月请假天数 <span>${currentYear} 年合计 ${yearStats.totalLeave} 天</span></div>
+          <div class="chart-title">${english ? "Leave days by month" : "每月请假天数"} <span>${english ? `${currentYear} total: ${yearStats.totalLeave} days` : `${currentYear} 年合计 ${yearStats.totalLeave} 天`}</span></div>
           <div class="bar-area">${bars}</div>
           <div class="x-axis">${labels}</div>
         </div>
@@ -5524,7 +5714,7 @@
         }
 
         function userDataSnapshot() {
-            return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary}));
+            return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences}));
         }
 
         function backupUserDataSnapshot() {
@@ -5534,6 +5724,9 @@
                 workSchedule: state.workSchedule,
                 salary: state.salary,
                 quotaRules: state.quotaRules,
+                ticketPreferences: state.ticketPreferences,
+                habits: state.habits,
+                habitCheckins: state.habitCheckins,
                 preferences: {
                     theme: getThemePreference(),
                     language: window.RestCalI18n?.getLanguage() || "zh"
@@ -5573,6 +5766,21 @@
                     compExpireRule: data.settings.compExpireRule || state.quotaRules.compExpireRule
                 };
             }
+            if (data.ticketPreferences && typeof data.ticketPreferences === "object" && !Array.isArray(data.ticketPreferences)) {
+                state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {});
+                restored = true;
+            } else if (data.settings && typeof data.settings === "object") {
+                state.ticketPreferences = normalizeTicketPreferences({}, data.settings);
+            }
+            if (Array.isArray(data.habits) || data.habit?.name) {
+                const legacyHabit = data.habit?.name ? [{id: "habit-legacy", name: data.habit.name, createdAt: data.habit.createdAt}] : [];
+                state.habits = normalizeHabits(Array.isArray(data.habits) ? data.habits : legacyHabit);
+                restored = true;
+            }
+            if (data.habitCheckins && typeof data.habitCheckins === "object" && !Array.isArray(data.habitCheckins)) {
+                state.habitCheckins = {...state.habitCheckins, ...normalizeHabitCheckins(data.habitCheckins, state.habits)};
+                restored = true;
+            }
             if (data.preferences && typeof data.preferences === "object" && !Array.isArray(data.preferences)) {
                 if (THEME_SEQUENCE.includes(data.preferences.theme)) {
                     try { localStorage.setItem(THEME_KEY, data.preferences.theme); } catch { }
@@ -5601,12 +5809,13 @@
 
         function renderOnboardingStep() {
             const step = RestCalOnboardingView.steps[onboardingStep];
+            const isLastStep = onboardingStep === RestCalOnboardingView.steps.length - 1;
             els.onboardingStepLabel.textContent = `${onboardingStep + 1} / ${RestCalOnboardingView.steps.length}`;
             els.onboardingProgress.style.width = `${((onboardingStep + 1) / RestCalOnboardingView.steps.length) * 100}%`;
             els.onboardingBack.hidden = onboardingStep === 0;
             els.onboardingSkip.hidden = false;
-            els.onboardingSkip.textContent = onboardingStep === 4 ? "稍后再设置" : "暂时跳过";
-            els.onboardingNext.textContent = onboardingStep === 0 ? "开始设置" : onboardingStep === 4 ? "完成并进入 RestCal" : "下一步";
+            els.onboardingSkip.textContent = isLastStep ? "稍后再设置" : "暂时跳过";
+            els.onboardingNext.textContent = onboardingStep === 0 ? "开始设置" : isLastStep ? "完成并进入 RestCal" : "下一步";
             els.onboardingContent.innerHTML = RestCalOnboardingView.markup(step);
             if (step.kind === "profile") {
                 setInputValue("obName", onboardingDraft.profile.name);
@@ -5624,6 +5833,13 @@
                 setInputValue("obDeductions", onboardingDraft.salary.fixedDeductions || "");
                 setInputValue("obTax", onboardingDraft.salary.estimatedTax || "");
                 setInputValue("obPayday", onboardingDraft.salary.payday || "");
+            } else if (step.kind === "tickets") {
+                const preferences = normalizeTicketPreferences(onboardingDraft.ticketPreferences);
+                setInputValue("obTicketDepartureRule", preferences.departureRule);
+                setInputValue("obTicketAdvanceDays", preferences.advanceDays);
+                setInputValue("obTicketReminderTime", preferences.reminderTime);
+                enhanceSelect(document.getElementById("obTicketDepartureRule"), "field");
+                enhanceSelect(document.getElementById("obTicketReminderTime"), "field");
             } else if (step.kind === "summary") renderOnboardingSummary();
             els.onboardingContent.querySelector("input,select")?.focus({preventScroll: true});
         }
@@ -5634,9 +5850,10 @@
             if (RestCalOnboardingView.steps[onboardingStep].kind === "profile") onboardingDraft.profile = {name: value("obName").trim(), company: value("obCompany").trim(), hireDate: value("obHireDate")};
             if (RestCalOnboardingView.steps[onboardingStep].kind === "schedule") onboardingDraft.workSchedule = {workdaysPerWeek: clampInt(value("obWorkdays"), 1, 7, 5), dailyWorkHours: clampNumber(value("obDailyHours"), 0.5, 24, 8), scheduleType: value("obScheduleType") || "standard", restDays: [...document.querySelectorAll("#obRestDays input:checked")].map(input => Number(input.value))};
             if (RestCalOnboardingView.steps[onboardingStep].kind === "salary") onboardingDraft.salary = {monthlySalary: nonNegativeNumber(value("obSalary")), fixedDeductions: nonNegativeNumber(value("obDeductions")), estimatedTax: nonNegativeNumber(value("obTax")), payday: value("obPayday") ? clampInt(value("obPayday"), 1, 31, 10) : null};
+            if (RestCalOnboardingView.steps[onboardingStep].kind === "tickets") onboardingDraft.ticketPreferences = normalizeTicketPreferences({departureRule: value("obTicketDepartureRule"), advanceDays: value("obTicketAdvanceDays"), reminderTime: value("obTicketReminderTime")});
         }
         function renderOnboardingRestDays() { const host = document.getElementById("obRestDays"); if (!host) return; host.innerHTML = RestCalOnboardingView.restDayOptions(onboardingDraft.workSchedule.restDays); }
-        function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div>`; }
+        function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; const ticket = normalizeTicketPreferences(d.ticketPreferences); const departure = ticket.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日"; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div><div class="onboarding-summary-row"><span>购票提醒</span><strong>${departure} · 提前 ${ticket.advanceDays} 天 · ${ticket.reminderTime}</strong></div>`; }
         async function nextOnboardingStep() {
             syncOnboardingDraft();
             if (!validateOnboardingStep()) return;
@@ -5659,13 +5876,17 @@
         function validateOnboardingStep() {
             const kind = RestCalOnboardingView.steps[onboardingStep].kind;
             if (kind === "welcome" || kind === "profile" || kind === "summary") return true;
-            const checks = kind === "schedule" ? [["obWorkdays", 1, 7, "每周工作天数应为 1–7"], ["obDailyHours", 0.5, 24, "每日工作时长应为 0.5–24 小时"]] : [["obSalary", 0, Infinity, "月薪不能为负数"], ["obDeductions", 0, Infinity, "固定扣除不能为负数"], ["obTax", 0, Infinity, "个税预估不能为负数"], ["obPayday", 1, 31, "发薪日应为 1–31"]];
+            const checks = kind === "schedule"
+                ? [["obWorkdays", 1, 7, "每周工作天数应为 1–7"], ["obDailyHours", 0.5, 24, "每日工作时长应为 0.5–24 小时"]]
+                : kind === "tickets"
+                    ? [["obTicketAdvanceDays", 1, 60, "提前售卖天数应为 1–60"]]
+                    : [["obSalary", 0, Infinity, "月薪不能为负数"], ["obDeductions", 0, Infinity, "固定扣除不能为负数"], ["obTax", 0, Infinity, "个税预估不能为负数"], ["obPayday", 1, 31, "发薪日应为 1–31"]];
             let valid = true;
             checks.forEach(([id, min, max, message]) => { const input = document.getElementById(id); const raw = input?.value.trim() || ""; const value = Number(raw); const error = document.getElementById(`${id}Error`); const invalid = raw !== "" && (!Number.isFinite(value) || value < min || value > max); if (error) error.textContent = invalid ? message : ""; input?.classList.toggle("invalid", invalid); if (invalid) valid = false; });
             return valid;
         }
         function skipOnboarding() { state.onboardingSkipped = true; state.onboardingCompleted = false; saveState(); closeOnboarding(); renderSetupBanner(); showToast("已跳过设置，之后可在设置中重新打开"); }
-        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name}); fillSettingsInputs(); renderRestDaysPicker(); }
+        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {}); Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name, ticketDepartureRule: state.ticketPreferences.departureRule, ticketReminderTime: state.ticketPreferences.reminderTime, ticketAdvanceDays: state.ticketPreferences.advanceDays}); fillSettingsInputs(); renderRestDaysPicker(); }
         function clampInt(value, min, max, fallback) { const n = Number.parseInt(value, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function clampNumber(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function nonNegativeNumber(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
@@ -5858,7 +6079,7 @@
             try {
                 const payload = JSON.stringify({
                     app: "xiuli",
-                    version: 3,
+                    version: 4,
                     exportedAt: new Date().toISOString(),
                     records: state.records,
                     ...backupUserDataSnapshot()
@@ -5956,6 +6177,7 @@
 
         function getTicketReminders(year) {
             const holidayMap = getHolidayMap(year);
+            const preferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
             const firstByName = new Map();
             for (const [iso, value] of holidayMap.entries()) {
                 if (!firstByName.has(value.name) || iso < firstByName.get(value.name)) {
@@ -5964,9 +6186,10 @@
             }
 
             return [...firstByName.entries()].map(([name, iso]) => {
-                const departure = fromISO(iso);
-                const saleDate = addDays(departure, -14);
-                return {name, departure, saleDate};
+                const holidayStart = fromISO(iso);
+                const departure = preferences.departureRule === "holiday-eve" ? addDays(holidayStart, -1) : holidayStart;
+                const saleDate = addDays(departure, -preferences.advanceDays);
+                return {name, holidayStart, departure, saleDate, advanceDays: preferences.advanceDays};
             }).sort((a, b) => a.departure - b.departure);
         }
 
@@ -6217,7 +6440,9 @@
         }
 
         function weekdayName(date) {
-            return ["周日", "周一", "周二", "周三", "周四", "周五", "周六"][date.getDay()];
+            return (getLanguage() === "en"
+                ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                : ["周日", "周一", "周二", "周三", "周四", "周五", "周六"])[date.getDay()];
         }
 
         function formatMoney(value) {
@@ -6372,8 +6597,10 @@
         function structuredState(base, source = {}) {
             const settings = base.settings || {};
             const workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...(source.workSchedule || {}), restDays: Array.isArray(source.workSchedule?.restDays) ? source.workSchedule.restDays : [0, 6]};
+            const legacyHabits = source.habit?.name ? [{id: "habit-legacy", name: source.habit.name, createdAt: source.habit.createdAt}] : [];
+            const habits = normalizeHabits(Array.isArray(source.habits) ? source.habits : legacyHabits);
             const result = {
-                schemaVersion: 3,
+                schemaVersion: 5,
                 records: normalizeRecords(base.records || {}, workSchedule),
                 settings,
                 profile: {...DEFAULT_USER_DATA.profile, ...(source.profile || {}), name: source.profile?.name ?? settings.applicantName ?? ""},
@@ -6394,12 +6621,70 @@
                     annualExpireRule: source.quotaRules?.annualExpireRule ?? settings.annualExpireRule ?? "next-03-31",
                     compExpireRule: source.quotaRules?.compExpireRule ?? settings.compExpireRule ?? "none"
                 },
+                ticketPreferences: normalizeTicketPreferences(source.ticketPreferences, settings),
+                habits,
+                habitCheckins: normalizeHabitCheckins(source.habitCheckins, habits),
                 onboardingCompleted: Boolean(source.onboardingCompleted),
                 onboardingSkipped: Boolean(source.onboardingSkipped),
                 productTourSeenVersion: Math.max(0, Number(source.productTourSeenVersion) || 0),
                 setupBannerDismissed: Boolean(source.setupBannerDismissed)
             };
             return result;
+        }
+
+        function normalizeTicketPreferences(value = {}, legacySettings = {}) {
+            const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+            const departureRule = source.departureRule ?? legacySettings.ticketDepartureRule;
+            const reminderTime = source.reminderTime ?? legacySettings.ticketReminderTime;
+            const advanceDays = source.advanceDays ?? legacySettings.ticketAdvanceDays;
+            return {
+                departureRule: ["holiday-start", "holiday-eve"].includes(departureRule) ? departureRule : DEFAULT_USER_DATA.ticketPreferences.departureRule,
+                reminderTime: isValidReminderTime(reminderTime) ? reminderTime : DEFAULT_USER_DATA.ticketPreferences.reminderTime,
+                advanceDays: clampInt(advanceDays, 1, 60, DEFAULT_USER_DATA.ticketPreferences.advanceDays)
+            };
+        }
+
+        function isValidReminderTime(value) {
+            const match = /^(\d{2}):(\d{2})$/.exec(String(value || ""));
+            return Boolean(match && Number(match[1]) < 24 && Number(match[2]) < 60);
+        }
+
+        function normalizeHabits(habits) {
+            const normalized = [];
+            const ids = new Set();
+            for (const value of habits || []) {
+                if (!value || typeof value !== "object" || Array.isArray(value)) continue;
+                const name = typeof value.name === "string" ? value.name.trim().slice(0, 40) : "";
+                let id = typeof value.id === "string" ? value.id.trim().slice(0, 80) : "";
+                if (!name) continue;
+                if (!id || ids.has(id)) id = `habit-${Date.now().toString(36)}-${normalized.length}`;
+                ids.add(id);
+                const icon = HABIT_ICONS.some(item => item.id === value.icon) ? value.icon : "flag";
+                normalized.push({id, name, icon, createdAt: typeof value.createdAt === "string" ? value.createdAt : ""});
+            }
+            return normalized;
+        }
+
+        function normalizeHabitCheckins(checkins, habits = []) {
+            const normalized = {};
+            habits.forEach(habit => { normalized[habit.id] = {}; });
+            const entries = Object.entries(checkins || {});
+            const isLegacy = entries.some(([key]) => isValidISODate(key));
+            if (isLegacy && habits[0]) {
+                entries.forEach(([iso, value]) => {
+                    if (isValidISODate(iso) && value) normalized[habits[0].id][iso] = typeof value === "string" ? value : new Date().toISOString();
+                });
+                return normalized;
+            }
+            const validIds = new Set(habits.map(habit => habit.id));
+            for (const [habitId, dates] of entries) {
+                if (!validIds.has(habitId) || !dates || typeof dates !== "object" || Array.isArray(dates)) continue;
+                for (const [iso, value] of Object.entries(dates)) {
+                    if (!isValidISODate(iso) || !value) continue;
+                    normalized[habitId][iso] = typeof value === "string" ? value : new Date().toISOString();
+                }
+            }
+            return normalized;
         }
 
         function normalizeRecords(records, workSchedule = DEFAULT_USER_DATA.workSchedule) {

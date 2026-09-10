@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v1.5.43";
+const CACHE_VERSION = "v1.5.56";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";
@@ -15,6 +15,10 @@ const PRECACHE = [
     "assets/js/onboarding.js",
     "assets/js/product-tour.js",
     "assets/css/styles.css",
+    "assets/vendor/phosphor/regular/style.css",
+    "assets/vendor/phosphor/regular/Phosphor.woff2",
+    "assets/vendor/phosphor/fill/style.css",
+    "assets/vendor/phosphor/fill/Phosphor-Fill.woff2",
     "manifest.webmanifest",
     "assets/vendor/chinese-days/index.min.js",
     "assets/icons/favicon-16.png",

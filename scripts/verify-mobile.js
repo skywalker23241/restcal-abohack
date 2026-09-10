@@ -269,7 +269,7 @@ async function run() {
                     marker: {
                         width: Math.round(rect.width),
                         height: Math.round(rect.height),
-                        href: marker.querySelector("use")?.getAttribute("href"),
+                        iconClass: marker.querySelector(".icon")?.className,
                         iconDisplay: getComputedStyle(marker.querySelector(".icon")).display
                     },
                     statusCell: {
@@ -283,7 +283,7 @@ async function run() {
         const compactViewport = w <= COMPACT_BREAKPOINT;
         const markerAudit = noteMarker?.marker;
         const markerRange = compactViewport ? COMPACT_NOTE_MARKER : WIDE_NOTE_MARKER;
-        const markerFailed = !markerAudit || markerAudit.href !== "#i-note"
+        const markerFailed = !markerAudit || !markerAudit.iconClass?.includes("ph-note")
             || !inRange(markerAudit.width, markerRange) || !inRange(markerAudit.height, markerRange)
             // 紧凑月视图把便签标记降为小圆点，图标本体隐藏。
             || (compactViewport ? markerAudit.iconDisplay !== "none" : markerAudit.iconDisplay === "none");
@@ -499,7 +499,7 @@ async function run() {
                 const result = note ? {
                     border: style.borderTopStyle,
                     background: style.backgroundColor,
-                    icon: note.querySelector("use")?.getAttribute("href")
+                    icon: note.querySelector(".icon")?.className
                 } : null;
                 calendarMode = previousMode;
                 anchorDate = previousAnchor;
@@ -508,7 +508,7 @@ async function run() {
             })()
         `);
         if (!dayNoteAudit || dayNoteAudit.border === "none"
-            || dayNoteAudit.background === "rgba(0, 0, 0, 0)" || dayNoteAudit.icon !== "#i-note") {
+            || dayNoteAudit.background === "rgba(0, 0, 0, 0)" || !dayNoteAudit.icon?.includes("ph-note")) {
             throw new Error(`${w}px day note card audit failed: ${JSON.stringify(dayNoteAudit)}`);
         }
         // 打开请假条生成器（内联脚本的顶层函数是全局的），填表并生成小票
@@ -614,11 +614,11 @@ async function run() {
             [...document.querySelectorAll(".day-modal .btn.icon-only")].map(button => ({
                 label: button.getAttribute("aria-label"),
                 title: button.getAttribute("title"),
-                href: button.querySelector("use")?.getAttribute("href")
+                iconClass: button.querySelector(".icon")?.className
             }))
         `);
         if (dayActionIcons.length !== 1 || dayActionIcons.some(item =>
-            !item.label || !item.title || !item.href?.startsWith("#i-action-")
+            !item.label || !item.title || !item.iconClass?.includes("ph-x")
         )) {
             throw new Error(`${w}px day action icon audit failed: ${JSON.stringify(dayActionIcons)}`);
         }
@@ -657,7 +657,7 @@ async function run() {
             throw new Error(`${w}px direct backdrop click did not close day modal`);
         }
         await wait(400);
-        const weekendNoteAudit = await win.webContents.executeJavaScript(`
+        const weekendRecordAudit = await win.webContents.executeJavaScript(`
             (() => {
                 const date = getMonthDates(currentYear, currentMonth).find(item => getDayInfo(item).isWeekend);
                 if (!date) return null;
@@ -665,15 +665,16 @@ async function run() {
                 openModal(iso);
                 const note = document.getElementById("modalNote");
                 const save = document.getElementById("modalSave");
-                const statusesDisabled = [...document.querySelectorAll(".action-grid-primary .action-btn:not(.overtime)")]
-                    .every(button => button.disabled);
+                const statusesEnabled = [...document.querySelectorAll(".action-grid-primary .action-btn")]
+                    .every(button => !button.disabled);
                 const advancedOpen = document.getElementById("modalAdvanced").open;
                 const saveEnabled = !save.disabled;
                 note.value = "周末备注验证";
+                chooseStatus("annual");
                 save.click();
                 return {
                     iso,
-                    statusesDisabled,
+                    statusesEnabled,
                     advancedOpen,
                     saveEnabled,
                     note: state.records[iso]?.note,
@@ -681,9 +682,9 @@ async function run() {
                 };
             })()
         `);
-        if (!weekendNoteAudit || !weekendNoteAudit.statusesDisabled || !weekendNoteAudit.advancedOpen
-            || !weekendNoteAudit.saveEnabled || weekendNoteAudit.note !== "周末备注验证" || weekendNoteAudit.status) {
-            throw new Error(`${w}px weekend note audit failed: ${JSON.stringify(weekendNoteAudit)}`);
+        if (!weekendRecordAudit || !weekendRecordAudit.statusesEnabled || !weekendRecordAudit.advancedOpen
+            || !weekendRecordAudit.saveEnabled || weekendRecordAudit.note !== "周末备注验证" || weekendRecordAudit.status !== "annual") {
+            throw new Error(`${w}px weekend record audit failed: ${JSON.stringify(weekendRecordAudit)}`);
         }
         await wait(400);
         // 打开设置，验证桌面侧栏与移动端目录的图标和对齐
@@ -700,12 +701,12 @@ async function run() {
                 return {
                     width: Math.round(rect.width),
                     height: Math.round(rect.height),
-                    href: icon.querySelector("use").getAttribute("href")
+                    iconClass: icon.className
                 };
             })
         `);
-        if (settingsItems.length !== 8 || settingsItems.some(item =>
-            item.width < 16 || item.height < 16 || !item.href.startsWith("#i-")
+        if (settingsItems.length !== 9 || settingsItems.some(item =>
+            item.width < 16 || item.height < 16 || !item.iconClass.includes("ph-")
         )) {
             throw new Error(`${w}px settings icon layout failed: ${JSON.stringify(settingsItems)}`);
         }
@@ -753,6 +754,50 @@ async function run() {
         await capture(win, `settings-${w}`);
         await win.webContents.executeJavaScript("document.getElementById('closeSettings').click(); undefined");
         await wait(400);
+        const toastAudit = await win.webContents.executeJavaScript(`
+            (() => {
+                showToast("设置已保存");
+                const toast = document.querySelector(".toast-region .toast:last-child");
+                const icon = toast.querySelector(".toast-icon .icon");
+                return new Promise(resolve => setTimeout(() => {
+                    const rect = toast.getBoundingClientRect();
+                    resolve({
+                        role: toast.getAttribute("role"),
+                        iconClass: icon.className,
+                        width: Math.round(rect.width),
+                        height: Math.round(rect.height),
+                        top: Math.round(rect.top),
+                        centered: Math.abs((rect.left + rect.right) / 2 - document.documentElement.clientWidth / 2) <= 2,
+                        inside: rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight
+                    });
+                }, 260));
+            })()
+        `);
+        if (toastAudit.role !== "status" || !toastAudit.iconClass.includes("ph-check-circle")
+            || toastAudit.width < 220 || toastAudit.height < 54 || toastAudit.top > 40
+            || !toastAudit.centered || !toastAudit.inside) {
+            throw new Error(`${w}px toast audit failed: ${JSON.stringify(toastAudit)}`);
+        }
+        if (w === 1440) await capture(win, "toast-1440");
+        await win.webContents.executeJavaScript('document.querySelectorAll(".toast").forEach(toast => toast.remove()); undefined');
+        if (w === 360) {
+            const hoverPauseAudit = await win.webContents.executeJavaScript(`
+                (async () => {
+                    showToast("悬停暂停验证", "success", {duration: 500});
+                    const toast = document.querySelector(".toast-region .toast:last-child");
+                    await new Promise(resolve => setTimeout(resolve, 120));
+                    toast.dispatchEvent(new MouseEvent("mouseenter"));
+                    await new Promise(resolve => setTimeout(resolve, 650));
+                    const stayed = toast.isConnected && toast.classList.contains("show");
+                    toast.dispatchEvent(new MouseEvent("mouseleave"));
+                    await new Promise(resolve => setTimeout(resolve, 700));
+                    return {stayed, dismissed: !toast.isConnected};
+                })()
+            `);
+            if (!hoverPauseAudit.stayed || !hoverPauseAudit.dismissed) {
+                throw new Error(`Toast hover-pause audit failed: ${JSON.stringify(hoverPauseAudit)}`);
+            }
+        }
         for (const language of ["zh", "en"]) {
             await win.webContents.executeJavaScript(`
                 window.RestCalI18n.setLanguage(${JSON.stringify(language)});
@@ -774,11 +819,80 @@ async function run() {
                 throw new Error(`${w}px ${language} tools audit failed: ${JSON.stringify(toolsAudit)}`);
             }
             await capture(win, `tools-${language}-${w}`);
+            if (w === 360 && language === "zh") {
+                await win.webContents.executeJavaScript(`
+                    document.getElementById("habitToolToggle").click();
+                    document.getElementById("habitIconToggle").click();
+                    document.querySelector('[data-habit-icon="book"]').click();
+                    document.getElementById("habitNameCreate").value = "阅读";
+                    document.getElementById("habitCreateForm").requestSubmit();
+                    document.getElementById("habitNameCreate").value = "散步";
+                    document.getElementById("habitCreateForm").requestSubmit();
+                    document.querySelectorAll("[data-habit-today]")[0].click();
+                    document.querySelectorAll("[data-habit-today]")[1].click();
+                    undefined
+                `);
+                await wait(380);
+                const habitToolAudit = await win.webContents.executeJavaScript(`
+                    (() => {
+                        const modal = document.getElementById("habitToolPanel");
+                        const box = modal.firstElementChild.getBoundingClientRect();
+                        const today = toISO(new Date());
+                        return {
+                            open: modal.classList.contains("open"),
+                            count: state.habits.length,
+                            rows: document.querySelectorAll(".habit-item").length,
+                            checked: state.habits.filter(habit => Boolean(state.habitCheckins[habit.id]?.[today])).length,
+                            icons: state.habits.map(habit => habit.icon),
+                            iconOptions: document.querySelectorAll("[data-habit-icon]").length,
+                            rowIcons: [...document.querySelectorAll(".habit-item-icon .icon")].map(icon => icon.className),
+                            pressed: [...document.querySelectorAll("[data-habit-today]")].every(button => button.getAttribute("aria-pressed") === "true"),
+                            inside: box.left >= 0 && box.right <= innerWidth + 1 && box.top >= 0 && box.bottom <= innerHeight + 1
+                        };
+                    })()
+                `);
+                if (!habitToolAudit.open || habitToolAudit.count !== 2 || habitToolAudit.rows !== 2
+                    || habitToolAudit.checked !== 2 || !habitToolAudit.pressed || !habitToolAudit.inside
+                    || habitToolAudit.iconOptions !== 12 || habitToolAudit.icons.join(",") !== "book,flag"
+                    || !habitToolAudit.rowIcons[0]?.includes("ph-book-open") || !habitToolAudit.rowIcons[1]?.includes("ph-flag")) {
+                    throw new Error(`Habit tool audit failed: ${JSON.stringify(habitToolAudit)}`);
+                }
+                await capture(win, "habits-zh-360");
+                await win.webContents.executeJavaScript('document.getElementById("habitIconToggle").click(); undefined');
+                await capture(win, "habits-icons-zh-360");
+                await win.webContents.executeJavaScript('closeHabitIconMenu(); undefined');
+                await win.webContents.executeJavaScript('applyTheme("dark"); undefined');
+                await wait(120);
+                await capture(win, "habits-dark-360");
+                await win.webContents.executeJavaScript('applyTheme("light"); undefined');
+                await win.webContents.executeJavaScript('document.getElementById("closeHabitTool").click(); undefined');
+                await wait(280);
+                const habitDayAudit = await win.webContents.executeJavaScript(`
+                    (() => {
+                        const iso = "2026-09-12";
+                        openModal(iso);
+                        document.querySelectorAll("[data-modal-habit-id]")[0].click();
+                        document.querySelectorAll("[data-modal-habit-id]")[1].click();
+                        saveModalRecord();
+                        const checked = state.habits.filter(habit => Boolean(state.habitCheckins[habit.id]?.[iso]));
+                        const marker = document.querySelector('[data-date="' + iso + '"] .habit-marker');
+                        return {checked: checked.length, marker: marker?.textContent.trim(), modalClosing: document.getElementById("dayModal").classList.contains("closing")};
+                    })()
+                `);
+                if (habitDayAudit.checked !== 2 || habitDayAudit.marker !== "2" || !habitDayAudit.modalClosing) {
+                    throw new Error(`Habit day check-in audit failed: ${JSON.stringify(habitDayAudit)}`);
+                }
+                await wait(260);
+                await win.webContents.executeJavaScript('switchView("tools"); undefined');
+                await wait(180);
+            }
             await win.webContents.executeJavaScript('document.getElementById("ticketToolToggle").click(); undefined');
             await wait(350);
             const ticketAudit = await win.webContents.executeJavaScript(`
                 (() => {
                     const modal = document.getElementById("ticketToolPanel");
+                    modal.getAnimations().forEach(animation => animation.finish());
+                    modal.firstElementChild.getAnimations().forEach(animation => animation.finish());
                     const box = modal.firstElementChild.getBoundingClientRect();
                     const body = modal.querySelector(".ticket-dialog-body");
                     const sample = getTicketReminders(2026).find(item => toISO(item.departure) === "2026-10-01");
@@ -786,6 +900,7 @@ async function run() {
                         open: modal.classList.contains("open"),
                         focused: modal.contains(document.activeElement),
                         inside: box.left >= 0 && box.right <= innerWidth + 1 && box.top >= 0 && box.bottom <= innerHeight + 1,
+                        rect: {left: box.left, right: box.right, top: box.top, bottom: box.bottom, height: box.height},
                         overflow: body.scrollWidth - body.clientWidth,
                         saleDate: toISO(sample.saleDate),
                         ics: XiuliIcs.generateIcs({ticketReminders: [sample]}).includes("DTSTART:20260917T010000Z")

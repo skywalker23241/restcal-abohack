@@ -26,7 +26,8 @@ const records = {
 const content = global.XiuliIcs.generateIcs({
     records,
     ticketReminders: [{name: "国庆节", saleDate: "2026-09-16", departure: "2026-10-01"}],
-    ticketReminderTime: "09:00",
+    ticketReminderTime: "20:30",
+    ticketAdvanceDays: 15,
     include: {work: true}
 });
 const unfolded = content.replace(/\r\n /g, "");
@@ -34,7 +35,9 @@ const unfolded = content.replace(/\r\n /g, "");
 assert.match(unfolded, /UID:restcal-work-2026-08-26@restcal\.app/);
 assert.match(unfolded, /UID:restcal-overtime-2026-08-26@restcal\.app/);
 assert.match(unfolded, /SUMMARY:.*\[加班\] 2\.5小时/);
-assert.match(unfolded, /DTSTART:20260916T010000Z/);
+assert.match(unfolded, /DTSTART:20260916T123000Z/);
+assert.match(unfolded, /出发前 15 天计算/);
+assert.match(unfolded, /北京时间 20:30/);
 assert.match(unfolded, /TRANSP:OPAQUE/);
 assert.ok(unfolded.includes("备注: 第一行\\n第二行"), "description newlines should use one RFC escape");
 assert.ok(!unfolded.includes("第一行\\\\n第二行"), "description newlines must not be double escaped");

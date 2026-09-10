@@ -216,6 +216,10 @@
 
         // 4. 12306 火车票抢票提醒
         const seenTickets = new Set();
+        const ticketReminderTime = options.ticketReminderTime || "09:00";
+        const ticketAdvanceDays = Number.isFinite(Number(options.ticketAdvanceDays))
+            ? Math.max(1, Math.round(Number(options.ticketAdvanceDays)))
+            : 14;
         if (include.tickets) ticketReminders.forEach(t => {
             const dtStart = formatIcsDate(t.saleDate);
             if (!dtStart) return;
@@ -224,7 +228,7 @@
             if (seenTickets.has(key)) return;
             seenTickets.add(key);
 
-            const dtStartUtc = formatUtcDateTime(t.saleDate, options.ticketReminderTime || "09:00");
+            const dtStartUtc = formatUtcDateTime(t.saleDate, ticketReminderTime);
             const dtEndUtc = addMinutesUtc(dtStartUtc, 30);
             const departureStr = t.departure instanceof Date
                 ? `${t.departure.getFullYear()}年${t.departure.getMonth() + 1}月${t.departure.getDate()}日`
@@ -237,7 +241,7 @@
                 `DTSTART:${dtStartUtc}`,
                 `DTEND:${dtEndUtc}`,
                 `SUMMARY:🚄 [抢票提醒] ${escapeIcsText(t.name)} 火车票今日开售`,
-                `DESCRIPTION:${escapeIcsText(`假期首日为 ${departureStr}，预售期 15 天（含当天），开售日为出发前 14 天。此提醒默认北京时间 09:00，具体起售时间以车站及车次为准。`)}`,
+                `DESCRIPTION:${escapeIcsText(`计划出行日为 ${departureStr}，开售日按出发前 ${ticketAdvanceDays} 天计算。此提醒设为北京时间 ${ticketReminderTime}，具体起售时间以车站及车次为准。`)}`,
                 "BEGIN:VALARM",
                 "ACTION:DISPLAY",
                 `DESCRIPTION:${escapeIcsText(`${t.name}火车票开售提醒`)}`,
