@@ -94,8 +94,8 @@
         return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     }
 
-    function pushAllDayEvent(lines, {uid, stamp, date, summary, description = "", transparent = true}) {
-        lines.push(
+    function pushAllDayEvent(lines, {uid, stamp, date, summary, description = "", transparent = true, url = "", restcalId = ""}) {
+        const eventLines = [
             "BEGIN:VEVENT",
             `UID:${uid}`,
             `DTSTAMP:${stamp}`,
@@ -103,9 +103,50 @@
             `DTEND;VALUE=DATE:${addOneDayIcs(date)}`,
             `SUMMARY:${escapeIcsText(summary)}`,
             `DESCRIPTION:${escapeIcsText(description)}`,
-            `TRANSP:${transparent ? "TRANSPARENT" : "OPAQUE"}`,
-            "END:VEVENT"
-        );
+            `TRANSP:${transparent ? "TRANSPARENT" : "OPAQUE"}`
+        ];
+        if (url) eventLines.push(`URL:${escapeIcsText(url)}`);
+        if (restcalId) eventLines.push(`X-RESTCAL-ID:${escapeIcsText(restcalId)}`);
+        eventLines.push("END:VEVENT");
+        lines.push(...eventLines);
+    }
+
+    function resolveEventUrl(options, kind, date) {
+        return typeof options.eventUrlFor === "function"
+            ? String(options.eventUrlFor({kind, date: formatIcsDate(date).replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")}) || "")
+            : "";
+    }
+
+    function calendarHeader(name = "休历") {
+        return [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//RestCal//休历日历导出器//CN",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            `X-WR-CALNAME:${escapeIcsText(name)}`,
+            "X-WR-TIMEZONE:Asia/Shanghai"
+        ];
+    }
+
+    function generateEventIcs(event = {}) {
+        const date = formatIcsDate(event.date);
+        if (!/^\d{8}$/.test(date)) throw new Error("日历事件日期无效");
+        const iso = date.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+        const stamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+        const lines = calendarHeader(event.calendarName || "休历");
+        pushAllDayEvent(lines, {
+            uid: event.uid || `restcal-day-${iso}@restcal.app`,
+            stamp,
+            date: iso,
+            summary: event.summary || `休历 ${iso}`,
+            description: event.description || "",
+            transparent: event.transparent !== false,
+            url: event.url || "",
+            restcalId: event.restcalId || `day:${iso}`
+        });
+        lines.push("END:VCALENDAR");
+        return lines.flatMap(foldIcsLine).join("\r\n");
     }
 
     function generateIcs(options = {}) {
@@ -126,15 +167,7 @@
         const targetYear = options.year || options.targetYear;
         const nowIso = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-        const lines = [
-            "BEGIN:VCALENDAR",
-            "VERSION:2.0",
-            "PRODID:-//RestCal//休历日历导出器//CN",
-            "CALSCALE:GREGORIAN",
-            "METHOD:PUBLISH",
-            "X-WR-CALNAME:休历",
-            "X-WR-TIMEZONE:Asia/Shanghai"
-        ];
+        const lines = calendarHeader();
 
         // 1. 用户状态、加班与备注记录（加班是独立事件，不覆盖当天状态）
         const recordDates = Object.keys(records).sort();
@@ -146,15 +179,18 @@
             const status = rec.status;
             if (status === "work" && include.work) {
                 pushAllDayEvent(lines, {uid: `restcal-work-${iso}@restcal.app`, stamp: nowIso, date: iso,
-                    summary: `💻 [出勤] ${rec.note || ""}`.trim(), description: [rec.note && `备注: ${rec.note}`, rec.updatedAt && `更新时间: ${rec.updatedAt}`].filter(Boolean).join("\n")});
+                    summary: `💻 [出勤] ${rec.note || ""}`.trim(), description: [rec.note && `备注: ${rec.note}`, rec.updatedAt && `更新时间: ${rec.updatedAt}`].filter(Boolean).join("\n"),
+                    url: resolveEventUrl(options, "work", iso), restcalId: `work:${iso}`});
             } else if (status && status !== "work" && include.leave) {
                 const label = statusLabels[status] || rec.leaveType || "请假";
                 pushAllDayEvent(lines, {uid: `restcal-leave-${iso}@restcal.app`, stamp: nowIso, date: iso,
                     summary: `🏖️ [${label}] ${rec.reason || ""}`.trim(),
-                    description: [rec.leaveType && `类型: ${rec.leaveType}`, rec.reason && `理由: ${rec.reason}`, rec.note && `备注: ${rec.note}`, rec.updatedAt && `更新时间: ${rec.updatedAt}`].filter(Boolean).join("\n"), transparent: false});
+                    description: [rec.leaveType && `类型: ${rec.leaveType}`, rec.reason && `理由: ${rec.reason}`, rec.note && `备注: ${rec.note}`, rec.updatedAt && `更新时间: ${rec.updatedAt}`].filter(Boolean).join("\n"), transparent: false,
+                    url: resolveEventUrl(options, "leave", iso), restcalId: `leave:${iso}`});
             } else if (!status && rec.note && include.notes) {
                 pushAllDayEvent(lines, {uid: `restcal-note-${iso}@restcal.app`, stamp: nowIso, date: iso,
-                    summary: `📝 [备注] ${rec.note}`, description: rec.updatedAt ? `更新时间: ${rec.updatedAt}` : ""});
+                    summary: `📝 [备注] ${rec.note}`, description: rec.updatedAt ? `更新时间: ${rec.updatedAt}` : "",
+                    url: resolveEventUrl(options, "note", iso), restcalId: `note:${iso}`});
             }
 
             if (rec.overtime && include.overtime) {
@@ -162,7 +198,8 @@
                 const rate = Number(rec.overtime.rate) || 1;
                 pushAllDayEvent(lines, {uid: `restcal-overtime-${iso}@restcal.app`, stamp: nowIso, date: iso,
                     summary: `💼 [加班] ${hours}小时 ${rec.overtime.reason || ""}`.trim(),
-                    description: [`工时: ${hours} 小时`, `调休倍率: ${rate}x`, rec.overtime.reason && `事由: ${rec.overtime.reason}`, rec.note && `备注: ${rec.note}`, rec.overtime.updatedAt && `更新时间: ${rec.overtime.updatedAt}`].filter(Boolean).join("\n")});
+                    description: [`工时: ${hours} 小时`, `调休倍率: ${rate}x`, rec.overtime.reason && `事由: ${rec.overtime.reason}`, rec.note && `备注: ${rec.note}`, rec.overtime.updatedAt && `更新时间: ${rec.overtime.updatedAt}`].filter(Boolean).join("\n"),
+                    url: resolveEventUrl(options, "overtime", iso), restcalId: `overtime:${iso}`});
             }
         });
 
@@ -177,6 +214,7 @@
             seenHolidays.add(key);
 
             const dtEnd = addOneDayIcs(h.date);
+            const holidayUrl = resolveEventUrl(options, "holiday", h.date);
             lines.push(
                 "BEGIN:VEVENT",
                 `UID:restcal-holiday-${dtStart}-${stableHash(h.name)}@restcal.app`,
@@ -186,6 +224,8 @@
                 `SUMMARY:🎉 [节假日] ${escapeIcsText(h.name)}`,
                 `DESCRIPTION:${escapeIcsText("国务院法定节假日放假安排")}`,
                 "TRANSP:TRANSPARENT",
+                ...(holidayUrl ? [`URL:${escapeIcsText(holidayUrl)}`] : []),
+                `X-RESTCAL-ID:holiday:${dtStart}`,
                 "END:VEVENT"
             );
         });
@@ -201,6 +241,7 @@
             seenMakeups.add(key);
 
             const dtEnd = addOneDayIcs(m.date);
+            const makeupUrl = resolveEventUrl(options, "makeup", m.date);
             lines.push(
                 "BEGIN:VEVENT",
                 `UID:restcal-makeup-${dtStart}-${stableHash(m.name)}@restcal.app`,
@@ -210,6 +251,8 @@
                 `SUMMARY:💼 [调休上班] ${escapeIcsText(m.name)}`,
                 `DESCRIPTION:${escapeIcsText("法定节假日调休补班")}`,
                 "TRANSP:TRANSPARENT",
+                ...(makeupUrl ? [`URL:${escapeIcsText(makeupUrl)}`] : []),
+                `X-RESTCAL-ID:makeup:${dtStart}`,
                 "END:VEVENT"
             );
         });
@@ -234,6 +277,7 @@
                 ? `${t.departure.getFullYear()}年${t.departure.getMonth() + 1}月${t.departure.getDate()}日`
                 : String(t.departure || "");
 
+            const ticketUrl = resolveEventUrl(options, "ticket", t.saleDate);
             lines.push(
                 "BEGIN:VEVENT",
                 `UID:restcal-ticket-${dtStart}-${stableHash(t.name)}@restcal.app`,
@@ -248,6 +292,8 @@
                 "TRIGGER:-PT15M",
                 "END:VALARM",
                 "TRANSP:TRANSPARENT",
+                ...(ticketUrl ? [`URL:${escapeIcsText(ticketUrl)}`] : []),
+                `X-RESTCAL-ID:ticket:${dtStart}:${stableHash(t.name)}`,
                 "END:VEVENT"
             );
         });
@@ -296,6 +342,7 @@
 
     global.XiuliIcs = {
         generateIcs,
+        generateEventIcs,
         downloadIcs
     };
 })(typeof window !== "undefined" ? window : global);

@@ -28,7 +28,8 @@ const content = global.XiuliIcs.generateIcs({
     ticketReminders: [{name: "国庆节", saleDate: "2026-09-16", departure: "2026-10-01"}],
     ticketReminderTime: "20:30",
     ticketAdvanceDays: 15,
-    include: {work: true}
+    include: {work: true},
+    eventUrlFor: ({date}) => `restcal://day/${date}`
 });
 const unfolded = content.replace(/\r\n /g, "");
 
@@ -39,6 +40,8 @@ assert.match(unfolded, /DTSTART:20260916T123000Z/);
 assert.match(unfolded, /出发前 15 天计算/);
 assert.match(unfolded, /北京时间 20:30/);
 assert.match(unfolded, /TRANSP:OPAQUE/);
+assert.match(unfolded, /URL:restcal:\/\/day\/2026-08-27/);
+assert.match(unfolded, /X-RESTCAL-ID:leave:2026-08-27/);
 assert.ok(unfolded.includes("备注: 第一行\\n第二行"), "description newlines should use one RFC escape");
 assert.ok(!unfolded.includes("第一行\\\\n第二行"), "description newlines must not be double escaped");
 
@@ -50,5 +53,17 @@ const defaultContent = global.XiuliIcs.generateIcs({records});
 assert.doesNotMatch(defaultContent, /UID:restcal-work-/);
 assert.match(defaultContent, /UID:restcal-overtime-/);
 assert.match(defaultContent, /UID:restcal-leave-/);
+
+const singleEvent = global.XiuliIcs.generateEventIcs({
+    date: "2026-09-10",
+    summary: "[年假] 家庭安排",
+    description: "在休历中打开：restcal://day/2026-09-10",
+    url: "restcal://day/2026-09-10",
+    transparent: false
+}).replace(/\r\n /g, "");
+assert.match(singleEvent, /UID:restcal-day-2026-09-10@restcal\.app/);
+assert.match(singleEvent, /URL:restcal:\/\/day\/2026-09-10/);
+assert.match(singleEvent, /X-RESTCAL-ID:day:2026-09-10/);
+assert.match(singleEvent, /TRANSP:OPAQUE/);
 
 console.log("ICS export tests passed");

@@ -117,6 +117,13 @@ The theme follows the system by default and can be switched manually between aut
 - CSV import and export includes calendar records, profile, work schedule, salary, leave balances, leave-note defaults, theme, and language. Imports are validated before existing data is changed.
 - WebDAV backup saves and restores the same complete dataset across devices. The WebDAV address and credentials remain on the current device and are never written to backup files. It works in the desktop app, local server, and Netlify deployment.
 
+### 📆 System calendar integration
+
+- Open any daily record and choose “Add to calendar” to carry its status, reason, overtime, and notes into the system calendar.
+- The Android APK opens the system calendar's event editor for confirmation. The Windows app opens the default calendar application, while the web app downloads a single-event ICS file.
+- Exported events include a `restcal://day/YYYY-MM-DD` return link. With the Android APK or Windows app installed, that link opens the matching date directly in RestCal.
+- The web app also accepts date links in the form `https://restcal.abohack.com/app?date=YYYY-MM-DD`.
+
 ## 🚀 Quick start
 
 | Option | Best for | How to start |

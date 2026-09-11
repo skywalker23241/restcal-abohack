@@ -4936,6 +4936,12 @@ html.theme-anim #themeToggle .icon {
     height: 16px;
 }
 
+.calendar-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .foot-spacer {
     flex: 1 1 auto;
 }
@@ -5742,6 +5748,16 @@ html.theme-anim #themeToggle .icon {
     .day-modal-foot .btn.danger-ghost {
         min-height: 40px;
         padding-inline: 8px;
+    }
+
+    .day-modal-foot .calendar-add-btn {
+        width: 44px;
+        min-width: 44px;
+        padding-inline: 0;
+    }
+
+    .day-modal-foot .calendar-add-btn span {
+        display: none;
     }
 
     /* 单列改块级流布局：前后元素在流中不可能相互覆盖，由 body 统一滚动 */

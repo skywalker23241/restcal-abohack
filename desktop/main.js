@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, net, protocol, shell, ipcMain } = require("ele
 const path = require("path");
 const http = require("http");
 const https = require("https");
+const fs = require("fs/promises");
 const { pathToFileURL } = require("url");
 
 // 网页静态文件统一放在 public/；开发和打包后都从这里加载。
@@ -9,6 +10,15 @@ const root = path.join(__dirname, "..", "public");
 
 const APP_SCHEME = "app";
 const APP_ORIGIN = `${APP_SCHEME}://xiuli`;
+const DEEP_LINK_SCHEME = "restcal";
+
+if (process.env.PORTABLE_EXECUTABLE_FILE) {
+    app.setAsDefaultProtocolClient(DEEP_LINK_SCHEME, process.env.PORTABLE_EXECUTABLE_FILE, []);
+} else if (process.defaultApp && process.argv[1]) {
+    app.setAsDefaultProtocolClient(DEEP_LINK_SCHEME, process.execPath, [path.resolve(process.argv[1])]);
+} else {
+    app.setAsDefaultProtocolClient(DEEP_LINK_SCHEME);
+}
 
 // 用自定义协议而不是 file://：页面里农历、节假日 JSON 是通过 fetch 加载的，
 // file:// 下 fetch 会失败并退回内置备用数据；标准安全协议下 fetch 和
@@ -88,6 +98,29 @@ function webdavRequest({ method, url, headers, body } = {}) {
 }
 
 let mainWindow = null;
+let pendingDeepLink = process.argv.find(arg => /^restcal:\/\//i.test(arg)) || null;
+
+function deliverDeepLink(url) {
+    if (!/^restcal:\/\/day\/\d{4}-\d{2}-\d{2}(?:[/?#]|$)/i.test(url || "")) return;
+    pendingDeepLink = url;
+    if (mainWindow && !mainWindow.webContents.isLoading()) {
+        mainWindow.webContents.send("calendar:deep-link", url);
+        pendingDeepLink = null;
+    }
+}
+
+async function openCalendarFile({content, filename} = {}) {
+    if (typeof content !== "string" || !content.includes("BEGIN:VCALENDAR") || content.length > 2_000_000) {
+        return {error: "日历文件内容无效"};
+    }
+    const safeName = String(filename || "RestCal.ics").replace(/[^\w.\-\u4e00-\u9fff]/g, "-");
+    const calendarDir = path.join(app.getPath("temp"), "restcal-calendar");
+    await fs.mkdir(calendarDir, {recursive: true});
+    const target = path.join(calendarDir, safeName.endsWith(".ics") ? safeName : `${safeName}.ics`);
+    await fs.writeFile(target, `\uFEFF${content}`, "utf8");
+    const error = await shell.openPath(target);
+    return error ? {error} : {ok: true};
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -118,7 +151,6 @@ function createWindow() {
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
-
     mainWindow.loadURL(`${APP_ORIGIN}/`);
 }
 
@@ -126,19 +158,27 @@ const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
     app.quit();
 } else {
-    app.on("second-instance", () => {
+    app.on("second-instance", (_event, commandLine) => {
+        const deepLink = commandLine.find(arg => /^restcal:\/\//i.test(arg));
         if (mainWindow) {
             if (mainWindow.isMinimized()) {
                 mainWindow.restore();
             }
             mainWindow.focus();
         }
+        if (deepLink) deliverDeepLink(deepLink);
     });
 
     app.whenReady().then(() => {
         Menu.setApplicationMenu(null);
         protocol.handle(APP_SCHEME, handleAppRequest);
         ipcMain.handle("webdav:request", (event, options) => webdavRequest(options || {}));
+        ipcMain.handle("calendar:add-event", (_event, options) => openCalendarFile(options || {}));
+        ipcMain.handle("calendar:get-launch-url", () => {
+            const url = pendingDeepLink;
+            pendingDeepLink = null;
+            return url;
+        });
         createWindow();
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) {

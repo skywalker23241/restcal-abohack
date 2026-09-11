@@ -4,6 +4,8 @@
 
 可以和像Google日历，微软日历等其他日历同步事件，这样用户可以在日历视图中看见更多信息流。
 
+已完成基础联动：Android / Windows 添加单日事件、ICS 回跳链接和指定日期 Deep Link。下一步接入 Google Calendar 与 Microsoft Graph 增量同步。
+
 ## 2. 支持连接邮箱
 
 这样可以直接发送请假条至HR或者老板的邮箱，更加便捷！

@@ -6,3 +6,14 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("xiuliDav", {
     request: options => ipcRenderer.invoke("webdav:request", options)
 });
+
+contextBridge.exposeInMainWorld("xiuliCalendar", {
+    addEvent: options => ipcRenderer.invoke("calendar:add-event", options),
+    getLaunchUrl: () => ipcRenderer.invoke("calendar:get-launch-url"),
+    onDeepLink: callback => {
+        if (typeof callback !== "function") return () => {};
+        const listener = (_event, url) => callback(url);
+        ipcRenderer.on("calendar:deep-link", listener);
+        return () => ipcRenderer.removeListener("calendar:deep-link", listener);
+    }
+});

@@ -19,6 +19,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         registerPlugin(WebDavPlugin.class);
+        registerPlugin(CalendarPlugin.class);
         super.onCreate(savedInstanceState);
 
         // Android 15/16 forces targetSdk 35+ activities edge-to-edge. HyperOS can

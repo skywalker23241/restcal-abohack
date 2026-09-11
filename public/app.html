@@ -853,6 +853,9 @@
             <div class="modal-foot day-modal-foot">
                 <button class="btn danger-ghost" id="modalClear" type="button" hidden>清除记录</button>
                 <span class="foot-spacer" aria-hidden="true"></span>
+                <button class="btn calendar-add-btn" id="modalAddCalendar" type="button" title="添加到系统日历">
+                    <i class="ph ph-calendar-plus icon" aria-hidden="true"></i><span>添加到日历</span>
+                </button>
                 <button class="btn" id="modalCancel" type="button">取消</button>
                 <button class="btn primary" id="modalSave" type="button">保存</button>
             </div>
@@ -1208,6 +1211,7 @@
             modalRangeNotice: document.getElementById("modalRangeNotice"),
             modalGenerateDoc: document.getElementById("modalGenerateDoc"),
             modalClear: document.getElementById("modalClear"),
+            modalAddCalendar: document.getElementById("modalAddCalendar"),
             modalSave: document.getElementById("modalSave"),
             closeModal: document.getElementById("closeModal"),
             modalCancel: document.getElementById("modalCancel")
@@ -1238,7 +1242,8 @@
             renderWebdavCard();
             resetLeaveGeneratorForm();
             await render();
-            if (!state.onboardingCompleted && !state.onboardingSkipped && window.RestCalOnboardingView) openOnboarding();
+            const openedFromCalendar = await initCalendarDeepLinks();
+            if (!openedFromCalendar && !state.onboardingCompleted && !state.onboardingSkipped && window.RestCalOnboardingView) openOnboarding();
         }
 
         const backdropTimers = new WeakMap();
@@ -2407,7 +2412,8 @@
                 const content = XiuliIcs.generateIcs({
                     ticketReminders: [item],
                     ticketReminderTime: state.ticketPreferences.reminderTime,
-                    ticketAdvanceDays: state.ticketPreferences.advanceDays
+                    ticketAdvanceDays: state.ticketPreferences.advanceDays,
+                    eventUrlFor: ({date}) => restcalDateLink(date)
                 });
                 XiuliIcs.downloadIcs(content, `RestCal-${toISO(item.departure)}-购票提醒.ics`);
                 showToast("提醒文件已导出，请导入系统日历");
@@ -2599,6 +2605,7 @@
                 if (button) togglePendingHabit(button.dataset.modalHabitId);
             });
             els.modalClear.addEventListener("click", clearActiveRecord);
+            els.modalAddCalendar.addEventListener("click", addActiveDateToCalendar);
             els.modalSave.addEventListener("click", saveModalRecord);
             els.confirmCancel.addEventListener("click", () => resolveConfirm(false));
             els.confirmOk.addEventListener("click", () => resolveConfirm(true));
@@ -3879,6 +3886,127 @@
             closeBackdrop(els.dayModal);
         }
 
+        function restcalDateLink(iso) {
+            return `restcal://day/${encodeURIComponent(iso)}`;
+        }
+
+        function parseRestcalDateLink(rawUrl) {
+            if (!rawUrl || typeof rawUrl !== "string") return "";
+            try {
+                const url = new URL(rawUrl, location.href);
+                let iso = url.searchParams.get("date") || "";
+                if (url.protocol === "restcal:") {
+                    if (url.hostname !== "day") return "";
+                    iso = decodeURIComponent(url.pathname.replace(/^\/+/, "").split("/")[0] || "");
+                }
+                return isValidISODate(iso) ? iso : "";
+            } catch {
+                return "";
+            }
+        }
+
+        async function openRestcalDateLink(rawUrl) {
+            const iso = parseRestcalDateLink(rawUrl);
+            if (!iso) return false;
+            if (openBackdrops.size) {
+                [...openBackdrops].forEach(closeBackdrop);
+                await new Promise(resolve => window.setTimeout(resolve, 220));
+            }
+            const date = fromISO(iso);
+            currentYear = date.getFullYear();
+            currentMonth = date.getMonth() + 1;
+            anchorDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            switchView("calendar");
+            await render();
+            if (!calendarApi.years.has(currentYear)) {
+                showToast(`暂时无法打开 ${iso} 的日历数据`, "error");
+                return false;
+            }
+            openModal(iso);
+            return true;
+        }
+
+        async function initCalendarDeepLinks() {
+            let opened = false;
+            const receive = async payload => {
+                const rawUrl = typeof payload === "string" ? payload : payload?.url;
+                if (await openRestcalDateLink(rawUrl)) opened = true;
+            };
+
+            window.xiuliCalendar?.onDeepLink?.(receive);
+            const nativeApp = window.Capacitor?.Plugins?.App;
+            nativeApp?.addListener?.("appUrlOpen", receive);
+
+            const initialUrls = [];
+            if (/[?&]date=/.test(location.search)) initialUrls.push(location.href);
+            try {
+                const desktopUrl = await window.xiuliCalendar?.getLaunchUrl?.();
+                if (desktopUrl) initialUrls.push(desktopUrl);
+            } catch {}
+            try {
+                const launch = await nativeApp?.getLaunchUrl?.();
+                if (launch?.url) initialUrls.push(launch.url);
+            } catch {}
+            for (const url of [...new Set(initialUrls)]) await receive(url);
+            return opened;
+        }
+
+        function activeCalendarEvent() {
+            const iso = activeDate;
+            const status = pendingStatus && pendingStatus !== "clear" ? pendingStatus : "";
+            const statusLabel = STATUS_LABELS[status] || "";
+            const reason = LEAVE_STATUSES.includes(status) ? els.modalReason.value.trim() : "";
+            const note = els.modalNote.value.trim();
+            const overtimeHours = pendingOvertime ? Number(els.modalOvertimeHours?.value) || 0 : 0;
+            const overtimeReason = pendingOvertime ? els.modalOvertimeReason?.value.trim() || "" : "";
+            const labels = [statusLabel && `[${statusLabel}]`, pendingOvertime && `[加班 ${overtimeHours}小时]`].filter(Boolean);
+            const link = restcalDateLink(iso);
+            const description = [
+                reason && `理由：${reason}`,
+                overtimeReason && `加班事由：${overtimeReason}`,
+                note && `备注：${note}`,
+                `在休历中打开：${link}`
+            ].filter(Boolean).join("\n");
+            return {
+                date: iso,
+                uid: `restcal-day-${iso}@restcal.app`,
+                restcalId: `day:${iso}`,
+                summary: `${labels.join(" ") || "[休历]"}${reason ? ` ${reason}` : ""}`,
+                description,
+                url: link,
+                transparent: !LEAVE_STATUSES.includes(status)
+            };
+        }
+
+        async function addActiveDateToCalendar() {
+            if (!activeDate || !window.XiuliIcs?.generateEventIcs) return;
+            const event = activeCalendarEvent();
+            const content = XiuliIcs.generateEventIcs(event);
+            const filename = `RestCal-${event.date}.ics`;
+            els.modalAddCalendar.disabled = true;
+            try {
+                const nativeCalendar = window.Capacitor?.Plugins?.Calendar;
+                if (nativeCalendar?.addEvent) {
+                    const startTime = Date.parse(`${event.date}T00:00:00Z`);
+                    await nativeCalendar.addEvent({...event, startTime, endTime: startTime + 86400000, allDay: true});
+                    showToast("已打开系统日历，请确认保存");
+                    return;
+                }
+                if (window.xiuliCalendar?.addEvent) {
+                    const result = await window.xiuliCalendar.addEvent({content, filename});
+                    if (result?.error) throw new Error(result.error);
+                    showToast("已交给默认日历应用打开");
+                    return;
+                }
+                XiuliIcs.downloadIcs(content, filename);
+                showToast("日历文件已下载，请在系统日历中打开");
+            } catch (error) {
+                showToast(`无法打开系统日历：${error.message || "未知错误"}`, "error", {duration: 6000});
+            } finally {
+                els.modalAddCalendar.disabled = false;
+            }
+        }
+
         function syncSettingsFromInputs() {
             state.settings.salary = cleanNumber(els.salaryInput.value);
             state.settings.deduction = cleanNumber(els.deductionInput.value);
@@ -4901,7 +5029,8 @@
                 statusLabels: STATUS_LABELS,
                 include: Object.fromEntries([...document.querySelectorAll("[data-ics-category]")].map(input => [input.dataset.icsCategory, input.checked])),
                 ticketReminderTime: els.icsTicketTime?.value || state.ticketPreferences.reminderTime,
-                ticketAdvanceDays: state.ticketPreferences.advanceDays
+                ticketAdvanceDays: state.ticketPreferences.advanceDays,
+                eventUrlFor: ({date}) => restcalDateLink(date)
             });
 
             const filename = targetYear ? `RestCal-${targetYear}年度日历.ics` : `RestCal-全量日历.ics`;
