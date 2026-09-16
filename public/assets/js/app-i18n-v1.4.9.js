@@ -14,15 +14,15 @@
         "出行小贴士": "Before you travel",
         "预售期为 15 天（含当天），开售日期为出发前 14 天。以下以假期首日出发为例，不代表实时余票。": "The 15-day booking window includes today: sales open 14 days before departure. These plans assume departure on the first holiday day; they do not show live availability.",
         "具体起售时刻以出发站及车次为准；返程车票请按返程日期另行安排。": "Sale times depend on the departure station and train. Plan return tickets separately using your return date.",
-        "查询车站起售时间 ↗": "Check station sale times ↗", "查询起售时间": "Check sale times",
+        "查询车站起售时间 ↗": "Check station sale times ↗", "查询起售时间": "Check sale times", "打开设置": "Open settings",
         "前往 12306 ↗": "Open 12306 ↗", "前往 12306": "Open 12306",
         "提醒默认 09:00，实际起售时间以 12306 为准。": "Reminder defaults to 09:00. Check 12306 for the actual sale time.",
         "开售日期": "Sales open",
-        "出行日期": "Departure", "导出提醒": "Export reminder",
-        "假期首日出发": "Depart on the first holiday day", "假期前一天晚上出发": "Depart the evening before the holiday",
-        "购票提醒偏好": "Ticket reminder preferences", "按你的出行习惯计算出发日和开售日。": "Calculate departure and sale dates around your travel habits.",
-        "计划出发时间": "Planned departure", "火车票提前售卖天数": "Advance ticket-sale days", "购票提醒时间": "Reminder time",
-        "将按计划出发日倒推开售日期；实际起售时间以 12306 为准。": "The sale date is calculated from your planned departure. Check 12306 for the actual sale time.",
+        "出行日期": "Travel date", "导出提醒": "Export reminder", "去程": "Outbound", "返程": "Return",
+        "假期首日出发": "Depart on the first holiday day", "假期前一天晚上出发": "Depart the evening before the holiday", "假期最后一天返程": "Return on the last holiday day", "假期结束后一天返程": "Return one day after the holiday",
+        "购票提醒偏好": "Ticket reminder preferences", "按你的出行习惯计算出发日和开售日。": "Calculate departure and sale dates around your travel habits.", "按你的出行习惯计算去程、返程和开售日。": "Calculate outbound, return, and sale dates around your travel habits.",
+        "计划出发时间": "Planned departure", "计划返程时间": "Planned return", "火车票提前售卖天数": "Advance ticket-sale days", "购票提醒时间": "Reminder time",
+        "将按计划出发日倒推开售日期；实际起售时间以 12306 为准。": "The sale date is calculated from your planned departure. Check 12306 for the actual sale time.", "将分别按计划出发日和返程日倒推开售日期；实际起售时间以 12306 为准。": "Sale dates are calculated from the planned outbound and return dates. Check 12306 for the actual sale time.",
         "提前售卖天数应为 1–60": "Advance ticket-sale days must be between 1 and 60",
         "出发日已过": "Departure passed",
         "今天开售": "Sales open today",
@@ -293,15 +293,17 @@
             const setAllowance = trimmed.match(/^设置(年假|调休)额度$/);
             if (setAllowance) translated = `Set ${EN[setAllowance[1]].toLowerCase()} allowance`;
             const holidayDate = trimmed.match(/^(中秋|中秋节|国庆节|春节|元旦|劳动节|清明节|端午节) · (.+)$/);
-            if (holidayDate) translated = `${EN[holidayDate[1]]} · ${holidayDate[2]}`;
-            const ticketToday = trimmed.match(/^(.+?)火车票今天开售，(?:假期首日|计划出行) (.+)$/);
-            if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]} train tickets go on sale today; planned departure ${translateCore(ticketToday[2])}`;
-            const ticketSoon = trimmed.match(/^(.+?)火车票 (\d+) 天后开售（(.+)）$/);
-            if (ticketSoon) translated = `${EN[ticketSoon[1]] || ticketSoon[1]} train tickets go on sale in ${ticketSoon[2]} days (${translateCore(ticketSoon[3])})`;
-            const ticketOnSale = trimmed.match(/^(.+?)火车票已开售，(?:假期首日|计划出行) (.+)$/);
-            if (ticketOnSale) translated = `${EN[ticketOnSale[1]] || ticketOnSale[1]} train tickets are on sale; planned departure ${translateCore(ticketOnSale[2])}`;
+            if (holidayDate) translated = `${EN[holidayDate[1]]} · ${EN[holidayDate[2]] || holidayDate[2]}`;
+            const ticketToday = trimmed.match(/^(.+?)(去程|返程)?火车票今天开售，(?:假期首日|计划出行) (.+)$/);
+            if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]}${ticketToday[2] ? ` ${EN[ticketToday[2]].toLowerCase()}` : ""} train tickets go on sale today; travel date ${translateCore(ticketToday[3])}`;
+            const ticketSoon = trimmed.match(/^(.+?)(去程|返程)?火车票 (\d+) 天后开售（(.+)）$/);
+            if (ticketSoon) translated = `${EN[ticketSoon[1]] || ticketSoon[1]}${ticketSoon[2] ? ` ${EN[ticketSoon[2]].toLowerCase()}` : ""} train tickets go on sale in ${ticketSoon[3]} days (${translateCore(ticketSoon[4])})`;
+            const ticketOnSale = trimmed.match(/^(.+?)(去程|返程)?火车票已开售，(?:假期首日|计划出行) (.+)$/);
+            if (ticketOnSale) translated = `${EN[ticketOnSale[1]] || ticketOnSale[1]}${ticketOnSale[2] ? ` ${EN[ticketOnSale[2]].toLowerCase()}` : ""} train tickets are on sale; travel date ${translateCore(ticketOnSale[3])}`;
             const ticketGuide = trimmed.match(/^按(假期前一天晚上|假期首日)出发、提前 (\d+) 天计算，(\d{2}:\d{2}) 提醒；实际起售时间以 12306 为准。$/);
             if (ticketGuide) translated = `Depart ${ticketGuide[1] === "假期前一天晚上" ? "the evening before the holiday" : "on the first holiday day"}; sales are calculated ${ticketGuide[2]} days ahead with a ${ticketGuide[3]} reminder. Check 12306 for the actual sale time.`;
+            const roundTripGuide = trimmed.match(/^去程按(假期前一天晚上|假期首日)、返程按(假期结束后一天|假期最后一天)计算，均提前 (\d+) 天售票，(\d{2}:\d{2}) 提醒；实际起售时间以 12306 为准。$/);
+            if (roundTripGuide) translated = `Outbound: ${roundTripGuide[1] === "假期前一天晚上" ? "the evening before the holiday" : "the first holiday day"}; return: ${roundTripGuide[2] === "假期结束后一天" ? "one day after the holiday" : "the last holiday day"}. Sales open ${roundTripGuide[3]} days ahead with a ${roundTripGuide[4]} reminder. Check 12306 for the actual sale time.`;
             const weekdayToday = trimmed.match(/^(周[一二三四五六日]) · 今天$/);
             if (weekdayToday && EN[weekdayToday[1]]) translated = `${EN[weekdayToday[1]]} · Today`;
             const ticketSaleWeekday = trimmed.match(/^(周[一二三四五六日]) · 开售$/);

@@ -2121,7 +2121,9 @@ i.icon {
     box-shadow: var(--shadow-dialog);
 }
 .ticket-window .modal-head { flex: 0 0 auto; align-items: center; }
+.ticket-head-actions { display: flex; align-items: center; gap: 4px; }
 .ticket-window .modal-close-text { flex: 0 0 auto; min-height: 36px; padding-inline: 8px; border-color: transparent; color: var(--muted); font-size: 12px; }
+.ticket-window .modal-close-text .icon { width: 15px; height: 15px; }
 .ticket-dialog-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 16px; display: grid; gap: 14px; }
 @media (max-width: 760px) {
     .ticket-dialog-body { padding: 12px 12px max(20px, env(safe-area-inset-bottom)); }

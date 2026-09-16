@@ -229,7 +229,10 @@
         <div class="ticket-window">
             <div class="modal-head">
                 <h2 id="ticketDialogTitle">购票提醒</h2>
-                <button class="btn ghost modal-close-text" id="closeTicketTool" type="button">关闭</button>
+                <div class="ticket-head-actions">
+                    <button class="btn ghost modal-close-text" id="openTicketSettings" type="button"><i class="ph ph-gear-six icon" aria-hidden="true"></i>打开设置</button>
+                    <button class="btn ghost modal-close-text" id="closeTicketTool" type="button">关闭</button>
+                </div>
             </div>
             <div class="ticket-dialog-body">
                     <div class="reminder-list" id="ticketReminders"></div>
@@ -493,6 +496,10 @@
                                 <label for="ticketDepartureRule">计划出发时间</label>
                                 <select id="ticketDepartureRule"><option value="holiday-start">假期首日出发</option><option value="holiday-eve">假期前一天晚上出发</option></select>
                             </div>
+                            <div class="field wide-field">
+                                <label for="ticketReturnRule">计划返程时间</label>
+                                <select id="ticketReturnRule"><option value="holiday-end">假期最后一天返程</option><option value="holiday-next">假期结束后一天返程</option></select>
+                            </div>
                             <div class="field">
                                 <label for="ticketAdvanceDays">火车票提前售卖天数</label>
                                 <input id="ticketAdvanceDays" inputmode="numeric" type="number" min="1" max="60" step="1" placeholder="14">
@@ -502,7 +509,7 @@
                                 <select id="icsTicketTime" aria-label="购票提醒时间"></select>
                             </div>
                         </div>
-                        <p class="notice">将按计划出发日倒推开售日期；实际起售时间以 12306 为准。</p>
+                        <p class="notice">将分别按计划出发日和返程日倒推开售日期；实际起售时间以 12306 为准。</p>
                     </section>
                     <section class="settings-panel" data-settings-panel="leave-doc" hidden>
                         <header class="settings-panel-head">
@@ -948,7 +955,7 @@
             workSchedule: {workdaysPerWeek: 5, restDays: [0, 6], dailyWorkHours: 8, scheduleType: "standard"},
             salary: {monthlySalary: 0, fixedDeductions: 0, estimatedTax: 0, specialDeductions: 0, taxMode: "simple", payday: null},
             quotaRules: {annualExpireRule: "next-03-31", compExpireRule: "none"},
-            ticketPreferences: {departureRule: "holiday-start", reminderTime: "09:00", advanceDays: 14},
+            ticketPreferences: {departureRule: "holiday-start", returnRule: "holiday-end", reminderTime: "09:00", advanceDays: 14},
             habits: [],
             onboardingCompleted: false,
             onboardingSkipped: false
@@ -1121,6 +1128,7 @@
             ticketReminders: document.getElementById("ticketReminders"),
             ticketGuideText: document.getElementById("ticketGuideText"),
             ticketDepartureRule: document.getElementById("ticketDepartureRule"),
+            ticketReturnRule: document.getElementById("ticketReturnRule"),
             ticketAdvanceDays: document.getElementById("ticketAdvanceDays"),
             icsTicketTime: document.getElementById("icsTicketTime"),
             habitToolToggle: document.getElementById("habitToolToggle"),
@@ -2383,6 +2391,10 @@
             });
             els.ticketToolToggle.addEventListener("click", () => toggleTicketTool(els.ticketToolToggle));
             document.getElementById("closeTicketTool").addEventListener("click", () => closeBackdrop(els.ticketToolPanel));
+            document.getElementById("openTicketSettings").addEventListener("click", () => {
+                closeBackdrop(els.ticketToolPanel);
+                openSettings("tickets");
+            });
             els.ticketToolPanel.addEventListener("click", event => {
                 if (event.target === els.ticketToolPanel) closeBackdrop(els.ticketToolPanel);
             });
@@ -2404,10 +2416,10 @@
                 if (!els.habitCreateControl.contains(event.target)) closeHabitIconMenu();
             });
             els.habitList.addEventListener("click", handleHabitListClick);
-            els.ticketReminders.addEventListener("click", event => {
+            els.ticketReminders.addEventListener("click", async event => {
                 const button = event.target.closest("[data-ticket-export]");
                 if (!button || !window.XiuliIcs) return;
-                const item = getTicketReminders(currentYear).find(item => toISO(item.departure) === button.dataset.ticketExport);
+                const item = getTicketReminders(currentYear).find(item => `${item.tripType}:${toISO(item.departure)}` === button.dataset.ticketExport);
                 if (!item) return;
                 const content = XiuliIcs.generateIcs({
                     ticketReminders: [item],
@@ -2415,8 +2427,28 @@
                     ticketAdvanceDays: state.ticketPreferences.advanceDays,
                     eventUrlFor: ({date}) => restcalDateLink(date)
                 });
-                XiuliIcs.downloadIcs(content, `RestCal-${toISO(item.departure)}-购票提醒.ics`);
-                showToast("提醒文件已导出，请导入系统日历");
+                const filename = `RestCal-${toISO(item.departure)}-${item.tripLabel}购票提醒.ics`;
+                button.disabled = true;
+                try {
+                    const nativeCalendar = window.Capacitor?.Plugins?.Calendar;
+                    if (nativeCalendar?.addEvent) {
+                        await nativeCalendar.addEvent(ticketCalendarEvent(item));
+                        showToast("已打开系统日历，请确认保存");
+                        return;
+                    }
+                    if (window.xiuliCalendar?.addEvent) {
+                        const result = await window.xiuliCalendar.addEvent({content, filename});
+                        if (result?.error) throw new Error(result.error);
+                        showToast("已交给默认日历应用打开");
+                        return;
+                    }
+                    XiuliIcs.downloadIcs(content, filename);
+                    showToast("日历文件已下载，请在系统日历中打开");
+                } catch (error) {
+                    showToast(`无法打开系统日历：${error.message || "未知错误"}`, "error", {duration: 6000});
+                } finally {
+                    button.disabled = false;
+                }
             });
             document.addEventListener("click", event => {
                 const button = event.target instanceof Element ? event.target.closest("[data-open-settings-dynamic]") : null;
@@ -3408,8 +3440,8 @@
                     tone: "info",
                     icon: "train",
                     text: diff === 0
-                        ? `${item.name}火车票今天开售，计划出行 ${formatMonthDay(item.departure)}`
-                        : `${item.name}火车票 ${diff} 天后开售（${formatMonthDay(item.saleDate)}）`,
+                        ? `${item.name}${item.tripLabel}火车票今天开售，计划出行 ${formatMonthDay(item.departure)}`
+                        : `${item.name}${item.tripLabel}火车票 ${diff} 天后开售（${formatMonthDay(item.saleDate)}）`,
                     actionLabel: "查看",
                     ticketReminder: true
                 });
@@ -3744,7 +3776,8 @@
             const reminders = getTicketReminders(currentYear);
             const ticketPreferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
             const departureLabel = ticketPreferences.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日";
-            if (els.ticketGuideText) els.ticketGuideText.textContent = `按${departureLabel}出发、提前 ${ticketPreferences.advanceDays} 天计算，${ticketPreferences.reminderTime} 提醒；实际起售时间以 12306 为准。`;
+            const returnLabel = ticketPreferences.returnRule === "holiday-next" ? "假期结束后一天" : "假期最后一天";
+            if (els.ticketGuideText) els.ticketGuideText.textContent = `去程按${departureLabel}、返程按${returnLabel}计算，均提前 ${ticketPreferences.advanceDays} 天售票，${ticketPreferences.reminderTime} 提醒；实际起售时间以 12306 为准。`;
 
             if (!reminders.length) {
                 els.ticketToolHint.textContent = "本年度暂无购票提醒";
@@ -3759,10 +3792,10 @@
             } else {
                 const saleDiff = diffDays(reference, nextReminder.saleDate);
                 els.ticketToolHint.textContent = saleDiff > 0
-                    ? `${nextReminder.name}火车票 ${saleDiff} 天后开售（${formatMonthDay(nextReminder.saleDate)}）`
+                    ? `${nextReminder.name}${nextReminder.tripLabel}火车票 ${saleDiff} 天后开售（${formatMonthDay(nextReminder.saleDate)}）`
                     : saleDiff === 0
-                        ? `${nextReminder.name}火车票今天开售，计划出行 ${formatMonthDay(nextReminder.departure)}`
-                        : `${nextReminder.name}火车票已开售，计划出行 ${formatMonthDay(nextReminder.departure)}`;
+                        ? `${nextReminder.name}${nextReminder.tripLabel}火车票今天开售，计划出行 ${formatMonthDay(nextReminder.departure)}`
+                        : `${nextReminder.name}${nextReminder.tripLabel}火车票已开售，计划出行 ${formatMonthDay(nextReminder.departure)}`;
             }
 
             const upcoming = reminders.filter(item => diffDays(reference, item.departure) >= 0);
@@ -3795,11 +3828,11 @@
                 return `<article class="travel-ticket ${archived ? "is-past" : ""}">
                     <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<i class="ph ph-${holidayIcon(item.name)} icon"></i>`}</span>
                     <div class="travel-ticket-main">
-                        <div class="travel-ticket-head"><h3>${escapeHtml(item.name)}</h3><span class="ticket-status ${statusClass}">${status}</span></div>
+                        <div class="travel-ticket-head"><h3>${escapeHtml(item.name)} · ${item.tripLabel}</h3><span class="ticket-status ${statusClass}">${status}</span></div>
                         <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
                         <div class="ticket-departure"><span>出行日期</span><time datetime="${toISO(item.departure)}">${formatMonthDay(item.departure)}</time><small>${weekdayName(item.departure)}</small></div>
                     </div>
-                    ${archived ? "" : `<button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${toISO(item.departure)}">导出提醒</button>`}
+                    ${archived ? "" : `<button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${item.tripType}:${toISO(item.departure)}">导出提醒</button>`}
                 </article>`;
             };
             els.ticketReminders.innerHTML = `
@@ -3978,6 +4011,21 @@
             };
         }
 
+        function ticketCalendarEvent(item) {
+            const saleDate = item.saleDate instanceof Date ? item.saleDate : fromISO(String(item.saleDate));
+            const [hour, minute] = normalizeTicketPreferences(state.ticketPreferences, state.settings).reminderTime.split(":").map(Number);
+            const startTime = Date.UTC(saleDate.getFullYear(), saleDate.getMonth(), saleDate.getDate(), hour - 8, minute);
+            const tripLabel = item.tripType === "return" ? "返程" : "去程";
+            const departure = item.departure instanceof Date ? item.departure : fromISO(String(item.departure));
+            return {
+                summary: `[抢票提醒] ${item.name}${tripLabel}火车票今日开售`,
+                description: `计划${tripLabel}日：${toISO(departure)}。具体起售时间以出发站及车次为准。`,
+                startTime,
+                endTime: startTime + 30 * 60 * 1000,
+                allDay: false
+            };
+        }
+
         async function addActiveDateToCalendar() {
             if (!activeDate || !window.XiuliIcs?.generateEventIcs) return;
             const event = activeCalendarEvent();
@@ -4037,6 +4085,7 @@
             };
             state.ticketPreferences = normalizeTicketPreferences({
                 departureRule: els.ticketDepartureRule?.value,
+                returnRule: els.ticketReturnRule?.value,
                 reminderTime: els.icsTicketTime?.value,
                 advanceDays: els.ticketAdvanceDays?.value
             });
@@ -4047,6 +4096,7 @@
             state.settings.compExpireRule = state.quotaRules.compExpireRule;
             state.settings.payday = state.salary.payday;
             state.settings.ticketDepartureRule = state.ticketPreferences.departureRule;
+            state.settings.ticketReturnRule = state.ticketPreferences.returnRule;
             state.settings.ticketReminderTime = state.ticketPreferences.reminderTime;
             state.settings.ticketAdvanceDays = state.ticketPreferences.advanceDays;
         }
@@ -4078,6 +4128,7 @@
             els.dailyHoursInput.value = state.workSchedule.dailyWorkHours;
             els.scheduleTypeInput.value = state.workSchedule.scheduleType;
             if (els.ticketDepartureRule) els.ticketDepartureRule.value = state.ticketPreferences.departureRule;
+            if (els.ticketReturnRule) els.ticketReturnRule.value = state.ticketPreferences.returnRule;
             if (els.ticketAdvanceDays) els.ticketAdvanceDays.value = state.ticketPreferences.advanceDays;
             if (els.icsTicketTime) els.icsTicketTime.value = state.ticketPreferences.reminderTime;
             renderRestDaysPicker();
@@ -5965,9 +6016,11 @@
             } else if (step.kind === "tickets") {
                 const preferences = normalizeTicketPreferences(onboardingDraft.ticketPreferences);
                 setInputValue("obTicketDepartureRule", preferences.departureRule);
+                setInputValue("obTicketReturnRule", preferences.returnRule);
                 setInputValue("obTicketAdvanceDays", preferences.advanceDays);
                 setInputValue("obTicketReminderTime", preferences.reminderTime);
                 enhanceSelect(document.getElementById("obTicketDepartureRule"), "field");
+                enhanceSelect(document.getElementById("obTicketReturnRule"), "field");
                 enhanceSelect(document.getElementById("obTicketReminderTime"), "field");
             } else if (step.kind === "summary") renderOnboardingSummary();
             els.onboardingContent.querySelector("input,select")?.focus({preventScroll: true});
@@ -5979,10 +6032,10 @@
             if (RestCalOnboardingView.steps[onboardingStep].kind === "profile") onboardingDraft.profile = {name: value("obName").trim(), company: value("obCompany").trim(), hireDate: value("obHireDate")};
             if (RestCalOnboardingView.steps[onboardingStep].kind === "schedule") onboardingDraft.workSchedule = {workdaysPerWeek: clampInt(value("obWorkdays"), 1, 7, 5), dailyWorkHours: clampNumber(value("obDailyHours"), 0.5, 24, 8), scheduleType: value("obScheduleType") || "standard", restDays: [...document.querySelectorAll("#obRestDays input:checked")].map(input => Number(input.value))};
             if (RestCalOnboardingView.steps[onboardingStep].kind === "salary") onboardingDraft.salary = {monthlySalary: nonNegativeNumber(value("obSalary")), fixedDeductions: nonNegativeNumber(value("obDeductions")), estimatedTax: nonNegativeNumber(value("obTax")), payday: value("obPayday") ? clampInt(value("obPayday"), 1, 31, 10) : null};
-            if (RestCalOnboardingView.steps[onboardingStep].kind === "tickets") onboardingDraft.ticketPreferences = normalizeTicketPreferences({departureRule: value("obTicketDepartureRule"), advanceDays: value("obTicketAdvanceDays"), reminderTime: value("obTicketReminderTime")});
+            if (RestCalOnboardingView.steps[onboardingStep].kind === "tickets") onboardingDraft.ticketPreferences = normalizeTicketPreferences({departureRule: value("obTicketDepartureRule"), returnRule: value("obTicketReturnRule"), advanceDays: value("obTicketAdvanceDays"), reminderTime: value("obTicketReminderTime")});
         }
         function renderOnboardingRestDays() { const host = document.getElementById("obRestDays"); if (!host) return; host.innerHTML = RestCalOnboardingView.restDayOptions(onboardingDraft.workSchedule.restDays); }
-        function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; const ticket = normalizeTicketPreferences(d.ticketPreferences); const departure = ticket.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日"; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div><div class="onboarding-summary-row"><span>购票提醒</span><strong>${departure} · 提前 ${ticket.advanceDays} 天 · ${ticket.reminderTime}</strong></div>`; }
+        function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; const ticket = normalizeTicketPreferences(d.ticketPreferences); const departure = ticket.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日"; const returnDay = ticket.returnRule === "holiday-next" ? "假期结束后一天" : "假期最后一天"; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div><div class="onboarding-summary-row"><span>购票提醒</span><strong>去程：${departure} · 返程：${returnDay} · 提前 ${ticket.advanceDays} 天 · ${ticket.reminderTime}</strong></div>`; }
         async function nextOnboardingStep() {
             syncOnboardingDraft();
             if (!validateOnboardingStep()) return;
@@ -6015,7 +6068,7 @@
             return valid;
         }
         function skipOnboarding() { state.onboardingSkipped = true; state.onboardingCompleted = false; saveState(); closeOnboarding(); renderSetupBanner(); showToast("已跳过设置，之后可在设置中重新打开"); }
-        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {}); Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name, ticketDepartureRule: state.ticketPreferences.departureRule, ticketReminderTime: state.ticketPreferences.reminderTime, ticketAdvanceDays: state.ticketPreferences.advanceDays}); fillSettingsInputs(); renderRestDaysPicker(); }
+        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {}); Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name, ticketDepartureRule: state.ticketPreferences.departureRule, ticketReturnRule: state.ticketPreferences.returnRule, ticketReminderTime: state.ticketPreferences.reminderTime, ticketAdvanceDays: state.ticketPreferences.advanceDays}); fillSettingsInputs(); renderRestDaysPicker(); }
         function clampInt(value, min, max, fallback) { const n = Number.parseInt(value, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function clampNumber(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function nonNegativeNumber(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
@@ -6308,18 +6361,26 @@
             const holidayMap = getHolidayMap(year);
             const preferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
             const firstByName = new Map();
+            const lastByName = new Map();
             for (const [iso, value] of holidayMap.entries()) {
                 if (!firstByName.has(value.name) || iso < firstByName.get(value.name)) {
                     firstByName.set(value.name, iso);
                 }
+                if (!lastByName.has(value.name) || iso > lastByName.get(value.name)) {
+                    lastByName.set(value.name, iso);
+                }
             }
 
-            return [...firstByName.entries()].map(([name, iso]) => {
+            return [...firstByName.entries()].flatMap(([name, iso]) => {
                 const holidayStart = fromISO(iso);
                 const departure = preferences.departureRule === "holiday-eve" ? addDays(holidayStart, -1) : holidayStart;
-                const saleDate = addDays(departure, -preferences.advanceDays);
-                return {name, holidayStart, departure, saleDate, advanceDays: preferences.advanceDays};
-            }).sort((a, b) => a.departure - b.departure);
+                const holidayEnd = fromISO(lastByName.get(name));
+                const returnDate = preferences.returnRule === "holiday-next" ? addDays(holidayEnd, 1) : holidayEnd;
+                return [
+                    {name, tripType: "outbound", tripLabel: "去程", holidayStart, holidayEnd, departure, saleDate: addDays(departure, -preferences.advanceDays), advanceDays: preferences.advanceDays},
+                    {name, tripType: "return", tripLabel: "返程", holidayStart, holidayEnd, departure: returnDate, saleDate: addDays(returnDate, -preferences.advanceDays), advanceDays: preferences.advanceDays}
+                ];
+            }).sort((a, b) => a.departure - b.departure || (a.tripType === "outbound" ? -1 : 1));
         }
 
         function getHolidayMap(year) {
@@ -6764,10 +6825,12 @@
         function normalizeTicketPreferences(value = {}, legacySettings = {}) {
             const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
             const departureRule = source.departureRule ?? legacySettings.ticketDepartureRule;
+            const returnRule = source.returnRule ?? legacySettings.ticketReturnRule;
             const reminderTime = source.reminderTime ?? legacySettings.ticketReminderTime;
             const advanceDays = source.advanceDays ?? legacySettings.ticketAdvanceDays;
             return {
                 departureRule: ["holiday-start", "holiday-eve"].includes(departureRule) ? departureRule : DEFAULT_USER_DATA.ticketPreferences.departureRule,
+                returnRule: ["holiday-end", "holiday-next"].includes(returnRule) ? returnRule : DEFAULT_USER_DATA.ticketPreferences.returnRule,
                 reminderTime: isValidReminderTime(reminderTime) ? reminderTime : DEFAULT_USER_DATA.ticketPreferences.reminderTime,
                 advanceDays: clampInt(advanceDays, 1, 60, DEFAULT_USER_DATA.ticketPreferences.advanceDays)
             };

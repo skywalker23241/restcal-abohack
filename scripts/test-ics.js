@@ -54,6 +54,16 @@ assert.doesNotMatch(defaultContent, /UID:restcal-work-/);
 assert.match(defaultContent, /UID:restcal-overtime-/);
 assert.match(defaultContent, /UID:restcal-leave-/);
 
+const roundTripContent = global.XiuliIcs.generateIcs({
+    ticketReminders: [
+        {name: "元旦", tripType: "outbound", saleDate: "2026-12-18", departure: "2027-01-01"},
+        {name: "元旦", tripType: "return", saleDate: "2026-12-18", departure: "2027-01-01"}
+    ]
+}).replace(/\r\n /g, "");
+assert.match(roundTripContent, /元旦去程火车票今日开售/);
+assert.match(roundTripContent, /元旦返程火车票今日开售/);
+assert.equal((roundTripContent.match(/BEGIN:VEVENT/g) || []).length, 2, "same-day outbound and return reminders should both be exported");
+
 const singleEvent = global.XiuliIcs.generateEventIcs({
     date: "2026-09-10",
     summary: "[年假] 家庭安排",

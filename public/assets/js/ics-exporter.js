@@ -267,7 +267,9 @@
             const dtStart = formatIcsDate(t.saleDate);
             if (!dtStart) return;
             if (targetYear && !dtStart.startsWith(String(targetYear))) return;
-            const key = `${dtStart}-${t.name}`;
+            const tripType = t.tripType === "return" ? "return" : "outbound";
+            const tripLabel = tripType === "return" ? "返程" : "去程";
+            const key = `${dtStart}-${t.name}-${tripType}`;
             if (seenTickets.has(key)) return;
             seenTickets.add(key);
 
@@ -280,20 +282,20 @@
             const ticketUrl = resolveEventUrl(options, "ticket", t.saleDate);
             lines.push(
                 "BEGIN:VEVENT",
-                `UID:restcal-ticket-${dtStart}-${stableHash(t.name)}@restcal.app`,
+                `UID:restcal-ticket-${dtStart}-${tripType}-${stableHash(t.name)}@restcal.app`,
                 `DTSTAMP:${nowIso}`,
                 `DTSTART:${dtStartUtc}`,
                 `DTEND:${dtEndUtc}`,
-                `SUMMARY:🚄 [抢票提醒] ${escapeIcsText(t.name)} 火车票今日开售`,
-                `DESCRIPTION:${escapeIcsText(`计划出行日为 ${departureStr}，开售日按出发前 ${ticketAdvanceDays} 天计算。此提醒设为北京时间 ${ticketReminderTime}，具体起售时间以车站及车次为准。`)}`,
+                `SUMMARY:🚄 [抢票提醒] ${escapeIcsText(t.name)}${tripLabel}火车票今日开售`,
+                `DESCRIPTION:${escapeIcsText(`计划${tripLabel}日为 ${departureStr}，开售日按出发前 ${ticketAdvanceDays} 天计算。此提醒设为北京时间 ${ticketReminderTime}，具体起售时间以车站及车次为准。`)}`,
                 "BEGIN:VALARM",
                 "ACTION:DISPLAY",
-                `DESCRIPTION:${escapeIcsText(`${t.name}火车票开售提醒`)}`,
+                `DESCRIPTION:${escapeIcsText(`${t.name}${tripLabel}火车票开售提醒`)}`,
                 "TRIGGER:-PT15M",
                 "END:VALARM",
                 "TRANSP:TRANSPARENT",
                 ...(ticketUrl ? [`URL:${escapeIcsText(ticketUrl)}`] : []),
-                `X-RESTCAL-ID:ticket:${dtStart}:${stableHash(t.name)}`,
+                `X-RESTCAL-ID:ticket:${dtStart}:${tripType}:${stableHash(t.name)}`,
                 "END:VEVENT"
             );
         });
