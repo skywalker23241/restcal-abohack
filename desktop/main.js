@@ -1,4 +1,5 @@
 const { app, BrowserWindow, Menu, net, protocol, shell, ipcMain } = require("electron");
+const googleCalendar = require("./google-calendar");
 const path = require("path");
 const http = require("http");
 const https = require("https");
@@ -50,9 +51,22 @@ function handleAppRequest(request) {
 }
 
 function openExternally(url) {
-    if (/^https?:\/\//i.test(url)) {
+    if (/^(?:https?:\/\/|mailto:)/i.test(url)) {
         shell.openExternal(url);
     }
+}
+
+function composeEmail({to = "", subject = "", body = ""} = {}) {
+    const address = String(to).trim();
+    if (address && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+        return {error: "收件邮箱格式不正确"};
+    }
+    const mailto = `mailto:${encodeURIComponent(address)}?${new URLSearchParams({
+        subject: String(subject).slice(0, 200),
+        body: String(body).slice(0, 20_000)
+    }).toString()}`;
+    shell.openExternal(mailto);
+    return {ok: true};
 }
 
 // WebDav 请求在主进程用 Node 发出，绕过渲染进程的 CORS 限制，
@@ -174,6 +188,11 @@ if (!gotLock) {
         protocol.handle(APP_SCHEME, handleAppRequest);
         ipcMain.handle("webdav:request", (event, options) => webdavRequest(options || {}));
         ipcMain.handle("calendar:add-event", (_event, options) => openCalendarFile(options || {}));
+        ipcMain.handle("mail:compose", (_event, options) => composeEmail(options || {}));
+        ipcMain.handle("google-calendar:status", () => googleCalendar.status());
+        ipcMain.handle("google-calendar:connect", (_event, clientId) => googleCalendar.connect(clientId));
+        ipcMain.handle("google-calendar:sync", (_event, events) => googleCalendar.syncEvents(events));
+        ipcMain.handle("google-calendar:disconnect", () => googleCalendar.disconnect());
         ipcMain.handle("calendar:get-launch-url", () => {
             const url = pendingDeepLink;
             pendingDeepLink = null;

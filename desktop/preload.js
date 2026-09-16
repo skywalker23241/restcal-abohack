@@ -17,3 +17,14 @@ contextBridge.exposeInMainWorld("xiuliCalendar", {
         return () => ipcRenderer.removeListener("calendar:deep-link", listener);
     }
 });
+
+contextBridge.exposeInMainWorld("xiuliMail", {
+    compose: options => ipcRenderer.invoke("mail:compose", options)
+});
+
+contextBridge.exposeInMainWorld("xiuliGoogleCalendar", {
+    status: () => ipcRenderer.invoke("google-calendar:status"),
+    connect: clientId => ipcRenderer.invoke("google-calendar:connect", clientId),
+    sync: events => ipcRenderer.invoke("google-calendar:sync", events),
+    disconnect: () => ipcRenderer.invoke("google-calendar:disconnect")
+});

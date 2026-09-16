@@ -211,10 +211,10 @@
                         <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
                     <button class="tool-card" id="icsToolBtn" type="button">
-                        <span class="tool-card-icon"><i class="ph ph-export icon"></i></span>
+                        <span class="tool-card-icon"><i class="ph ph-plugs-connected icon"></i></span>
                         <span class="tool-card-copy">
-                            <strong>日历导出 (.ics)</strong>
-                            <small>同步事项到系统日历</small>
+                            <strong>日历与邮箱</strong>
+                            <small>连接 Google、邮箱或导出日历</small>
                         </span>
                         <span class="tool-card-arrow" aria-hidden="true"><i class="ph ph-caret-right icon"></i></span>
                     </button>
@@ -352,11 +352,16 @@
 
     <div class="modal-backdrop tour-intro-backdrop" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle" aria-describedby="guideDescription">
         <div class="modal tour-intro-modal">
-            <div class="tour-intro-mark" aria-hidden="true"><i class="ph ph-book-open icon"></i></div>
+            <div class="tour-intro-mark" aria-hidden="true"><img class="tour-intro-logo" src="assets/icons/icon-192.png" alt=""></div>
             <div class="modal-body tour-intro-body">
                 <span class="tour-intro-eyebrow">快速上手</span>
-                <h2 id="guideTitle">用 2 分钟认识 RestCal</h2>
-                <p id="guideDescription">跟随提示快速浏览主要功能。</p>
+                <h2 id="guideTitle">用 90 秒认识 RestCal</h2>
+                <p id="guideDescription">只看最常用的操作，边看边试，不会保存演示记录。</p>
+                <div class="tour-intro-points" aria-label="引导内容">
+                    <span><i class="ph ph-calendar-check icon" aria-hidden="true"></i>记录与统计</span>
+                    <span><i class="ph ph-toolbox icon" aria-hidden="true"></i>工资与工具</span>
+                    <span><i class="ph ph-shield-check icon" aria-hidden="true"></i>本地与备份</span>
+                </div>
             </div>
             <div class="modal-foot">
                 <button class="btn" id="closeGuide" type="button">暂不体验</button>
@@ -381,6 +386,7 @@
                     <button class="settings-nav-btn" data-settings-nav="quota" type="button"><span class="settings-nav-label"><i class="ph ph-chart-donut icon" aria-hidden="true"></i><span>假期额度</span></span></button>
                     <button class="settings-nav-btn" data-settings-nav="tickets" type="button"><span class="settings-nav-label"><i class="ph ph-train icon" aria-hidden="true"></i><span>购票提醒</span></span></button>
                     <button class="settings-nav-btn" data-settings-nav="leave-doc" type="button"><span class="settings-nav-label"><i class="ph ph-note-pencil icon" aria-hidden="true"></i><span>请假条模板</span></span></button>
+                    <button class="settings-nav-btn" data-settings-nav="connections" type="button"><span class="settings-nav-label"><i class="ph ph-plugs-connected icon" aria-hidden="true"></i><span>账号与连接</span></span></button>
                     <button class="settings-nav-btn" data-settings-nav="data" type="button"><span class="settings-nav-label"><i class="ph ph-cloud-arrow-up icon" aria-hidden="true"></i><span>数据与同步</span></span></button>
                     <button class="settings-nav-btn" data-settings-nav="appearance" type="button"><span class="settings-nav-label"><i class="ph ph-palette icon" aria-hidden="true"></i><span>外观</span></span></button>
                     <button class="settings-nav-btn settings-nav-advanced" data-settings-nav="advanced" type="button"><span class="settings-nav-label"><i class="ph ph-gear-six icon" aria-hidden="true"></i><span>高级设置</span></span></button>
@@ -538,6 +544,53 @@
                             </div>
                         </div>
                     </section>
+                    <section class="settings-panel" data-settings-panel="connections" hidden>
+                        <header class="settings-panel-head">
+                            <h3>账号与连接</h3>
+                            <p>把休历中的重要安排带到你日常使用的日历和邮箱。</p>
+                        </header>
+                        <div class="connection-card" id="googleCalendarCard">
+                            <div class="connection-card-main">
+                                <span class="connection-provider-icon google" aria-hidden="true">G</span>
+                                <div class="connection-copy">
+                                    <strong>Google 日历</strong>
+                                    <span id="googleCalendarMeta">单向同步，Google 日历不会反向修改休历</span>
+                                </div>
+                                <span class="connection-status" id="googleCalendarBadge">未连接</span>
+                            </div>
+                            <div class="connection-options" id="googleCalendarOptions" hidden>
+                                <label class="connection-toggle"><input id="googleCalendarAutoSync" type="checkbox" checked><span>记录变化后自动同步</span></label>
+                                <div class="ics-options" aria-label="Google 日历同步内容">
+                                    <label><input type="checkbox" data-google-category="leave" checked> 请假与调休</label>
+                                    <label><input type="checkbox" data-google-category="overtime" checked> 加班</label>
+                                    <label><input type="checkbox" data-google-category="work"> 普通出勤</label>
+                                    <label><input type="checkbox" data-google-category="notes" checked> 备注</label>
+                                </div>
+                            </div>
+                            <div class="connection-actions">
+                                <button class="btn primary" id="googleCalendarConnect" type="button">连接 Google</button>
+                                <button class="btn" id="googleCalendarSync" type="button" hidden>立即同步</button>
+                                <button class="btn ghost" id="googleCalendarDisconnect" type="button" hidden>断开</button>
+                                <button class="btn ghost" id="openIcsExport" type="button">导出日历文件</button>
+                            </div>
+                            <p class="notice connection-feedback" id="googleCalendarFeedback" aria-live="polite"></p>
+                        </div>
+                        <div class="connection-card">
+                            <div class="connection-card-main">
+                                <span class="connection-provider-icon mail" aria-hidden="true"><i class="ph ph-envelope-simple icon"></i></span>
+                                <div class="connection-copy">
+                                    <strong>系统默认邮箱</strong>
+                                    <span>生成请假条后，可直接带着主题和正文打开邮件应用。</span>
+                                </div>
+                                <span class="connection-status connected">可用</span>
+                            </div>
+                            <div class="field connection-email-field">
+                                <label for="defaultRecipientEmail">默认收件邮箱 <em>选填</em></label>
+                                <input id="defaultRecipientEmail" type="email" autocomplete="email" placeholder="例如：manager@example.com">
+                            </div>
+                        </div>
+                        <p class="privacy-note"><i class="ph ph-shield-check icon" aria-hidden="true"></i><span>休历只能管理由自己创建的日历事项，不读取其他 Google 日程。授权信息加密保存在本机。</span></p>
+                    </section>
                     <section class="settings-panel" data-settings-panel="data" hidden>
                         <header class="settings-panel-head">
                             <h3>数据与同步</h3>
@@ -685,6 +738,35 @@
         </div>
     </div>
 
+    <div class="modal-backdrop" id="googleConfigModal" role="dialog" aria-modal="true" aria-labelledby="googleConfigTitle">
+        <div class="modal google-config-modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="googleConfigTitle">连接 Google 日历</h2>
+                    <div class="subtitle">使用系统浏览器完成安全授权</div>
+                </div>
+                <button class="btn ghost icon-only" id="closeGoogleConfig" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="googleClientId">Google OAuth 客户端 ID</label>
+                    <input id="googleClientId" autocomplete="off" spellcheck="false" placeholder="xxxx.apps.googleusercontent.com">
+                </div>
+                <p class="notice">当前开发版本需要填写一次桌面应用类型的 OAuth 客户端 ID。正式发行时可预置，普通用户无需看到此项。</p>
+                <details class="settings-help">
+                    <summary>如何创建客户端 ID</summary>
+                    <p class="notice">在 Google Cloud Console 启用 Google Calendar API，配置 OAuth 同意屏幕，然后创建“桌面应用”类型的客户端。客户端 ID 不是密码，但请勿在此填写客户端密钥。</p>
+                </details>
+                <p class="notice" id="googleConfigStatus" aria-live="polite"></p>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" id="googleConfigCancel" type="button">取消</button>
+                <span class="foot-spacer" aria-hidden="true"></span>
+                <button class="btn primary" id="googleConfigContinue" type="button">前往 Google 授权</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-backdrop" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptModalTitle">
         <div class="receipt-window">
             <div class="modal-head">
@@ -771,6 +853,8 @@
             </div>
             <div class="modal-foot">
                 <button class="btn" id="downloadLeaveReceipt" type="button">下载图片</button>
+                <button class="btn" id="emailLeaveDoc" type="button" disabled><i class="ph ph-envelope-simple icon" aria-hidden="true"></i>邮件发送</button>
+                <span class="foot-spacer" aria-hidden="true"></span>
                 <button class="btn primary" id="leaveGeneratorDone" type="button">完成</button>
             </div>
         </div>
@@ -956,6 +1040,10 @@
             salary: {monthlySalary: 0, fixedDeductions: 0, estimatedTax: 0, specialDeductions: 0, taxMode: "simple", payday: null},
             quotaRules: {annualExpireRule: "next-03-31", compExpireRule: "none"},
             ticketPreferences: {departureRule: "holiday-start", returnRule: "holiday-end", reminderTime: "09:00", advanceDays: 14},
+            integrations: {
+                googleCalendar: {autoSync: true, include: {leave: true, overtime: true, work: false, notes: true}},
+                email: {defaultRecipient: ""}
+            },
             habits: [],
             onboardingCompleted: false,
             onboardingSkipped: false
@@ -1037,6 +1125,9 @@
         let productTour = null;
         let noteTooltipTarget = null;
         let dayModalBackdropPress = false;
+        let googleConnection = {connected: false};
+        let googleSyncTimer = 0;
+        let lastGoogleSyncSignature = "";
 
         const els = {
             app: document.querySelector("main.app"),
@@ -1122,6 +1213,22 @@
             webdavConfigStatus: document.getElementById("webdavConfigStatus"),
             closeWebdavConfig: document.getElementById("closeWebdavConfig"),
             webdavConfigDone: document.getElementById("webdavConfigDone"),
+            googleCalendarMeta: document.getElementById("googleCalendarMeta"),
+            googleCalendarBadge: document.getElementById("googleCalendarBadge"),
+            googleCalendarOptions: document.getElementById("googleCalendarOptions"),
+            googleCalendarAutoSync: document.getElementById("googleCalendarAutoSync"),
+            googleCalendarConnect: document.getElementById("googleCalendarConnect"),
+            googleCalendarSync: document.getElementById("googleCalendarSync"),
+            googleCalendarDisconnect: document.getElementById("googleCalendarDisconnect"),
+            googleCalendarFeedback: document.getElementById("googleCalendarFeedback"),
+            openIcsExport: document.getElementById("openIcsExport"),
+            defaultRecipientEmail: document.getElementById("defaultRecipientEmail"),
+            googleConfigModal: document.getElementById("googleConfigModal"),
+            googleClientId: document.getElementById("googleClientId"),
+            googleConfigStatus: document.getElementById("googleConfigStatus"),
+            closeGoogleConfig: document.getElementById("closeGoogleConfig"),
+            googleConfigCancel: document.getElementById("googleConfigCancel"),
+            googleConfigContinue: document.getElementById("googleConfigContinue"),
             ticketToolToggle: document.getElementById("ticketToolToggle"),
             ticketToolHint: document.getElementById("ticketToolHint"),
             ticketToolPanel: document.getElementById("ticketToolPanel"),
@@ -1146,6 +1253,7 @@
             closeLeaveGenerator: document.getElementById("closeLeaveGenerator"),
             leaveGeneratorDone: document.getElementById("leaveGeneratorDone"),
             downloadLeaveReceipt: document.getElementById("downloadLeaveReceipt"),
+            emailLeaveDoc: document.getElementById("emailLeaveDoc"),
             leaveApplicantDoc: document.getElementById("leaveApplicantDoc"),
             leaveRecipientDoc: document.getElementById("leaveRecipientDoc"),
             leaveTypeForDoc: document.getElementById("leaveTypeForDoc"),
@@ -1248,6 +1356,8 @@
             els.webdavUsername.value = webdavConfig.username || "";
             els.webdavPassword.value = webdavConfig.password || "";
             renderWebdavCard();
+            fillIntegrationInputs();
+            await refreshGoogleConnection();
             resetLeaveGeneratorForm();
             await render();
             const openedFromCalendar = await initCalendarDeepLinks();
@@ -2455,8 +2565,11 @@
                 if (button) openSettings(button.dataset.openSettingsDynamic);
             });
             els.icsToolBtn?.addEventListener("click", () => {
-                openSettings("data");
-                window.setTimeout(() => document.getElementById("icsCard")?.scrollIntoView({behavior: "smooth", block: "center"}), 220);
+                openSettings("connections");
+            });
+            els.openIcsExport.addEventListener("click", () => {
+                setSettingsPanel("data");
+                window.setTimeout(() => document.getElementById("icsCard")?.scrollIntoView({behavior: "smooth", block: "center"}), 180);
             });
             els.exportIcsCurrentYear?.addEventListener("click", () => exportIcsFile(currentYear));
             els.exportIcsAll?.addEventListener("click", () => exportIcsFile(null));
@@ -2487,6 +2600,7 @@
             els.closeLeaveGenerator.addEventListener("click", closeLeaveGenerator);
             els.leaveGeneratorDone.addEventListener("click", closeLeaveGenerator);
             els.downloadLeaveReceipt.addEventListener("click", downloadLeaveReceiptImage);
+            els.emailLeaveDoc.addEventListener("click", emailCurrentLeaveDoc);
             els.leaveGeneratorModal.addEventListener("click", event => {
                 if (event.target === els.leaveGeneratorModal) closeLeaveGenerator();
             });
@@ -2512,6 +2626,18 @@
             els.webdavConfigDone.addEventListener("click", closeWebdavConfigModal);
             els.webdavConfigModal.addEventListener("click", event => {
                 if (event.target === els.webdavConfigModal) closeWebdavConfigModal();
+            });
+            els.googleCalendarConnect.addEventListener("click", openGoogleConfig);
+            els.googleCalendarSync.addEventListener("click", () => syncGoogleCalendar({announce: true}));
+            els.googleCalendarDisconnect.addEventListener("click", disconnectGoogleCalendar);
+            els.googleCalendarAutoSync.addEventListener("change", saveIntegrationPreferences);
+            document.querySelectorAll("[data-google-category]").forEach(input => input.addEventListener("change", saveIntegrationPreferences));
+            els.defaultRecipientEmail.addEventListener("input", saveIntegrationPreferences);
+            els.closeGoogleConfig.addEventListener("click", closeGoogleConfig);
+            els.googleConfigCancel.addEventListener("click", closeGoogleConfig);
+            els.googleConfigContinue.addEventListener("click", connectGoogleCalendar);
+            els.googleConfigModal.addEventListener("click", event => {
+                if (event.target === els.googleConfigModal) closeGoogleConfig();
             });
             els.generateDoc.addEventListener("click", generateLeaveDoc);
             [els.leaveTypeForDoc, els.leaveStart, els.leaveEnd, els.leaveReasonDoc, els.leaveApplicantDoc, els.leaveRecipientDoc, els.leaveHandoffDoc].forEach(input => {
@@ -2557,21 +2683,21 @@
             els.closeModal.addEventListener("click", closeModal);
             els.modalCancel.addEventListener("click", closeModal);
             els.calendarGrid.addEventListener("pointerover", event => {
-                const card = event.target instanceof Element ? event.target.closest(".has-note[data-note]") : null;
+                const card = event.target instanceof Element ? event.target.closest(".day-card.has-note[data-note]") : null;
                 if (!card || card.contains(event.relatedTarget)) return;
                 showNoteTooltip(card);
             });
             els.calendarGrid.addEventListener("pointerout", event => {
-                const card = event.target instanceof Element ? event.target.closest(".has-note[data-note]") : null;
+                const card = event.target instanceof Element ? event.target.closest(".day-card.has-note[data-note]") : null;
                 if (!card || card.contains(event.relatedTarget)) return;
                 hideNoteTooltip(card);
             });
             els.calendarGrid.addEventListener("focusin", event => {
-                const card = event.target instanceof Element ? event.target.closest(".has-note[data-note]") : null;
+                const card = event.target instanceof Element ? event.target.closest(".day-card.has-note[data-note]") : null;
                 if (card) showNoteTooltip(card);
             });
             els.calendarGrid.addEventListener("focusout", event => {
-                const card = event.target instanceof Element ? event.target.closest(".has-note[data-note]") : null;
+                const card = event.target instanceof Element ? event.target.closest(".day-card.has-note[data-note]") : null;
                 if (card) hideNoteTooltip(card);
             });
             els.calendarGrid.addEventListener("click", event => {
@@ -2591,6 +2717,7 @@
                 if (els.habitToolPanel.classList.contains("open")) return closeBackdrop(els.habitToolPanel);
                 if (els.ticketToolPanel.classList.contains("open")) return closeBackdrop(els.ticketToolPanel);
                 if (els.searchModal.classList.contains("open")) return closeSearch();
+                if (els.googleConfigModal.classList.contains("open")) return closeGoogleConfig();
                 if (els.webdavConfigModal.classList.contains("open")) return closeWebdavConfigModal();
                 if (els.dayModal.classList.contains("open")) return closeModal();
                 if (els.receiptModal.classList.contains("open")) return closeReceiptModal();
@@ -3012,17 +3139,19 @@
                 if (record?.note) row.dataset.note = record.note;
                 row.setAttribute("aria-label", dayAriaLabel(date, info, record));
 
-                const detail = [record?.reason, record?.overtime?.reason, record?.overtime ? `加班 ${record.overtime.hours} 小时` : "", record?.note].filter(Boolean).join(" · ");
-                const detailHtml = detail
-                    ? escapeHtml(detail)
-                    : (!record?.status && !record?.overtime && !info.isHoliday && !info.isWeekend && !info.makeupName ? `<em>未标记</em>` : "");
+                const detail = [record?.reason, record?.overtime?.reason, record?.overtime ? `加班 ${record.overtime.hours} 小时` : ""].filter(Boolean).join(" · ");
+                const isEmpty = !detail && !record?.note && !record?.status && !record?.overtime && !info.isHoliday && !info.isWeekend && !info.makeupName;
+                const detailHtml = [
+                    detail ? `<span class="week-meta">${escapeHtml(detail)}</span>` : "",
+                    record?.note ? `<span class="week-note"><span>${escapeHtml(record.note)}</span></span>` : "",
+                    isEmpty ? `<em>未标记</em>` : ""
+                ].filter(Boolean).join("");
                 row.innerHTML = `
           <span class="week-lunar">${getLunarText(date)}</span>
           <strong class="solar">${date.getDate()}</strong>
           ${daySubHtml(daySubInfo(date, info, record))}
           <span class="week-detail">${detailHtml}</span>
           <span class="week-dow">${weekdayName(date)}</span>
-          ${record?.note ? `<span class="note-marker" aria-hidden="true"><i class="ph ph-note icon"></i></span>` : ""}
           ${habitCheckinCountForDate(iso) ? `<span class="habit-marker" aria-hidden="true">${habitCheckinCountForDate(iso) > 1 ? habitCheckinCountForDate(iso) : '<i class="ph ph-check icon"></i>'}</span>` : ""}
         `;
                 fragment.appendChild(row);
@@ -3233,7 +3362,7 @@
           <div class="page-status">
             ${statusTags.length ? `<div class="tags">${statusTags.join("")}</div>` : ""}
             ${record?.reason ? `<div class="page-reason">${escapeHtml(record.reason)}</div>` : ""}
-            ${record?.note ? `<div class="page-note"><i class="ph ph-note icon" aria-hidden="true"></i><span>${escapeHtml(record.note)}</span></div>` : ""}
+            ${record?.note ? `<div class="page-note"><p>${escapeHtml(record.note)}</p></div>` : ""}
             ${!record?.status && !record?.overtime && emptyText ? `<div class="page-empty">${emptyText}</div>` : ""}
           </div>
           <figure class="page-quote">
@@ -4245,6 +4374,7 @@
                 danger: true
             });
             if (!ok) return;
+            try { await window.xiuliGoogleCalendar?.disconnect(); } catch { }
             localStorage.removeItem(STORAGE_KEY);
             localStorage.removeItem(WEBDAV_KEY);
             localStorage.removeItem(THEME_KEY);
@@ -4260,6 +4390,7 @@
             els.settingsPage?.classList.toggle("subpage-open", Boolean(group));
             renderDataStatus();
             renderWebdavCard();
+            refreshGoogleConnection();
             syncAppearanceControls();
             openBackdrop(els.settingsModal);
             if (group === "webdav" && !isWebdavConfigured()) window.setTimeout(openWebdavConfigModal, 220);
@@ -4309,10 +4440,11 @@
             productTour = new ProductTour({
                 steps: [
                     {
-                        target: "#nextMonth",
-                        title: "切换日期范围",
-                        text: "点击右箭头查看下一个月。旁边的年份、月份和“今天”也可以快速定位日期。",
-                        advanceOn: "target-click",
+                        target: ".calendar-toolbar",
+                        section: "日历工作台",
+                        icon: "ph-calendar-blank",
+                        title: "从时间开始安排",
+                        text: "这里可以切换日、周、月、年视图，也能用年份、月份和“今天”快速定位。下方概览会同步汇总当前月份。",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) closeSettings();
                             closeAllDateMenus();
@@ -4324,8 +4456,10 @@
                     },
                     {
                         target: tourWorkdayCard,
-                        title: "打开一天",
-                        text: "点击高亮的工作日，打开当天的出勤和请假记录。",
+                        section: "记录",
+                        icon: "ph-pencil-simple-line",
+                        title: "点一天，完成记录",
+                        text: "选择任意日期，就能记录出勤、请假、加班、备注和习惯打卡。现在点一下高亮的工作日试试。",
                         advanceOn: "target-click",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) closeSettings();
@@ -4339,53 +4473,26 @@
                         }
                     },
                     {
-                        target: '[data-action="annual"]',
-                        title: "选择当天状态",
-                        text: "点击“年假”看看状态如何选择。引导不会替你保存这条演示记录。",
-                        advanceOn: "target-click",
+                        target: ".day-modal .action-grid-primary",
+                        section: "记录",
+                        icon: "ph-calendar-check",
+                        title: "状态、时长与批量标记",
+                        text: "选择当天状态和时长；“更多选项”可一次标记一段日期，并自动跳过周末和法定节假日。引导不会保存这条演示记录。",
                         beforeEnter: async () => {
                             if (!els.dayModal.classList.contains("open")) {
                                 const card = tourWorkdayCard();
                                 if (card?.dataset.date) openModal(card.dataset.date);
                             }
                             els.modalAdvanced.open = false;
-                            await waitForTourTransition(60);
-                        }
-                    },
-                    {
-                        target: "#modalAdvanced > summary",
-                        title: "展开批量设置",
-                        text: "点击“更多选项”，设置需要批量标记的日期范围。",
-                        advanceOn: "target-click",
-                        beforeEnter: async () => {
-                            closeAllDateMenus();
-                            if (!els.dayModal.classList.contains("open")) {
-                                switchView("calendar");
-                                const card = tourWorkdayCard();
-                                if (card?.dataset.date) openModal(card.dataset.date);
-                            }
-                            els.modalAdvanced.open = false;
-                            await waitForTourTransition(60);
-                        }
-                    },
-                    {
-                        target: "#modalAdvanced .range-grid",
-                        title: "选择多个日期",
-                        text: "分别设置开始日期和结束日期。保存后，当前状态会应用到范围内所有工作日，并自动跳过周末和节假日。",
-                        beforeEnter: async () => {
-                            if (!els.dayModal.classList.contains("open")) {
-                                switchView("calendar");
-                                const card = tourWorkdayCard();
-                                if (card?.dataset.date) openModal(card.dataset.date);
-                            }
-                            els.modalAdvanced.open = true;
                             await waitForTourTransition(80);
                         }
                     },
                     {
                         target: () => firstVisible('.app-nav-btn[data-nav="stats"], .bottom-nav-btn[data-nav="stats"]'),
-                        title: "查看统计",
-                        text: "点击“统计”，查看月度出勤、请假天数和年度趋势。",
+                        section: "统计",
+                        icon: "ph-chart-bar",
+                        title: "让记录变成清晰统计",
+                        text: "统计页汇总月度与年度出勤、各类请假和剩余额度。点击“统计”查看。",
                         advanceOn: "target-click",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) {
@@ -4401,8 +4508,10 @@
                     },
                     {
                         target: () => firstVisible('.app-nav-btn[data-nav="tools"], .bottom-nav-btn[data-nav="tools"]'),
-                        title: "打开实用工具",
-                        text: "点击“工具”，这里可以生成工资条、请假条并查看购票提醒。",
+                        section: "工具箱",
+                        icon: "ph-toolbox",
+                        title: "把记录继续用起来",
+                        text: "点击“工具”，进入工资核算、请假条、购票提醒、习惯打卡和日历导出。",
                         advanceOn: "target-click",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) {
@@ -4417,9 +4526,13 @@
                         }
                     },
                     {
-                        target: '[data-open-receipt="salary"]',
-                        title: "工资核算与工资条",
-                        text: "根据所选月份的出勤和请假记录估算扣款、实发工资，并生成可下载的工资条。",
+                        target: () => window.innerWidth < 720
+                            ? document.querySelector(".tools-grid .tool-card:first-child")
+                            : document.querySelector(".tools-grid"),
+                        section: "工具箱",
+                        icon: "ph-sparkle",
+                        title: "五个工具，覆盖高频场景",
+                        text: "出勤记录可直接核算工资、生成工资条和请假条；节假日可查看购票提醒，日常还能打卡并导出到系统日历。",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) closeSettings();
                             switchView("tools");
@@ -4427,39 +4540,11 @@
                         }
                     },
                     {
-                        target: "[data-generate-leave-receipt]",
-                        title: "生成请假条",
-                        text: "填写日期、请假类型和理由，预览并下载规范的请假条。",
-                        beforeEnter: async () => {
-                            if (els.settingsModal.classList.contains("open")) closeSettings();
-                            switchView("tools");
-                            await waitForTourTransition(60);
-                        }
-                    },
-                    {
-                        target: "#ticketToolToggle",
-                        title: "购票提醒",
-                        text: "查看法定节假日火车票开售日期，提前安排假期出行。",
-                        beforeEnter: async () => {
-                            if (els.settingsModal.classList.contains("open")) closeSettings();
-                            switchView("tools");
-                            await waitForTourTransition(60);
-                        }
-                    },
-                    {
-                        target: "#languageToggle",
-                        title: "快速切换语言",
-                        text: "右上角语言按钮可以在中文和 English 之间快速切换。",
-                        beforeEnter: async () => {
-                            if (els.settingsModal.classList.contains("open")) closeSettings();
-                            switchView("tools");
-                            await waitForTourTransition(60);
-                        }
-                    },
-                    {
-                        target: () => firstVisible("#settingsToggle"),
-                        title: "进入设置",
-                        text: "点击设置入口，管理工作制度、工资、假期额度和个人资料。",
+                        target: "#settingsToggle",
+                        section: "个性化",
+                        icon: "ph-sliders-horizontal",
+                        title: "先按你的工作方式设置",
+                        text: "在设置中填写工作制度、薪资、假期额度和购票习惯，统计与工资核算会据此自动调整。",
                         advanceOn: "target-click",
                         beforeEnter: async () => {
                             if (els.settingsModal.classList.contains("open")) {
@@ -4470,59 +4555,14 @@
                         }
                     },
                     {
-                        target: '[data-settings-nav="appearance"]',
-                        title: "打开外观设置",
-                        text: "点击“外观”，设置主题和界面语言。",
-                        advanceOn: "target-click",
+                        target: "#settingsNav",
+                        section: "安全与偏好",
+                        icon: "ph-shield-check",
+                        title: "数据由你掌控",
+                        text: "数据默认保存在当前设备。你可以导出 CSV、同步 WebDAV，也能随时切换主题和中英文界面。到这里，核心功能就认识完了。",
                         beforeEnter: async () => {
                             if (!els.settingsModal.classList.contains("open")) openSettings();
                             els.settingsPage?.classList.remove("subpage-open");
-                            await waitForTourTransition(240);
-                        }
-                    },
-                    {
-                        target: "#themeChoice",
-                        title: "选择显示主题",
-                        text: "可以跟随系统，也可以固定使用浅色或深色主题。",
-                        beforeEnter: async () => {
-                            if (!els.settingsModal.classList.contains("open")) openSettings("appearance");
-                            else setSettingsPanel("appearance");
-                            els.settingsPage?.classList.add("subpage-open");
-                            await waitForTourTransition(180);
-                        }
-                    },
-                    {
-                        target: "#languageChoice",
-                        title: "设置界面语言",
-                        text: "语言也可以在这里选择，设置会保存在当前设备。",
-                        beforeEnter: async () => {
-                            if (!els.settingsModal.classList.contains("open")) openSettings("appearance");
-                            else setSettingsPanel("appearance");
-                            els.settingsPage?.classList.add("subpage-open");
-                            await waitForTourTransition(120);
-                        }
-                    },
-                    {
-                        target: '[data-settings-nav="data"]',
-                        title: "找到数据与同步",
-                        text: "点击“数据与同步”，进入备份、恢复和 WebDAV 配置。",
-                        advanceOn: "target-click",
-                        beforeEnter: async () => {
-                            if (!els.settingsModal.classList.contains("open")) {
-                                openSettings();
-                            }
-                            els.settingsPage?.classList.remove("subpage-open");
-                            await waitForTourTransition(240);
-                        }
-                    },
-                    {
-                        target: '[data-settings-panel="data"] .settings-card',
-                        title: "记得备份数据",
-                        text: "RestCal 数据保存在当前设备。更换设备前，可以在这里导出 CSV 或配置 WebDAV。你已经完成界面引导。",
-                        beforeEnter: async () => {
-                            if (!els.settingsModal.classList.contains("open")) openSettings("data");
-                            else setSettingsPanel("data");
-                            els.settingsPage?.classList.add("subpage-open");
                             await waitForTourTransition(240);
                         }
                     }
@@ -4716,6 +4756,196 @@
             }, 80);
         }
 
+        function fillIntegrationInputs() {
+            const google = state.integrations.googleCalendar;
+            els.googleCalendarAutoSync.checked = google.autoSync !== false;
+            document.querySelectorAll("[data-google-category]").forEach(input => {
+                input.checked = google.include[input.dataset.googleCategory] !== false;
+                if (input.dataset.googleCategory === "work" && google.include.work !== true) input.checked = false;
+            });
+            els.defaultRecipientEmail.value = state.integrations.email.defaultRecipient || "";
+            els.googleClientId.value = google.clientId || "";
+        }
+
+        function saveIntegrationPreferences() {
+            const google = state.integrations.googleCalendar;
+            google.autoSync = els.googleCalendarAutoSync.checked;
+            google.include = Object.fromEntries([...document.querySelectorAll("[data-google-category]")]
+                .map(input => [input.dataset.googleCategory, input.checked]));
+            state.integrations.email.defaultRecipient = els.defaultRecipientEmail.value.trim();
+            saveState();
+        }
+
+        async function refreshGoogleConnection() {
+            if (!window.xiuliGoogleCalendar) {
+                googleConnection = {connected: false, unavailable: true};
+                renderGoogleConnection();
+                return;
+            }
+            try {
+                googleConnection = await window.xiuliGoogleCalendar.status();
+            } catch (error) {
+                googleConnection = {connected: false, error: error.message};
+            }
+            renderGoogleConnection();
+        }
+
+        function renderGoogleConnection() {
+            const connected = Boolean(googleConnection.connected);
+            els.googleCalendarBadge.textContent = connected ? "已连接" : googleConnection.unavailable ? "桌面版可用" : "未连接";
+            els.googleCalendarBadge.classList.toggle("connected", connected);
+            els.googleCalendarOptions.hidden = !connected;
+            els.googleCalendarConnect.hidden = connected;
+            els.googleCalendarSync.hidden = !connected;
+            els.googleCalendarDisconnect.hidden = !connected;
+            if (connected) {
+                const last = googleConnection.lastSyncedAt ? ` · 上次同步 ${formatSyncTime(googleConnection.lastSyncedAt)}` : "";
+                els.googleCalendarMeta.textContent = `${googleConnection.email || "Google 账号"}${last}`;
+            } else {
+                els.googleCalendarMeta.textContent = googleConnection.unavailable
+                    ? "自动同步目前支持休历桌面版；仍可使用下方日历文件导出"
+                    : "单向同步，Google 日历不会反向修改休历";
+            }
+        }
+
+        function formatSyncTime(value) {
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return "";
+            return new Intl.DateTimeFormat(undefined, {month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit"}).format(date);
+        }
+
+        function openGoogleConfig() {
+            if (!window.xiuliGoogleCalendar) {
+                showToast("Google 自动同步目前支持休历桌面版", "error", {duration: 5000});
+                return;
+            }
+            els.googleConfigStatus.textContent = "";
+            openBackdrop(els.googleConfigModal);
+            els.googleClientId.focus({preventScroll: true});
+        }
+
+        function closeGoogleConfig() {
+            closeBackdrop(els.googleConfigModal);
+        }
+
+        async function connectGoogleCalendar() {
+            const clientId = els.googleClientId.value.trim();
+            if (!clientId) {
+                els.googleConfigStatus.textContent = "请填写 Google OAuth 客户端 ID。";
+                return;
+            }
+            els.googleConfigContinue.disabled = true;
+            els.googleConfigStatus.textContent = "正在打开系统浏览器，请完成 Google 授权…";
+            try {
+                googleConnection = await window.xiuliGoogleCalendar.connect(clientId);
+                state.integrations.googleCalendar.clientId = clientId;
+                saveState();
+                closeGoogleConfig();
+                renderGoogleConnection();
+                showToast("Google 日历已连接");
+                await syncGoogleCalendar({announce: true, force: true});
+            } catch (error) {
+                els.googleConfigStatus.textContent = `连接失败：${error.message || "未知错误"}`;
+            } finally {
+                els.googleConfigContinue.disabled = false;
+            }
+        }
+
+        async function disconnectGoogleCalendar() {
+            const confirmed = await showConfirm({
+                title: "断开 Google 日历？",
+                message: "休历将停止后续同步；已经写入 Google 日历的事项会保留。",
+                confirmText: "断开连接"
+            });
+            if (!confirmed) return;
+            try {
+                await window.xiuliGoogleCalendar.disconnect();
+                googleConnection = {connected: false};
+                lastGoogleSyncSignature = "";
+                renderGoogleConnection();
+                showToast("已断开 Google 日历");
+            } catch (error) {
+                showToast(`断开失败：${error.message || "未知错误"}`, "error");
+            }
+        }
+
+        function googleCalendarEvents() {
+            const include = state.integrations.googleCalendar.include;
+            return Object.entries(state.records).sort(([a], [b]) => a.localeCompare(b)).flatMap(([iso, record]) => {
+                const parts = [];
+                if (LEAVE_STATUSES.includes(record.status) && include.leave) parts.push(STATUS_LABELS[record.status]);
+                if (record.status === "work" && include.work) parts.push("出勤");
+                if (record.overtime && include.overtime) parts.push(`加班${record.overtime.hours ? ` ${record.overtime.hours} 小时` : ""}`);
+                if (!parts.length && record.note && include.notes) parts.push("休历备注");
+                if (!parts.length) return [];
+                const descriptions = [];
+                if (record.reason) descriptions.push(`原因：${record.reason}`);
+                if (record.overtime?.reason) descriptions.push(`加班说明：${record.overtime.reason}`);
+                if (record.note && include.notes) descriptions.push(`备注：${record.note}`);
+                descriptions.push("由休历单向同步");
+                return [{
+                    id: `restcal${iso.replaceAll("-", "")}`,
+                    summary: parts.join(" · "),
+                    description: descriptions.join("\n"),
+                    start: {date: iso},
+                    end: {date: toISO(addDays(fromISO(iso), 1))},
+                    transparency: "transparent",
+                    visibility: "private",
+                    extendedProperties: {private: {restcalDate: iso, restcalManaged: "true"}}
+                }];
+            });
+        }
+
+        function googleSyncSignature(events) {
+            return JSON.stringify(events.map(event => [event.id, event.summary, event.description]));
+        }
+
+        function scheduleGoogleSync() {
+            if (!googleConnection.connected || !state.integrations.googleCalendar.autoSync) return;
+            window.clearTimeout(googleSyncTimer);
+            googleSyncTimer = window.setTimeout(() => syncGoogleCalendar(), 900);
+        }
+
+        async function syncGoogleCalendar({announce = false, force = false} = {}) {
+            if (!window.xiuliGoogleCalendar || !googleConnection.connected) return;
+            const events = googleCalendarEvents();
+            const signature = googleSyncSignature(events);
+            if (!force && signature === lastGoogleSyncSignature) return;
+            els.googleCalendarSync.disabled = true;
+            els.googleCalendarFeedback.textContent = "正在同步…";
+            try {
+                const result = await window.xiuliGoogleCalendar.sync(events);
+                lastGoogleSyncSignature = signature;
+                googleConnection.lastSyncedAt = result.lastSyncedAt;
+                els.googleCalendarFeedback.textContent = `已同步 ${result.synced} 条事项`;
+                renderGoogleConnection();
+                if (announce) showToast(`Google 日历同步完成，共 ${result.synced} 条`);
+            } catch (error) {
+                els.googleCalendarFeedback.textContent = `同步失败：${error.message || "未知错误"}`;
+                if (announce) showToast(els.googleCalendarFeedback.textContent, "error", {duration: 6000});
+            } finally {
+                els.googleCalendarSync.disabled = false;
+            }
+        }
+
+        async function emailCurrentLeaveDoc() {
+            if (!currentLeaveReceipt) generateLeaveDoc();
+            if (!currentLeaveReceipt) return;
+            const to = state.integrations.email.defaultRecipient || "";
+            const payload = {to, subject: currentLeaveReceipt.emailSubject || "请假申请", body: currentLeaveReceipt.body || els.leaveOutput.value};
+            try {
+                if (window.xiuliMail?.compose) {
+                    const result = await window.xiuliMail.compose(payload);
+                    if (result?.error) throw new Error(result.error);
+                } else {
+                    window.location.href = `mailto:${encodeURIComponent(to)}?${new URLSearchParams({subject: payload.subject, body: payload.body}).toString()}`;
+                }
+                showToast("已打开默认邮箱");
+            } catch (error) {
+                showToast(`无法打开邮箱：${error.message || "未知错误"}`, "error", {duration: 6000});
+            }
+        }
+
         function resetLeaveGeneratorForm(preset = {}) {
             const defaultType = preset.type || preset.status || "personal";
             els.leaveApplicantDoc.value = preset.applicant ?? state.settings.applicantName ?? "";
@@ -4740,6 +4970,7 @@
 
         function clearLeaveReceiptPreview() {
             currentLeaveReceipt = null;
+            els.emailLeaveDoc.disabled = true;
             if (!els.leaveReceipt) return;
             els.leaveReceipt.classList.add("empty");
             els.leaveReceipt.innerHTML = `<div class="receipt-empty">填写左侧信息后点击生成</div>`;
@@ -5631,6 +5862,7 @@
                 kind: "leave",
                 title: "请假条",
                 subtitle: `${typeText} · THERMAL PRINT`,
+                emailSubject: `${applicant}的${typeText}申请（${start}${end !== start ? ` 至 ${end}` : ""}）`,
                 filename: `请假条-${applicant}-${applyDate}`,
                 sections: [
                     [
@@ -5647,6 +5879,7 @@
             els.leaveReceipt.classList.remove("empty");
             els.leaveReceipt.innerHTML = receiptInnerHtml(currentLeaveReceipt);
             currentReceipt = currentLeaveReceipt;
+            els.emailLeaveDoc.disabled = false;
         }
 
         function leaveDocBody(type, start, end, days, reason, applicant, applyDate, recipient, handoff) {
@@ -6790,7 +7023,7 @@
             const legacyHabits = source.habit?.name ? [{id: "habit-legacy", name: source.habit.name, createdAt: source.habit.createdAt}] : [];
             const habits = normalizeHabits(Array.isArray(source.habits) ? source.habits : legacyHabits);
             const result = {
-                schemaVersion: 5,
+                schemaVersion: 6,
                 records: normalizeRecords(base.records || {}, workSchedule),
                 settings,
                 profile: {...DEFAULT_USER_DATA.profile, ...(source.profile || {}), name: source.profile?.name ?? settings.applicantName ?? ""},
@@ -6812,6 +7045,7 @@
                     compExpireRule: source.quotaRules?.compExpireRule ?? settings.compExpireRule ?? "none"
                 },
                 ticketPreferences: normalizeTicketPreferences(source.ticketPreferences, settings),
+                integrations: normalizeIntegrations(source.integrations),
                 habits,
                 habitCheckins: normalizeHabitCheckins(source.habitCheckins, habits),
                 onboardingCompleted: Boolean(source.onboardingCompleted),
@@ -6820,6 +7054,28 @@
                 setupBannerDismissed: Boolean(source.setupBannerDismissed)
             };
             return result;
+        }
+
+        function normalizeIntegrations(value = {}) {
+            const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+            const googleSource = source.googleCalendar && typeof source.googleCalendar === "object" ? source.googleCalendar : {};
+            const includeSource = googleSource.include && typeof googleSource.include === "object" ? googleSource.include : {};
+            const emailSource = source.email && typeof source.email === "object" ? source.email : {};
+            return {
+                googleCalendar: {
+                    autoSync: googleSource.autoSync !== false,
+                    clientId: typeof googleSource.clientId === "string" ? googleSource.clientId.slice(0, 300) : "",
+                    include: {
+                        leave: includeSource.leave !== false,
+                        overtime: includeSource.overtime !== false,
+                        work: includeSource.work === true,
+                        notes: includeSource.notes !== false
+                    }
+                },
+                email: {
+                    defaultRecipient: typeof emailSource.defaultRecipient === "string" ? emailSource.defaultRecipient.slice(0, 320) : ""
+                }
+            };
         }
 
         function normalizeTicketPreferences(value = {}, legacySettings = {}) {
@@ -6921,6 +7177,7 @@
         function saveState() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                scheduleGoogleSync();
                 return true;
             } catch (error) {
                 // 存储被禁用或空间不足时，保留当前会话状态，并明确告知用户。

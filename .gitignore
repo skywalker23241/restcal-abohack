@@ -29,3 +29,5 @@ scripts/shots/
 
 # Android web assets generated before Capacitor sync
 mobile/
+.aidesigner/*
+!.aidesigner/.gitkeep
