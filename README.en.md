@@ -9,12 +9,12 @@
 **Leave, attendance, payroll estimates, and ticket reminders — one calendar for the Chinese workplace**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-![Release](https://img.shields.io/badge/release-v2.0.0-b4382a)
+![Release](https://img.shields.io/badge/release-v2.1.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.0.0 Android APK](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="RestCal day view with the daily calendar card, leave balance, attendance, and estimated take-home pay" width="100%">
 
@@ -30,19 +30,13 @@ It is a **zero-build, dependency-free frontend** written in native HTML, CSS, an
 
 The application interface can switch between Chinese and English. Language, theme, and all business settings are included in complete CSV and WebDAV backups.
 
-## 🆕 What's new in v2.0.0
+## 🆕 What's new in v2.1.0
 
-- Published an installable Android 2.0.0 APK with full-screen and Xiaomi HyperOS system-bar safe-area handling.
-- Android WebDAV now uses a native transport supporting `PROPFIND`, `MKCOL`, `PUT`, and `GET` without browser CORS restrictions.
-- The v1.6.0 Windows offline build remains available; existing data can be migrated through CSV or WebDAV.
-
-- Added a theme-aware date picker and improved year/month selection, calendar cards, and the week-view hierarchy.
-- Daily quotes now follow the interface language, with local fallback quotes when the network is unavailable.
-- Improved the landing-page preview carousel to cover day, week, month, and year views as well as settings and backup features.
-- Fixed extensionless `/app` routing, PWA navigation redirects, and caching of dynamic endpoints.
-- Improved mobile modal scrolling, safe-area spacing, and responsive layouts throughout the app.
-- Overtime is now stored alongside attendance or leave, with custom hours, conversion rates, batch scopes, and comp-time calculation.
-- Added filtered RFC 5545 calendar exports; CSV backups now preserve all overtime fields while remaining backward compatible.
+- Added one-way Google Calendar sync, system-calendar export, and default-email integration so RestCal records fit existing workflows.
+- Added round-trip train-ticket reminders, habit tracking, and handwritten-style notes tailored to day, week, and month views.
+- Rebuilt onboarding and the interface tour around focused highlights for calendar, records, statistics, tools, and settings.
+- Selecting the RestCal logo or wordmark now returns directly to today's day view from anywhere in the app.
+- Refined the compact mobile month view, holiday artwork, and interaction feedback. See the full [changelog](CHANGELOG.md).
 
 ## ✨ Features
 
@@ -69,13 +63,21 @@ The application interface can switch between Chinese and English. Language, them
 - Yearly statistics provide a monthly leave chart and a daily status heatmap for the entire year.
 - Leave balances show total, used, and remaining annual leave and time off in lieu.
 
-### 🧰 Three focused tools
+### 🧰 Five focused tools
 
 <img src="public/assets/images/screenshots/tools.png" alt="Tools page with payroll calculation, leave-note generation, and ticket reminders" width="100%">
 
 - Payroll calculator and salary slip: calculate leave deductions and estimated take-home pay, then export a salary-slip image.
 - Leave-note generator: turn saved records into a formal leave note that can be copied or downloaded.
-- Ticket reminders: list train-ticket sale dates and countdowns for statutory holidays.
+- Ticket reminders: list outbound and return train-ticket sale dates and countdowns for statutory holidays.
+- Habit tracking: create daily habits and follow streaks and monthly completion rates.
+- Calendar and email: connect Google Calendar, open the default email app, or export an ICS file for major calendar apps.
+
+### 👋 Lightweight interface tour
+
+<div align="center"><img src="public/assets/images/screenshots/onboarding.png" alt="RestCal quick-start introduction" width="480"></div>
+
+The first-run experience covers only the most common tasks. Focused highlights move through the calendar, records, statistics, tools, and settings without saving any demonstration records. The tour can be reopened from the top bar at any time.
 
 ### 💰 Payroll calculator and salary slip
 
@@ -124,12 +126,20 @@ The theme follows the system by default and can be switched manually between aut
 - Exported events include a `restcal://day/YYYY-MM-DD` return link. With the Android APK or Windows app installed, that link opens the matching date directly in RestCal.
 - The web app also accepts date links in the form `https://restcal.abohack.com/app?date=YYYY-MM-DD`.
 
+### 🔗 Google Calendar and email
+
+<div align="center"><img src="public/assets/images/screenshots/connections.png" alt="Connections settings for Google Calendar, the default email app, and privacy" width="900"></div>
+
+- The Windows desktop app can sync RestCal-created leave, attendance, comp time, and notes to Google Calendar without reading or changing other events.
+- After generating a leave note, RestCal can open the default email app with the recipient, subject, and message already filled in.
+- ICS exports work with Apple Calendar, Google Calendar, Outlook, Feishu, and WeCom.
+
 ## 🚀 Quick start
 
 | Option | Best for | How to start |
 |---|---|---|
 | **Web app** | Most users | Open [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html); it can be installed as a PWA |
-| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v1.6.0 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.6.0) |
+| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v2.1.0 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0) |
 | **Local server** | Development or intranet use | Clone the repository, run `node server.js`, and open `http://localhost:8765/app.html` |
 
 You can also open `public/app.html` directly (`public/index.html` is the product page). The application works offline under `file://`, but browsers do not register Service Workers or allow PWA installation in that mode. Use HTTP(S) when you need PWA features.
@@ -146,16 +156,16 @@ The application shell and bundled holiday, lunar-calendar, and solar-term data f
 
 ## 💻 Windows desktop app
 
-Latest Android release: [RestCal v2.0.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)
+Latest Android release: [RestCal v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)
 
-Windows offline release: [RestCal v2.0.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)
+Windows offline release: [RestCal v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)
 
 | Download | Purpose |
 |---|---|
-| [`RestCal-2.0.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-portable.exe) | Portable executable; no installation required |
-| [`RestCal-2.0.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-setup.exe) | Windows installer with a selectable installation directory |
-| [`RestCal-2.0.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-win.zip) | Extract and run `休历.exe` |
-| [`SHA256SUMS-2.0.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/SHA256SUMS-2.0.0.txt) | File-integrity checksums |
+| [`RestCal-2.1.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-portable.exe) | Portable executable; no installation required |
+| [`RestCal-2.1.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-setup.exe) | Windows installer with a selectable installation directory |
+| [`RestCal-2.1.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-win.zip) | Extract and run `休历.exe` |
+| [`SHA256SUMS-2.1.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/SHA256SUMS-2.1.0.txt) | File-integrity checksums |
 
 All three packages include the application and Chinese calendar data for 2004–2026. The current builds are not code-signed, so Windows SmartScreen may display a warning on first launch.
 
@@ -187,7 +197,7 @@ npm run build:android
 
 The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk` and can be installed directly on an Android phone for testing. `mobile/` is generated from `public/app.html` and `public/assets/` by `scripts/build-android-web.cjs`; do not edit it manually.
 
-Installable APK: [RestCal-2.0.0-android-webdav.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-android-webdav.apk). This build includes the native Android WebDAV transport; see [SHA256SUMS-2.0.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/SHA256SUMS-2.0.0.txt) for the checksum.
+Installable APK: [RestCal-2.1.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-android.apk). This build includes native Android WebDAV and system-calendar bridges; see [SHA256SUMS-2.1.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/SHA256SUMS-2.1.0.txt) for the checksum.
 
 ## 🛠 Deploy your own instance
 

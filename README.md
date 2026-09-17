@@ -9,12 +9,12 @@
 **请假、出勤、工资核算、购票提醒 —— 一页搞定的中国职场日历**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-![Release](https://img.shields.io/badge/release-v2.0.0-b4382a)
+![Release](https://img.shields.io/badge/release-v2.1.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.0.0 Android APK](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="休历天视图：当日日历卡片、假期额度、出勤和预计实发概览" width="100%">
 
@@ -30,19 +30,13 @@
 
 应用界面支持中文与英文一键切换；语言、主题以及所有业务设置都可以随 CSV 或 WebDAV 完整备份和恢复。
 
-## 🆕 v2.0.0 更新
+## 🆕 v2.1.0 更新
 
-- 发布可直接安装的 Android 2.0.0 APK，适配全面屏和小米 HyperOS 状态栏安全区域。
-- Android 端 WebDAV 改用原生网络通道，支持 `PROPFIND`、`MKCOL`、`PUT` 和 `GET`，不受浏览器跨域限制。
-- 保留 v1.6.0 Windows 离线版，旧版数据可继续通过 CSV 或 WebDAV 迁移。
-
-- 新增统一主题样式的日期选择器，并优化年月选择、日历卡片和周视图信息层级。
-- 每日一言按界面语言切换中文/英文来源，网络不可用时继续使用本地名句。
-- 优化 Landing Page 产品预览轮播，更完整展示日、周、月、年视图及设置、备份能力。
-- 修复 `/app` 无后缀路径、PWA 导航重定向及动态接口缓存问题。
-- 改善手机端弹层滚动、安全区域间距和多处响应式布局。
-- 加班改为独立附加记录，可与当天出勤/请假并存，支持自定义工时、倍率、批量范围和调休额度换算。
-- 新增可筛选的 RFC 5545 日历导出；CSV 完整保存加班字段，并兼容旧版备份。
+- 新增 Google 日历单向同步、系统日历导出和默认邮箱发送，休历记录可以自然进入现有工作流。
+- 新增往返火车票购票提醒、习惯打卡，以及日、周、月视图各具层次的手写风格备注。
+- 重做首次使用与界面引导，以分块聚光覆盖日历、记录、统计、工具和设置等核心任务。
+- 点击顶栏休历图标或文字，可从任意页面直接返回今天的日视图。
+- 更新移动端月视图、节假日插图和多处交互细节。完整变化见[更新日志](CHANGELOG.md)。
 
 ## ✨ 功能一览
 
@@ -69,13 +63,21 @@
 - 年度统计：按月查看请假天数柱状图，或切换到全年每日状态热力图。
 - 假期额度：年假、调休的总额度与已用、剩余天数一目了然。
 
-### 🧰 三个专注工具
+### 🧰 五个专注工具
 
 <img src="public/assets/images/screenshots/tools.png" alt="工具页面：工资核算与工资条、生成请假条和购票提醒" width="100%">
 
 - 工资核算与工资条：计算请假扣款、预计实发并导出工资条图片。
 - 生成请假条：读取已保存记录，生成可复制或下载的正式请假条。
-- 购票提醒：按法定节假日列出火车票开售日期和倒计时。
+- 购票提醒：按法定节假日列出往返火车票开售日期和倒计时。
+- 习惯打卡：新建日常习惯，记录连续天数与本月完成率。
+- 日历与邮箱：连接 Google 日历、打开默认邮箱，或导出兼容主流日历的 ICS 文件。
+
+### 👋 轻量界面引导
+
+<div align="center"><img src="public/assets/images/screenshots/onboarding.png" alt="休历快速上手引导" width="480"></div>
+
+首次进入时只介绍最常用的任务；聚光区域会跟随日历、记录、统计、工具和设置逐步移动，演示过程不会写入真实记录。之后可随时从顶栏重新打开。
 
 ### 💰 工资核算与工资条
 
@@ -124,12 +126,20 @@
 - 导出的日历事件包含 `restcal://day/YYYY-MM-DD` 回跳链接。在安装了 Android APK 或 Windows 版后，打开该链接会直接回到休历的对应日期。
 - 网页也支持 `https://restcal.abohack.com/app?date=YYYY-MM-DD` 形式的日期定位链接。
 
+### 🔗 Google 日历与邮箱
+
+<div align="center"><img src="public/assets/images/screenshots/connections.png" alt="账号与连接设置：Google 日历、系统邮箱和隐私说明" width="900"></div>
+
+- Windows 桌面版可将休历创建的请假、调休、出勤和备注单向同步到 Google 日历，不读取或修改其他日程。
+- 生成请假条后，可带着收件人、主题和正文直接打开系统默认邮箱。
+- ICS 导出兼容 Apple 日历、Google 日历、Outlook、飞书和企业微信。
+
 ## 🚀 快速开始
 
 | 方式 | 适合场景 | 上手方法 |
 |---|---|---|
 | **在线版** | 大多数用户 | 直接打开 [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html)，可安装为 PWA |
-| **桌面版** | Windows 免浏览器使用 | 从 [v1.6.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v1.6.0) 下载便携版、安装版或 ZIP |
+| **桌面版** | Windows 免浏览器使用 | 从 [v2.1.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0) 下载便携版、安装版或 ZIP |
 | **本地运行** | 开发或内网使用 | 克隆仓库后 `node server.js`，访问 `http://localhost:8765/app.html` |
 
 也可以直接双击打开 `public/app.html` 使用（`public/index.html` 是介绍页，应用本体在 `public/app.html`）。`file://` 模式本身可以离线运行，但浏览器不会注册 Service Worker，也不能将其安装为 PWA；需要 PWA 能力时请通过 HTTP(S) 打开。
@@ -146,16 +156,16 @@
 
 ## 💻 桌面版（Windows）
 
-最新 Android 版：[RestCal v2.0.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)
+最新 Android 版：[RestCal v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)
 
-Windows 离线版：[RestCal v2.0.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.0.0)
+Windows 离线版：[RestCal v2.1.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.0)
 
 | 下载 | 用途 |
 |---|---|
-| [`RestCal-2.0.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-portable.exe) | 免安装，下载后直接运行 |
-| [`RestCal-2.0.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-setup.exe) | Windows 安装程序，可选择安装目录 |
-| [`RestCal-2.0.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-win.zip) | 解压后运行 `休历.exe` |
-| [`SHA256SUMS-2.0.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/SHA256SUMS-2.0.0.txt) | 下载文件完整性校验值 |
+| [`RestCal-2.1.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-portable.exe) | 免安装，下载后直接运行 |
+| [`RestCal-2.1.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-setup.exe) | Windows 安装程序，可选择安装目录 |
+| [`RestCal-2.1.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-win.zip) | 解压后运行 `休历.exe` |
+| [`SHA256SUMS-2.1.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/SHA256SUMS-2.1.0.txt) | 下载文件完整性校验值 |
 
 三个程序包均包含应用和 2004–2026 年中国日历数据，无网络时也能使用。当前构建尚未进行代码签名，Windows SmartScreen 可能在首次运行时显示提醒。
 
@@ -187,7 +197,7 @@ npm run build:android
 
 Debug APK 输出在 `android/app/build/outputs/apk/debug/app-debug.apk`，可直接传到手机安装测试。`mobile/` 是由 `scripts/build-android-web.cjs` 从 `public/app.html` 和 `public/assets/` 生成的构建目录，不需要手动编辑。
 
-当前可直接安装的 APK：[RestCal-2.0.0-android-webdav.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/RestCal-2.0.0-android-webdav.apk)。该版本包含 Android 原生 WebDAV 通道，SHA256 见 [SHA256SUMS-2.0.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.0.0/SHA256SUMS-2.0.0.txt)。
+当前可直接安装的 APK：[RestCal-2.1.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/RestCal-2.1.0-android.apk)。该版本包含 Android 原生 WebDAV 与系统日历通道，SHA256 见 [SHA256SUMS-2.1.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.0/SHA256SUMS-2.1.0.txt)。
 
 ## 🛠 部署自己的实例
 

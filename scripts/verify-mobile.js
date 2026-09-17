@@ -37,8 +37,8 @@ const COMPACT_MONTH_EXACT = {
     footerDisplay: "none",
     bannerSubtitleDisplay: "none"
 };
-const COMPACT_NOTE_MARKER = [3, 6];  // 便签标记降为小圆点
-const WIDE_NOTE_MARKER = [11, 40];   // 宽屏保留图标本体
+const COMPACT_NOTE_MARKER = [8, 10]; // 紧凑月视图使用 9px 折角
+const WIDE_NOTE_MARKER = [13, 15];   // 宽屏使用 14px 折角
 
 function collectFailures(audit, ranges, exact) {
     const failures = Object.entries(ranges).flatMap(([key, [min, max]]) => {
@@ -177,21 +177,24 @@ async function run() {
             }
 
             const handlePoint = await win.webContents.executeJavaScript(`
-                (() => {
+                (async () => {
                     document.getElementById("searchToggle").click();
                     const backdrop = document.getElementById("searchModal");
                     backdrop.getAnimations().forEach(animation => animation.finish());
                     backdrop.firstElementChild.getAnimations().forEach(animation => animation.finish());
-                    const rect = backdrop.querySelector(".sheet-drag-handle").getBoundingClientRect();
-                    return {x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2)};
+                    const handle = backdrop.querySelector(".sheet-drag-handle");
+                    const rect = handle.getBoundingClientRect();
+                    const x = Math.round(rect.left + rect.width / 2);
+                    const y = Math.round(rect.top + rect.height / 2);
+                    handle.setPointerCapture = () => {};
+                    handle.hasPointerCapture = () => false;
+                    handle.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, pointerId: 71, pointerType: "touch", button: 0, clientX: x, clientY: y}));
+                    window.dispatchEvent(new PointerEvent("pointermove", {bubbles: true, pointerId: 71, pointerType: "touch", clientX: x, clientY: y + 150}));
+                    window.dispatchEvent(new PointerEvent("pointerup", {bubbles: true, pointerId: 71, pointerType: "touch", button: 0, clientX: x, clientY: y + 150}));
+                    await new Promise(resolve => setTimeout(resolve, 520));
+                    return {x, y};
                 })()
             `);
-            win.webContents.sendInputEvent({type: "mouseDown", x: handlePoint.x, y: handlePoint.y, button: "left", clickCount: 1});
-            await wait(80);
-            win.webContents.sendInputEvent({type: "mouseMove", x: handlePoint.x, y: handlePoint.y + 150, button: "left"});
-            await wait(100);
-            win.webContents.sendInputEvent({type: "mouseUp", x: handlePoint.x, y: handlePoint.y + 150, button: "left", clickCount: 1});
-            await wait(520);
             const dragAudit = await win.webContents.executeJavaScript(`
                 (() => {
                     const backdrop = document.getElementById("searchModal");
@@ -285,8 +288,8 @@ async function run() {
         const markerRange = compactViewport ? COMPACT_NOTE_MARKER : WIDE_NOTE_MARKER;
         const markerFailed = !markerAudit || !markerAudit.iconClass?.includes("ph-note")
             || !inRange(markerAudit.width, markerRange) || !inRange(markerAudit.height, markerRange)
-            // 紧凑月视图把便签标记降为小圆点，图标本体隐藏。
-            || (compactViewport ? markerAudit.iconDisplay !== "none" : markerAudit.iconDisplay === "none");
+            // 月视图只保留纸张折角，图标本体始终隐藏。
+            || markerAudit.iconDisplay !== "none";
         if (markerFailed) {
             throw new Error(`${w}px note marker layout failed: ${JSON.stringify(markerAudit ?? noteMarker)}`);
         }
@@ -499,7 +502,10 @@ async function run() {
                 const result = note ? {
                     border: style.borderTopStyle,
                     background: style.backgroundColor,
-                    icon: note.querySelector(".icon")?.className
+                    icon: note.querySelector(".icon")?.className,
+                    fontFamily: style.fontFamily,
+                    transform: style.transform,
+                    underlineHeight: getComputedStyle(note, "::after").height
                 } : null;
                 calendarMode = previousMode;
                 anchorDate = previousAnchor;
@@ -507,8 +513,9 @@ async function run() {
                 return result;
             })()
         `);
-        if (!dayNoteAudit || dayNoteAudit.border === "none"
-            || dayNoteAudit.background === "rgba(0, 0, 0, 0)" || !dayNoteAudit.icon?.includes("ph-note")) {
+        if (!dayNoteAudit || dayNoteAudit.border !== "none"
+            || dayNoteAudit.background !== "rgba(0, 0, 0, 0)" || dayNoteAudit.icon
+            || dayNoteAudit.transform === "none" || dayNoteAudit.underlineHeight !== "1px") {
             throw new Error(`${w}px day note card audit failed: ${JSON.stringify(dayNoteAudit)}`);
         }
         // 打开请假条生成器（内联脚本的顶层函数是全局的），填表并生成小票
@@ -705,7 +712,7 @@ async function run() {
                 };
             })
         `);
-        if (settingsItems.length !== 9 || settingsItems.some(item =>
+        if (settingsItems.length !== 10 || settingsItems.some(item =>
             item.width < 16 || item.height < 16 || !item.iconClass.includes("ph-")
         )) {
             throw new Error(`${w}px settings icon layout failed: ${JSON.stringify(settingsItems)}`);
@@ -756,6 +763,7 @@ async function run() {
         await wait(400);
         const toastAudit = await win.webContents.executeJavaScript(`
             (() => {
+                document.querySelectorAll(".toast").forEach(toast => toast.remove());
                 showToast("设置已保存");
                 const toast = document.querySelector(".toast-region .toast:last-child");
                 const icon = toast.querySelector(".toast-icon .icon");

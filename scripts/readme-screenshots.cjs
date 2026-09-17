@@ -129,6 +129,10 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await page.screenshot({path: path.join(OUT, "overview-light.png")});
         console.log("shot overview-light.png");
 
+        await shootModal(page, () => page.click("#guideToggle"), "#guideModal", "onboarding.png", ".tour-intro-modal");
+        await page.click("#closeGuide");
+        await sleep(350);
+
         await page.click('[data-nav="stats"]');
         await page.click('[data-stats-period="year"]');
         await sleep(400);
@@ -149,6 +153,8 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await sleep(350);
         await page.locator("#viewTools").screenshot({path: path.join(OUT, "tools.png")});
         console.log("shot tools.png");
+        await page.click("#closeTicketTool");
+        await sleep(350);
 
         await shootModal(page, () => page.click('[data-open-receipt="salary"]'), "#receiptModal", "salary-slip.png", ".receipt-window");
         await page.click("#receiptDone");
@@ -176,6 +182,10 @@ async function shootModal(page, openAction, modalSel, file, innerSel = ".modal")
         await sleep(500);
         await page.locator("#settingsModal .settings-page").screenshot({path: path.join(OUT, "settings.png")});
         console.log("shot settings.png");
+        await page.click('[data-settings-nav="connections"]');
+        await sleep(500);
+        await page.locator("#settingsModal .settings-page").screenshot({path: path.join(OUT, "connections.png")});
+        console.log("shot connections.png");
         await page.click("#settingsDone");
         await light.close();
 
