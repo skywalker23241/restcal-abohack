@@ -2,13 +2,32 @@
 (function () {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    function visibleElement(selectorOrResolver) {
+    function visibleElements(selectorOrResolver) {
         const result = typeof selectorOrResolver === "function"
             ? selectorOrResolver()
             : document.querySelector(selectorOrResolver);
-        if (!(result instanceof HTMLElement)) return null;
-        const rect = result.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0 ? result : null;
+        const candidates = result instanceof HTMLElement
+            ? [result]
+            : result && typeof result[Symbol.iterator] === "function"
+                ? [...result]
+                : [];
+        return [...new Set(candidates)].filter(element => {
+            if (!(element instanceof HTMLElement)) return false;
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+        });
+    }
+
+    function roundedRectPath({left, top, right, bottom}, radius = 12) {
+        const r = Math.max(0, Math.min(radius, (right - left) / 2, (bottom - top) / 2));
+        return [
+            `M ${right - r} ${top}`,
+            `H ${left + r} Q ${left} ${top} ${left} ${top + r}`,
+            `V ${bottom - r} Q ${left} ${bottom} ${left + r} ${bottom}`,
+            `H ${right - r} Q ${right} ${bottom} ${right} ${bottom - r}`,
+            `V ${top + r} Q ${right} ${top} ${right - r} ${top}`,
+            "Z"
+        ].join(" ");
     }
 
     function wait(ms) {
@@ -25,7 +44,7 @@
             this.onFinish = onFinish;
             this.onSkip = onSkip;
             this.index = -1;
-            this.target = null;
+            this.targets = [];
             this.active = false;
             this.runToken = 0;
             this.targetClickHandler = null;
@@ -41,11 +60,15 @@
             root.className = "product-tour";
             root.hidden = true;
             root.innerHTML = `
-                <div class="product-tour-shade" data-tour-shade="top"></div>
-                <div class="product-tour-shade" data-tour-shade="right"></div>
-                <div class="product-tour-shade" data-tour-shade="bottom"></div>
-                <div class="product-tour-shade" data-tour-shade="left"></div>
-                <div class="product-tour-focus" aria-hidden="true"><span></span></div>
+                <svg class="product-tour-clip-defs" width="0" height="0" aria-hidden="true">
+                    <defs>
+                        <clipPath id="productTourShadeClip" clipPathUnits="userSpaceOnUse">
+                            <path class="product-tour-clip-path" fill-rule="evenodd" clip-rule="evenodd"></path>
+                        </clipPath>
+                    </defs>
+                </svg>
+                <div class="product-tour-shade" aria-hidden="true"></div>
+                <div class="product-tour-focus-layer" aria-hidden="true"></div>
                 <section class="product-tour-card" role="dialog" aria-modal="false" aria-labelledby="productTourTitle" aria-describedby="productTourText">
                     <div class="product-tour-pointer" aria-hidden="true"></div>
                     <div class="product-tour-meta">
@@ -68,7 +91,10 @@
             document.body.appendChild(root);
             this.root = root;
             this.card = root.querySelector(".product-tour-card");
-            this.focus = root.querySelector(".product-tour-focus");
+            this.shade = root.querySelector(".product-tour-shade");
+            this.clipPath = root.querySelector(".product-tour-clip-path");
+            this.focusLayer = root.querySelector(".product-tour-focus-layer");
+            this.focuses = [];
             this.title = root.querySelector("#productTourTitle");
             this.text = root.querySelector("#productTourText");
             this.section = root.querySelector("#productTourSection");
@@ -78,9 +104,6 @@
             this.hint = root.querySelector(".product-tour-click-hint");
             this.backButton = root.querySelector(".product-tour-back");
             this.nextButton = root.querySelector(".product-tour-next");
-            this.shades = Object.fromEntries(
-                [...root.querySelectorAll("[data-tour-shade]")].map(node => [node.dataset.tourShade, node])
-            );
             root.querySelector(".product-tour-close").addEventListener("click", () => this.skip());
             this.backButton.addEventListener("click", () => this.show(this.index - 1));
             this.nextButton.addEventListener("click", () => this.next());
@@ -113,25 +136,25 @@
             if (typeof step.beforeEnter === "function") await step.beforeEnter();
             if (!this.active || token !== this.runToken) return;
 
-            let target = null;
-            for (let attempt = 0; attempt < 24 && !target; attempt += 1) {
-                target = visibleElement(step.target);
-                if (!target) await wait(40);
+            let targets = [];
+            for (let attempt = 0; attempt < 24 && !targets.length; attempt += 1) {
+                targets = visibleElements(step.targets || step.target);
+                if (!targets.length) await wait(40);
             }
-            if (!target) {
-                console.warn(`界面引导未找到第 ${index + 1} 步目标`, step.target);
+            if (!targets.length) {
+                console.warn(`界面引导未找到第 ${index + 1} 步目标`, step.targets || step.target);
                 return this.show(index + 1);
             }
 
-            const initialRect = target.getBoundingClientRect();
+            const initialRect = targets[0].getBoundingClientRect();
             if (initialRect.top < 18 || initialRect.bottom > window.innerHeight - 18) {
-                target.scrollIntoView({block: "center", inline: "center", behavior: reduceMotion.matches ? "auto" : "smooth"});
+                targets[0].scrollIntoView({block: "center", inline: "center", behavior: reduceMotion.matches ? "auto" : "smooth"});
                 await wait(reduceMotion.matches ? 20 : 360);
             }
             if (!this.active || token !== this.runToken) return;
 
             this.index = index;
-            this.target = target;
+            this.targets = targets;
             this.title.textContent = step.title;
             this.text.textContent = step.text;
             this.section.textContent = step.section || "快速上手";
@@ -143,18 +166,20 @@
             this.hint.hidden = !clickToAdvance;
             this.nextButton.hidden = clickToAdvance;
             this.nextButton.textContent = index === this.steps.length - 1 ? "完成" : "下一步";
-            target.classList.add("product-tour-target");
-            target.setAttribute("data-product-tour-active", "true");
+            targets.forEach(target => {
+                target.classList.add("product-tour-target");
+                target.setAttribute("data-product-tour-active", "true");
+            });
             if (clickToAdvance) {
                 this.targetClickHandler = () => window.setTimeout(() => this.next(), 40);
-                target.addEventListener("click", this.targetClickHandler, {once: true});
+                targets.forEach(target => target.addEventListener("click", this.targetClickHandler, {once: true}));
             }
             this.position();
             this.card.removeAttribute("aria-busy");
             await nextFrame();
             this.root.classList.remove("is-switching");
             window.setTimeout(() => this.queuePosition(), reduceMotion.matches ? 0 : 420);
-            if (clickToAdvance) target.focus({preventScroll: true});
+            if (clickToAdvance) targets[0].focus({preventScroll: true});
             else this.nextButton.focus({preventScroll: true});
         }
 
@@ -184,29 +209,55 @@
         }
 
         position() {
-            if (!this.active || !this.target?.isConnected) return;
-            const padding = window.innerWidth < 560 ? 6 : 9;
+            if (!this.active || !this.targets.length || this.targets.some(target => !target.isConnected)) return;
             const margin = window.innerWidth < 560 ? 10 : 16;
             const gap = window.innerWidth < 560 ? 12 : 16;
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const targetRect = this.target.getBoundingClientRect();
-            const hole = {
-                top: Math.max(0, targetRect.top - padding),
-                right: Math.min(viewportWidth, targetRect.right + padding),
-                bottom: Math.min(viewportHeight, targetRect.bottom + padding),
-                left: Math.max(0, targetRect.left - padding)
-            };
-            const holeWidth = Math.max(0, hole.right - hole.left);
-            const holeHeight = Math.max(0, hole.bottom - hole.top);
+            const holes = this.targets.map(target => {
+                const rect = target.getBoundingClientRect();
+                const surface = target.querySelector(":scope > .select-trigger") || target;
+                const radius = parseFloat(getComputedStyle(surface).borderTopLeftRadius) || 0;
+                return {
+                    top: Math.max(0, rect.top),
+                    right: Math.min(viewportWidth, rect.right),
+                    bottom: Math.min(viewportHeight, rect.bottom),
+                    left: Math.max(0, rect.left),
+                    radius
+                };
+            }).filter(hole => hole.right > hole.left && hole.bottom > hole.top);
+            if (!holes.length) return;
 
-            Object.assign(this.shades.top.style, {left: "0px", top: "0px", width: "100vw", height: `${hole.top}px`});
-            Object.assign(this.shades.bottom.style, {left: "0px", top: `${hole.bottom}px`, width: "100vw", height: `${Math.max(0, viewportHeight - hole.bottom)}px`});
-            Object.assign(this.shades.left.style, {left: "0px", top: `${hole.top}px`, width: `${hole.left}px`, height: `${holeHeight}px`});
-            Object.assign(this.shades.right.style, {left: `${hole.right}px`, top: `${hole.top}px`, width: `${Math.max(0, viewportWidth - hole.right)}px`, height: `${holeHeight}px`});
-            Object.assign(this.focus.style, {
-                left: `${hole.left}px`, top: `${hole.top}px`, width: `${holeWidth}px`, height: `${holeHeight}px`
+            const outer = `M 0 0 H ${viewportWidth} V ${viewportHeight} H 0 Z`;
+            const cutouts = holes.map(hole => roundedRectPath(hole, hole.radius)).join(" ");
+            this.clipPath.setAttribute("d", `${outer} ${cutouts}`);
+
+            while (this.focuses.length < holes.length) {
+                const focus = document.createElement("div");
+                focus.className = "product-tour-focus";
+                this.focusLayer.appendChild(focus);
+                this.focuses.push(focus);
+            }
+            this.focuses.forEach((focus, focusIndex) => {
+                const hole = holes[focusIndex];
+                focus.hidden = !hole;
+                if (!hole) return;
+                Object.assign(focus.style, {
+                    left: `${hole.left}px`,
+                    top: `${hole.top}px`,
+                    width: `${hole.right - hole.left}px`,
+                    height: `${hole.bottom - hole.top}px`,
+                    borderRadius: `${hole.radius}px`
+                });
             });
+
+            const hole = holes.reduce((bounds, current) => ({
+                top: Math.min(bounds.top, current.top),
+                right: Math.max(bounds.right, current.right),
+                bottom: Math.max(bounds.bottom, current.bottom),
+                left: Math.min(bounds.left, current.left)
+            }), {...holes[0]});
+            const holeWidth = hole.right - hole.left;
 
             this.card.style.maxWidth = `${Math.max(280, viewportWidth - margin * 2)}px`;
             const cardRect = this.card.getBoundingClientRect();
@@ -238,12 +289,15 @@
         }
 
         detachTarget() {
-            if (!this.target) return;
-            if (this.targetClickHandler) this.target.removeEventListener("click", this.targetClickHandler);
-            this.target.classList.remove("product-tour-target");
-            this.target.removeAttribute("data-product-tour-active");
-            this.target = null;
+            if (!this.targets.length) return;
+            this.targets.forEach(target => {
+                if (this.targetClickHandler) target.removeEventListener("click", this.targetClickHandler);
+                target.classList.remove("product-tour-target");
+                target.removeAttribute("data-product-tour-active");
+            });
+            this.targets = [];
             this.targetClickHandler = null;
+            this.focuses.forEach(focus => { focus.hidden = true; });
         }
 
         close() {

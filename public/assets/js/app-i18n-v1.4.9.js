@@ -42,6 +42,7 @@
         "天后开售": "days until sales open",
         "已结束的出行": "Past departures",
         "休历": "RestCal",
+        "返回今天的日视图": "Go to today's day view",
         "请假、出行日程规划 & 工资核算": "Leave, travel planning & payroll",
         "正在加载日历数据": "Loading calendar data",
         "本地中国日历数据已就绪": "Chinese calendar data ready",

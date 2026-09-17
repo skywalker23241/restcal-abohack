@@ -38,10 +38,10 @@
 <body>
     <main class="app">
         <header class="topbar">
-            <div class="brand">
+            <button class="brand" id="brandHome" type="button" title="返回今天的日视图" aria-label="返回今天的日视图">
                 <img class="logo" src="assets/icons/icon-192.png" alt="" aria-hidden="true">
                 <h1>休历</h1>
-            </div>
+            </button>
             <nav class="app-nav" aria-label="主导航">
                 <span class="app-nav-indicator" aria-hidden="true"></span>
                 <button class="app-nav-btn" data-nav="calendar" type="button" aria-current="page"><i class="ph-fill ph-calendar-blank icon"></i><span>日历</span></button>
@@ -1131,6 +1131,7 @@
 
         const els = {
             app: document.querySelector("main.app"),
+            brandHome: document.getElementById("brandHome"),
             yearSelect: document.getElementById("yearSelect"),
             monthSelect: document.getElementById("monthSelect"),
             prevMonth: document.getElementById("prevMonth"),
@@ -1591,6 +1592,21 @@
             try { localStorage.setItem(CAL_MODE_KEY, mode); } catch { }
             syncCalendarModeUI();
             render();
+        }
+
+        function jumpToToday(mode = calendarMode) {
+            const now = new Date();
+            anchorDate = now;
+            currentYear = now.getFullYear();
+            currentMonth = now.getMonth() + 1;
+            if (mode !== calendarMode) setCalendarMode(mode);
+            else render();
+        }
+
+        function returnToTodayDayView() {
+            closeAllDateMenus();
+            switchView("calendar");
+            jumpToToday("day");
         }
 
         function syncCalendarModeUI() {
@@ -2391,12 +2407,8 @@
 
             els.prevMonth.addEventListener("click", () => shiftMonth(-1));
             els.nextMonth.addEventListener("click", () => shiftMonth(1));
-            els.todayBtn.addEventListener("click", () => {
-                anchorDate = new Date();
-                currentYear = today.getFullYear();
-                currentMonth = today.getMonth() + 1;
-                render();
-            });
+            els.todayBtn.addEventListener("click", () => jumpToToday());
+            els.brandHome.addEventListener("click", returnToTodayDayView);
 
             [
                 els.salaryInput,
@@ -4430,6 +4442,16 @@
             }) || els.calendarGrid.querySelector(".day-card.clickable:not(.outside)");
         }
 
+        function tourCalendarToolbarTargets() {
+            return [
+                enhancedSelects.get(els.yearSelect)?.box || els.yearSelect,
+                enhancedSelects.get(els.monthSelect)?.box || els.monthSelect,
+                els.todayBtn,
+                document.querySelector("#viewCalendar .view-switcher"),
+                ...els.monthSummary.children
+            ].filter(Boolean);
+        }
+
         function waitForTourTransition(ms = 220) {
             return new Promise(resolve => window.setTimeout(resolve, ms));
         }
@@ -4440,7 +4462,7 @@
             productTour = new ProductTour({
                 steps: [
                     {
-                        target: ".calendar-toolbar",
+                        targets: tourCalendarToolbarTargets,
                         section: "日历工作台",
                         icon: "ph-calendar-blank",
                         title: "从时间开始安排",
@@ -4473,7 +4495,7 @@
                         }
                     },
                     {
-                        target: ".day-modal .action-grid-primary",
+                        targets: () => document.querySelectorAll(".day-modal .action-grid-primary .action-btn"),
                         section: "记录",
                         icon: "ph-calendar-check",
                         title: "状态、时长与批量标记",
@@ -4526,9 +4548,7 @@
                         }
                     },
                     {
-                        target: () => window.innerWidth < 720
-                            ? document.querySelector(".tools-grid .tool-card:first-child")
-                            : document.querySelector(".tools-grid"),
+                        targets: () => document.querySelectorAll(".tools-grid .tool-card"),
                         section: "工具箱",
                         icon: "ph-sparkle",
                         title: "五个工具，覆盖高频场景",
@@ -4555,7 +4575,7 @@
                         }
                     },
                     {
-                        target: "#settingsNav",
+                        target: ".settings-page",
                         section: "安全与偏好",
                         icon: "ph-shield-check",
                         title: "数据由你掌控",

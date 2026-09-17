@@ -240,7 +240,19 @@ button {
     align-items: center;
     gap: 10px;
     min-width: 0;
+    margin: 0;
+    padding: 2px 4px 2px 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: color var(--transition-fast) ease, background var(--transition-fast) ease;
 }
+
+.brand:hover { color: var(--primary); }
+.brand:focus-visible { outline: 0; box-shadow: 0 0 0 3px var(--ring-soft); }
 
 .logo {
     display: block;
@@ -1912,11 +1924,20 @@ i.icon {
 
 .product-tour-shade {
     position: fixed;
+    inset: 0;
+    z-index: 1100;
     background: color-mix(in srgb, var(--overlay) 78%, rgba(20, 16, 12, .1));
     -webkit-backdrop-filter: blur(6px) saturate(.82);
     backdrop-filter: blur(6px) saturate(.82);
+    -webkit-clip-path: url(#productTourShadeClip);
+    clip-path: url(#productTourShadeClip);
     pointer-events: auto;
-    transition: left 420ms cubic-bezier(.22, 1, .36, 1), top 420ms cubic-bezier(.22, 1, .36, 1), width 420ms cubic-bezier(.22, 1, .36, 1), height 420ms cubic-bezier(.22, 1, .36, 1), opacity 220ms ease;
+    transition: opacity 180ms ease;
+}
+
+.product-tour-clip-defs {
+    position: fixed;
+    pointer-events: none;
 }
 
 .product-tour-target {
@@ -1924,11 +1945,30 @@ i.icon {
     z-index: 1101 !important;
 }
 
+/* During the tour, let clarity carry the emphasis without an extra frame. */
+.product-tour-target,
+.product-tour-target > .select-trigger,
+.product-tour-target > .segmented-indicator {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.product-tour-target:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.product-tour-focus-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1102;
+    pointer-events: none;
+}
+
 .product-tour-focus {
     position: fixed;
-    z-index: 1102;
     border-radius: 12px;
-    box-shadow: 0 0 28px 12px color-mix(in srgb, var(--overlay) 24%, transparent);
+    background: transparent;
+    box-shadow: none;
     pointer-events: none;
     transition: left 420ms cubic-bezier(.22, 1, .36, 1), top 420ms cubic-bezier(.22, 1, .36, 1), width 420ms cubic-bezier(.22, 1, .36, 1), height 420ms cubic-bezier(.22, 1, .36, 1), opacity 180ms ease;
 }
@@ -1946,23 +1986,7 @@ i.icon {
 .product-tour.is-switching .product-tour-focus { opacity: .55; }
 
 .product-tour-pointer {
-    position: absolute;
-    left: var(--tour-pointer-x, 50%);
-    width: 14px;
-    height: 14px;
-    border: solid color-mix(in srgb, var(--primary) 28%, var(--border));
-    background: var(--card);
-    transform: translateX(-50%) rotate(45deg);
-}
-
-.product-tour-card[data-placement="bottom"] .product-tour-pointer {
-    top: -8px;
-    border-width: 1px 0 0 1px;
-}
-
-.product-tour-card[data-placement="top"] .product-tour-pointer {
-    bottom: -8px;
-    border-width: 0 1px 1px 0;
+    display: none;
 }
 
 .product-tour-card {
@@ -1970,11 +1994,11 @@ i.icon {
     z-index: 1103;
     width: min(374px, calc(100vw - 20px));
     padding: 18px 18px 16px;
-    border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--border));
+    border: 0;
     border-radius: 18px;
     color: var(--text);
-    background: color-mix(in srgb, var(--card) 96%, transparent);
-    box-shadow: 0 22px 54px rgba(35, 23, 14, .22), 0 2px 8px rgba(35, 23, 14, .08);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
+    box-shadow: 0 22px 58px rgba(35, 23, 14, .24);
     backdrop-filter: blur(18px);
     pointer-events: auto;
     transform-origin: var(--tour-pointer-x, 50%) center;
