@@ -66,6 +66,7 @@
     }
     </script>
 
+    <link rel="stylesheet" href="assets/vendor/neat-annotations/neat-annotations.css">
     <style>
         /* ============================================================
            Tokens — inherited from the RestCal app itself
@@ -267,20 +268,57 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: color-mix(in srgb, var(--paper) 84%, transparent);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid transparent;
-            transition: border-color .25s ease;
+            padding: 10px clamp(12px, 2.5vw, 28px) 0;
+            pointer-events: none;
         }
 
-        .nav.scrolled { border-bottom-color: var(--line); }
-
         .nav-inner {
+            position: relative;
+            isolation: isolate;
             display: flex;
             align-items: center;
             gap: 28px;
+            width: 100%;
+            max-width: 1120px;
             height: var(--nav-height);
+            padding: 8px 10px 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: 22px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 252, 247, 0.44) 48%, rgba(255, 255, 255, 0.58)),
+                color-mix(in srgb, var(--paper) 42%, transparent);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.92),
+                inset 0 -1px 0 rgba(180, 56, 42, 0.06),
+                0 10px 34px rgba(64, 45, 30, 0.06);
+            backdrop-filter: blur(24px) saturate(165%);
+            -webkit-backdrop-filter: blur(24px) saturate(165%);
+            pointer-events: auto;
+            transition: background .3s ease, border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+        }
+
+        .nav-inner::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            inset: 1px;
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 8% -40%, rgba(255, 255, 255, 0.95), transparent 36%),
+                radial-gradient(circle at 88% 150%, color-mix(in srgb, var(--seal) 13%, transparent), transparent 38%);
+            pointer-events: none;
+        }
+
+        .nav.scrolled .nav-inner {
+            border-color: rgba(255, 255, 255, 0.82);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(250, 246, 239, 0.58)),
+                color-mix(in srgb, var(--paper) 54%, transparent);
+            box-shadow:
+                inset 0 1px 0 #fff,
+                inset 0 -1px 0 rgba(180, 56, 42, 0.08),
+                0 16px 42px rgba(64, 45, 30, 0.13);
+            transform: translateY(-2px);
         }
 
         .nav-brand {
@@ -296,20 +334,43 @@
 
         .nav-links {
             display: flex;
-            gap: 26px;
+            gap: 5px;
             margin-inline: auto;
             list-style: none;
         }
 
         .nav-links a {
+            position: relative;
+            display: block;
+            padding: 7px 13px;
+            border-radius: 10px;
             text-decoration: none;
-            font-size: 0.92rem;
-            font-weight: 500;
+            font-size: 0.88rem;
+            font-weight: 600;
             color: var(--muted);
-            transition: color .15s ease;
+            transition: color .18s ease, background-color .18s ease, box-shadow .18s ease, transform .18s ease;
         }
 
-        .nav-links a:hover { color: var(--ink); }
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            right: 12px;
+            bottom: 4px;
+            left: 12px;
+            height: 1.5px;
+            border-radius: 999px;
+            background: var(--seal);
+            opacity: 0;
+            transform: scaleX(.25);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.42);
+            transform: translateY(-1px);
+        }
+        .nav-links a:hover::after { opacity: .72; transform: scaleX(1); }
 
         .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 
@@ -320,22 +381,24 @@
             place-items: center;
             width: 38px;
             height: 38px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.48);
             color: var(--ink);
-            transition: border-color .15s ease, transform .15s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 12px rgba(64, 45, 30, 0.05);
+            transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
         }
-        .nav-gh:hover { border-color: color-mix(in srgb, var(--muted) 45%, var(--line)); transform: translateY(-1px); }
+        .nav-gh:hover { border-color: color-mix(in srgb, var(--seal) 22%, white); background: rgba(255, 255, 255, 0.76); transform: translateY(-1px); }
         .nav-gh svg, .nav-gh .ph { width: 18px; height: 18px; font-size: 18px; }
 
         .lang-toggle {
             min-width: 46px;
             height: 38px;
             padding-inline: 10px;
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.48);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 12px rgba(64, 45, 30, 0.05);
             color: var(--ink);
             font: 650 0.76rem/1 var(--font-body);
             cursor: pointer;
@@ -369,7 +432,7 @@
         .hero h1 {
             margin-top: 22px;
             font-family: var(--font-display);
-            font-size: clamp(3.5rem, 7.8vw, 6.2rem);
+            font-size: clamp(3rem, 6.25vw, 5rem);
             font-weight: 700;
             letter-spacing: -0.05em;
             line-height: 0.98;
@@ -377,6 +440,39 @@
         }
 
         .hero h1 em { color: var(--seal); font-style: italic; }
+
+        .hero-title-prefix,
+        .hero-title-typed { display: inline; }
+
+        .hero-title-prefix {
+            display: inline-block;
+            transition: opacity .24s ease, transform .24s ease, filter .24s ease;
+        }
+
+        .hero-title-prefix.is-changing {
+            opacity: 0;
+            transform: translateY(.1em);
+            filter: blur(4px);
+        }
+
+        .hero-title-typed {
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        .hero-title-typed.is-typing::after {
+            content: "";
+            display: inline-block;
+            width: .055em;
+            height: .78em;
+            margin-left: .09em;
+            border-radius: 999px;
+            background: currentColor;
+            vertical-align: -.03em;
+            animation: typewriter-caret .72s steps(1, end) infinite;
+        }
+
+        @keyframes typewriter-caret { 50% { opacity: 0; } }
 
         .hero-sub {
             max-width: 54ch;
@@ -1024,7 +1120,32 @@
         /* ============================================================
            Open source
            ============================================================ */
+        .source-shell {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(30px, 5vw, 58px);
+            border: 1px solid color-mix(in srgb, var(--seal) 15%, var(--line));
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 8% 10%, color-mix(in srgb, var(--seal) 8%, transparent), transparent 30%),
+                linear-gradient(145deg, color-mix(in srgb, var(--card) 92%, transparent), color-mix(in srgb, var(--paper) 82%, white));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 22px 56px -36px rgba(45,30,18,.35);
+        }
+
+        .source-shell::after {
+            content: "开源";
+            position: absolute;
+            right: -0.06em;
+            bottom: -0.33em;
+            color: color-mix(in srgb, var(--seal) 5%, transparent);
+            font: 700 clamp(7rem, 15vw, 12rem)/1 var(--font-cjk);
+            letter-spacing: -0.12em;
+            pointer-events: none;
+        }
+
         .oss {
+            position: relative;
+            z-index: 1;
             display: grid;
             grid-template-columns: 1.05fr 1fr;
             gap: clamp(28px, 5vw, 64px);
@@ -1277,6 +1398,60 @@
             letter-spacing: 0.08em;
         }
 
+        .footer-bottom a {
+            color: color-mix(in srgb, var(--paper) 76%, transparent);
+            text-underline-offset: 3px;
+        }
+
+        .footer-bottom a:hover { color: var(--paper); }
+
+        .cookie-banner {
+            position: fixed;
+            z-index: 100;
+            right: clamp(14px, 3vw, 32px);
+            bottom: clamp(14px, 3vw, 28px);
+            left: clamp(14px, 3vw, 32px);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            max-width: 820px;
+            margin-inline: auto;
+            padding: 16px 16px 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            border-radius: 20px;
+            background: rgba(253, 251, 247, 0.82);
+            box-shadow: inset 0 1px 0 #fff, 0 18px 50px rgba(45, 30, 18, 0.18);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+        }
+
+        .cookie-banner[hidden] { display: none; }
+
+        .cookie-banner-icon {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex: none;
+            border-radius: 13px;
+            background: var(--seal-soft);
+            color: var(--seal);
+            font-size: 21px;
+        }
+
+        .cookie-banner-copy { flex: 1; }
+        .cookie-banner-copy strong { display: block; font-size: .92rem; }
+        .cookie-banner-copy p { margin-top: 2px; color: var(--muted); font-size: .8rem; line-height: 1.55; }
+        .cookie-banner-copy a { color: var(--seal); font-weight: 650; text-underline-offset: 3px; }
+        .cookie-banner .btn { flex: none; padding: 11px 18px; }
+
+        @media (max-width: 620px) {
+            .cookie-banner { align-items: flex-start; flex-wrap: wrap; padding: 16px; }
+            .cookie-banner-icon { width: 36px; height: 36px; }
+            .cookie-banner-copy { min-width: calc(100% - 54px); }
+            .cookie-banner .btn { width: 100%; }
+        }
+
         /* ============================================================
            Motion
            ============================================================ */
@@ -1299,11 +1474,38 @@
 
             [data-reveal] {
                 opacity: 0;
-                transform: translateY(22px);
-                transition: opacity .7s cubic-bezier(.2, .7, .3, 1), transform .7s cubic-bezier(.2, .7, .3, 1);
+                will-change: opacity, transform, filter;
             }
 
-            [data-reveal].in { opacity: 1; transform: none; }
+            [data-reveal].in {
+                animation: reveal-soft .72s cubic-bezier(.2, .75, .25, 1) var(--reveal-delay, 0ms) both;
+            }
+
+            [data-reveal="card"].in {
+                animation-name: reveal-card;
+                animation-duration: .76s;
+            }
+
+            [data-reveal="panel"].in {
+                animation-name: reveal-panel;
+                animation-duration: .86s;
+            }
+
+            @keyframes reveal-soft {
+                from { opacity: 0; transform: translateY(22px); filter: blur(2px); }
+                to { opacity: 1; transform: none; filter: none; }
+            }
+
+            @keyframes reveal-card {
+                from { opacity: 0; transform: translateY(30px) scale(.95); filter: blur(3px); }
+                60% { opacity: 1; }
+                to { opacity: 1; transform: none; filter: none; }
+            }
+
+            @keyframes reveal-panel {
+                from { opacity: 0; transform: translateY(36px) scale(.975); filter: blur(4px); }
+                to { opacity: 1; transform: none; filter: none; }
+            }
         }
 
         /* ============================================================
@@ -1318,6 +1520,9 @@
 
         @media (max-width: 720px) {
             :root { --nav-height: 60px; }
+            .nav { padding: 8px 10px 0; }
+            .nav-inner { padding-left: 12px; border-radius: 18px; }
+            .nav-inner::before { border-radius: 16px; }
             .nav-links { display: none; }
             .cta-btns .btn { flex: 1 1 210px; }
             .footer-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1352,7 +1557,8 @@
             .nav-actions .nav-gh:first-of-type { display: none; }
             .lang-toggle { min-width: 42px; padding-inline: 7px; }
             .hero { padding-top: 52px; }
-            .hero h1 { font-size: clamp(3rem, 16vw, 4rem); }
+            .hero h1 { font-size: clamp(2.55rem, 12.5vw, 3.35rem); }
+            .hero-title-prefix { display: block; }
             .hero-ctas .btn { flex: 1 1 100%; }
             .hero-stage { margin-inline: -8px; padding: 10px 10px 0; border-radius: 20px 20px 0 0; }
             .hero-window { border-radius: 10px 10px 0 0; }
@@ -1398,6 +1604,7 @@
             .footer-wordmark { line-height: 0.82; }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/hero-annotations.css">
 </head>
 
 <body>
@@ -1411,7 +1618,7 @@
             <ul class="nav-links">
                 <li><a href="#features" data-i18n="nav.features">Features</a></li>
                 <li><a href="#preview" data-i18n="nav.preview">Preview</a></li>
-                <li><a href="#use-cases" data-i18n="nav.audience">Who it's for</a></li>
+                <li><a href="#download" data-i18n="dl.nav">Download</a></li>
                 <li><a href="#open-source" data-i18n="nav.openSource">Open source</a></li>
             </ul>
             <div class="nav-actions">
@@ -1433,7 +1640,7 @@
             <div class="wrap">
                 <div class="hero-copy">
                     <p class="hero-product-name rise rise-1"><img class="mark" src="assets/icons/icon-192.png" alt="" aria-hidden="true"> <span data-i18n="hero.product">RestCal Calendar</span></p>
-                    <h1 class="rise rise-2" data-i18n-html="hero.title">Rest, <em>calculated.</em></h1>
+                    <h1 class="rise rise-2" id="heroTypewriter" aria-label="Rest, calculated."><span class="hero-title-prefix">Rest, </span><em class="hero-title-typed">calculated.</em></h1>
                     <p class="hero-sub rise rise-3" data-i18n="hero.subtitle">See leave, attendance, holidays and pay together in one beautifully simple, private calendar.</p>
                     <div class="hero-ctas rise rise-4">
                         <a class="btn btn-seal" href="app.html">
@@ -1445,504 +1652,50 @@
                     <p class="hero-meta rise rise-5" data-i18n="hero.meta">No account · Local by default · Optional sync</p>
                 </div>
 
-                <div class="hero-stage rise rise-5">
-                    <div class="hero-window">
-                        <div class="hero-window-bar" aria-hidden="true"><i></i><i></i><i></i></div>
-                        <img src="assets/images/screenshots/overview-light.png" data-i18n-attr="alt:hero.imageAlt"
-                            alt="RestCal day view showing the daily calendar card, leave allowance and attendance summary">
-                    </div>
-                </div>
+<div class="hero-carousel" aria-label="RestCal preview / 休历预览"><div class="hero-carousel-controls"><div role="tablist" aria-label="Pages / 页面"><button type="button" role="tab" id="hero-tab-calendar" aria-controls="hero-panel-calendar" aria-selected="true" tabindex="0" data-hero-slide="0"><span data-i18n="hero.tabcalendar">Calendar</span></button><button type="button" role="tab" id="hero-tab-record" aria-controls="hero-panel-record" aria-selected="false" tabindex="-1" data-hero-slide="1"><span data-i18n="hero.tabrecord">Mark dates</span></button><button type="button" role="tab" id="hero-tab-stats" aria-controls="hero-panel-stats" aria-selected="false" tabindex="-1" data-hero-slide="2"><span data-i18n="hero.tabstats">Statistics</span></button><button type="button" role="tab" id="hero-tab-leave" aria-controls="hero-panel-leave" aria-selected="false" tabindex="-1" data-hero-slide="3"><span data-i18n="hero.tableave">Leave note</span></button><button type="button" role="tab" id="hero-tab-tickets" aria-controls="hero-panel-tickets" aria-selected="false" tabindex="-1" data-hero-slide="4"><span data-i18n="hero.tabtickets">Ticket reminders</span></button><button type="button" role="tab" id="hero-tab-tools" aria-controls="hero-panel-tools" aria-selected="false" tabindex="-1" data-hero-slide="5"><span data-i18n="hero.tabtools">Tools</span></button><button type="button" role="tab" id="hero-tab-settings" aria-controls="hero-panel-settings" aria-selected="false" tabindex="-1" data-hero-slide="6"><span data-i18n="hero.tabsettings">Settings</span></button></div><div class="hero-carousel-arrows"><button type="button" data-hero-step="-1" aria-label="Previous page / 上一页"><i class="ph ph-arrow-left" aria-hidden="true"></i></button><button type="button" data-hero-step="1" aria-label="Next page / 下一页"><i class="ph ph-arrow-right" aria-hidden="true"></i></button></div></div><div class="hero-carousel-panels"><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-calendar" aria-labelledby="hero-tab-calendar"><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/screenshots/overview-light.png" data-src-zh="assets/images/screenshots/overview-light.png" data-src-en="assets/images/home/en/calendar.png" alt="RestCal Calendar / 休历日历" decoding="async" width="2880" height="1800"><span class="ann ann-e ann-no-mark hero-pin" style="left:44.5%;top:13%" data-note="Day, week, month & year" data-i18n-attr="data-note:hero.calloutviews" aria-hidden="true"></span><span class="ann ann-n ann-no-mark hero-pin" style="left:78%;top:17%" data-note="Leave and daily deductions" data-i18n-attr="data-note:hero.calloutpay" aria-hidden="true"></span><span class="ann ann-e ann-no-mark hero-pin" style="left:35.2%;top:57%" data-note="Select a day to add a record" data-i18n-attr="data-note:hero.calloutrecord" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:64%;top:70%" data-note="A daily quote, beside your plans" data-i18n-attr="data-note:hero.quote" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.calloutviews">Day, week, month & year</span></li><li><span data-i18n="hero.calloutpay">Leave and daily deductions</span></li><li><span data-i18n="hero.calloutrecord">Select a day to add a record</span></li><li><span data-i18n="hero.quote">A daily quote, beside your plans</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-record" aria-labelledby="hero-tab-record" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/date-record.png" data-src-zh="assets/images/home/date-record.png" data-src-en="assets/images/home/en/date-record.png" alt="RestCal Mark dates / 休历日期标记" width="2880" height="1800" decoding="async"><span class="ann ann-e ann-no-mark hero-pin" style="left:33.5%;top:33%;" data-note="Mark attendance, leave or overtime" data-i18n-attr="data-note:hero.detailstatus" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:66.5%;top:60%;" data-note="Apply to a date range" data-i18n-attr="data-note:hero.detailrange" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:66.5%;top:74%;" data-note="Keep a note with the date" data-i18n-attr="data-note:hero.detailnote" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.detailstatus">Mark attendance, leave or overtime</span></li><li><span data-i18n="hero.detailrange">Apply to a date range</span></li><li><span data-i18n="hero.detailnote">Keep a note with the date</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-stats" aria-labelledby="hero-tab-stats" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/statistics-overview.png" data-src-zh="assets/images/home/statistics-overview.png" data-src-en="assets/images/home/en/statistics-overview.png" alt="RestCal Statistics / 休历统计" decoding="async" width="2880" height="1800"><span class="ann ann-n ann-no-mark hero-pin" style="left:75%;top:38%" data-note="See your remaining leave" data-i18n-attr="data-note:hero.calloutbalance" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:63%;top:65%" data-note="Review leave across the year" data-i18n-attr="data-note:hero.calloutchart" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.calloutbalance">See your remaining leave</span></li><li><span data-i18n="hero.calloutchart">Review leave across the year</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-leave" aria-labelledby="hero-tab-leave" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/leave-overview.png" data-src-zh="assets/images/home/leave-overview.png" data-src-en="assets/images/home/en/leave-overview.png" alt="RestCal Leave note / 休历请假条" width="2880" height="1800" decoding="async"><span class="ann ann-e ann-no-mark hero-pin" style="left:20%;top:42%" data-note="Dates, reason and handoff" data-i18n-attr="data-note:hero.extraform" aria-hidden="true"></span><span class="ann ann-n ann-no-mark hero-pin" style="left:82%;top:67%" data-note="Preview, save or send by email" data-i18n-attr="data-note:hero.extraexport" aria-hidden="true"></span><span class="ann ann-e ann-no-mark hero-pin" style="left:27.5%;top:94%;--ann-text-x:-48px;" data-note="Open your email app with the request" data-i18n-attr="data-note:hero.email" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.extraform">Dates, reason and handoff</span></li><li><span data-i18n="hero.extraexport">Preview, save or send by email</span></li><li><span data-i18n="hero.email">Open your email app with the request</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-tickets" aria-labelledby="hero-tab-tickets" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/ticket-reminders.png" data-src-zh="assets/images/home/ticket-reminders.png" data-src-en="assets/images/home/en/ticket-reminders.png" alt="RestCal Ticket reminders / 休历购票提醒" width="2880" height="1800" decoding="async"><span class="ann ann-e ann-no-mark hero-pin" style="left:23.5%;top:40%;" data-note="Outbound and return sale dates" data-i18n-attr="data-note:hero.detailroundtrip" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:76.5%;top:55%;" data-note="Export a calendar reminder" data-i18n-attr="data-note:hero.detailexport" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.detailroundtrip">Outbound and return sale dates</span></li><li><span data-i18n="hero.detailexport">Export a calendar reminder</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-tools" aria-labelledby="hero-tab-tools" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/tools-overview.png" data-src-zh="assets/images/home/tools-overview.png" data-src-en="assets/images/home/en/tools-overview.png" alt="RestCal Tools / 休历工具" decoding="async" width="2880" height="1800"><span class="ann ann-s ann-no-mark hero-pin" style="left:34%;top:16%" data-note="Calculate pay and export payslips" data-i18n-attr="data-note:hero.calloutsalary" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:71%;top:35%" data-note="Keep up with daily habits" data-i18n-attr="data-note:hero.callouthabit" aria-hidden="true"></span><span class="ann ann-w ann-no-mark hero-pin" style="left:38.5%;top:49%" data-note="Calendar export and email" data-i18n-attr="data-note:hero.calloutconnect" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.calloutsalary">Calculate pay and export payslips</span></li><li><span data-i18n="hero.callouthabit">Keep up with daily habits</span></li><li><span data-i18n="hero.calloutconnect">Calendar export and email</span></li></ul></section><section class="hero-carousel-panel" role="tabpanel" tabindex="0" id="hero-panel-settings" aria-labelledby="hero-tab-settings" hidden><div class="hero-screen-area"><div class="hero-image-map"><img src="assets/images/home/settings-overview.png" data-src-zh="assets/images/home/settings-overview.png" data-src-en="assets/images/home/en/settings-overview.png" alt="RestCal Settings / 休历设置" width="2880" height="1800" decoding="async"><span class="ann ann-n ann-no-mark hero-pin" style="left:51%;top:53%" data-note="Set your own working week" data-i18n-attr="data-note:hero.extraschedule" aria-hidden="true"></span><span class="ann ann-n ann-no-mark hero-pin" style="left:23%;top:54%" data-note="Pay, leave quotas and templates" data-i18n-attr="data-note:hero.extradefaults" aria-hidden="true"></span></div></div><ul class="hero-annotation-key"><li><span data-i18n="hero.extraschedule">Set your own working week</span></li><li><span data-i18n="hero.extradefaults">Pay, leave quotas and templates</span></li></ul></section></div></div><p class="hero-shot-caption" data-i18n="hero.shotCaption">Actual app interface. Preview only; open the calendar to add records.</p>
             </div>
         </section>
 
         <!-- ============================================================ Features -->
-        <section class="section" id="features">
-            <div class="wrap">
-                <div class="section-head" data-reveal>
-                    <p class="eyebrow" data-i18n="features.label">Features</p>
-                    <h2 data-i18n="features.title">Built around what a day off actually costs</h2>
-                    <p data-i18n="features.intro">Small tools that share one calendar — mark a day once, and the statistics, quotas,
-                        and salary math all update together.</p>
-                </div>
-
-                <div class="features-grid">
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-calendar-blank"></i>
-                        </div>
-                        <h3 data-i18n="features.calendarTitle">Day, week, month &amp; year views</h3>
-                        <p data-i18n="features.calendarText">Switch from a tear-off day page to weekly, monthly, or yearly views while keeping
-                            lunar dates, holidays and makeup workdays visible.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-chart-bar"></i>
-                        </div>
-                        <h3 data-i18n="features.statsTitle">Monthly &amp; yearly statistics</h3>
-                        <p data-i18n="features.statsText">Switch between monthly and yearly analysis, with overtime and leave allowances
-                            visible alongside the charts.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-check-circle"></i>
-                        </div>
-                        <h3 data-i18n="features.workdayTitle">Real working-day math</h3>
-                        <p data-i18n="features.workdayText">Weekends and public holidays are excluded, makeup workdays included — attendance
-                            reflects the calendar you actually work.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-money"></i>
-                        </div>
-                        <h3 data-i18n="features.salaryTitle">Pay calculation &amp; payslips</h3>
-                        <p data-i18n="features.salaryText">Set salary and deduction rules once, then estimate monthly take-home pay and
-                            download a clean payslip image.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-ticket"></i>
-                        </div>
-                        <h3 data-i18n="features.ticketTitle">Ticket reminders</h3>
-                        <p data-i18n="features.ticketText">A focused tool card shows the next statutory-holiday ticket sale date and expands
-                            into the full yearly reminder list.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-arrows-down-up"></i>
-                        </div>
-                        <h3 data-i18n="features.csvTitle">CSV &amp; calendar export</h3>
-                        <p data-i18n="features.csvText">Move records with CSV, export an ICS calendar, or use optional WebDAV backup with
-                            validated imports and merge-safe restoration.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-note"></i>
-                        </div>
-                        <h3 data-i18n="features.noteTitle">Leave note templates</h3>
-                        <p data-i18n="features.noteText">Pick dates and a reason, preview the result, and download a clean leave-note image
-                            ready to send.</p>
-                    </article>
-
-                    <article class="feature" data-reveal>
-                        <div class="feature-icon" aria-hidden="true">
-                            <i class="ph ph-shield-check"></i>
-                        </div>
-                        <h3 data-i18n="features.localTitle">Yours, locally</h3>
-                        <p data-i18n="features.localText">Everything runs locally by default, works offline as a PWA or Windows app, and only
-                            uses WebDAV when you choose to configure it.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
+        <section class="section" id="features"><div class="wrap"><div class="section-head"><h2 data-i18n="main.title">From a day off to a clear record.</h2><p data-i18n="main.intro">Start with your calendar. Leave balances, pay and leave requests follow from it.</p></div><div class="features-grid"><article class="feature"><div class="feature-icon"><i class="ph ph-calendar-blank" aria-hidden="true"></i></div><h3 data-i18n="main.calendar">Attendance and leave, together</h3><p data-i18n="main.calendarText">Record attendance, leave, overtime and notes. Switch between day, week, month and year, or mark multiple workdays at once.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-wallet" aria-hidden="true"></i></div><h3 data-i18n="main.salary">Estimate pay before payday</h3><p data-i18n="main.salaryText">Set salary, fixed deductions and leave deduction rates. Estimate monthly take-home pay and export a payslip image.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-chart-bar" aria-hidden="true"></i></div><h3 data-i18n="main.stats">Keep track of leave balances</h3><p data-i18n="main.statsText">See used and remaining annual or compensatory leave. Review attendance and overtime with monthly charts and yearly heatmaps.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-note-pencil" aria-hidden="true"></i></div><h3 data-i18n="main.note">Prepare a leave request</h3><p data-i18n="main.noteText">Fill in dates, reason and handoff details. Generate the text, download an image or open your email app with the request.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-train" aria-hidden="true"></i></div><h3 data-i18n="main.ticket">Plan both legs of your trip</h3><p data-i18n="main.ticketText">See outbound and return train-ticket sale dates for public holidays. Adjust travel preferences and export reminders to your calendar.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-cloud-arrow-up" aria-hidden="true"></i></div><h3 data-i18n="main.backup">Keep a copy of your records</h3><p data-i18n="main.backupText">Records stay on your device by default. Export or import CSV backups, or use WebDAV to back up and restore on another device.</p></article></div></div></section>
 
         <!-- ============================================================ Preview -->
-        <section class="section" id="preview">
-            <div class="wrap">
-                <div class="section-head" data-reveal>
-                    <p class="eyebrow" data-i18n="preview.label">Preview</p>
-                    <h2 data-i18n="preview.title">One calendar, three focused workspaces</h2>
-                    <p data-i18n="preview.intro">Seven crisp, browser-rendered previews show the daily calendar, statistics,
-                        allowances, tools, settings and quick record editor.</p>
-                </div>
-
-                <div class="product-gallery" data-reveal data-product-carousel
-                    role="region" aria-roledescription="carousel"
-                    data-i18n-attr="aria-label:preview.carouselLabel"
-                    aria-label="RestCal feature previews">
-                    <div class="product-carousel-stage">
-                        <figure class="product-shot is-active" data-carousel-slide>
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.calendar">Calendar</span>
-                                        <h3 data-i18n="demo.dayTitle">A focused page for every day</h3>
-                                    </div>
-                                    <div class="demo-segment">
-                                        <span class="on" data-i18n="demo.day">Day</span><span data-i18n="demo.week">Week</span>
-                                        <span data-i18n="demo.month">Month</span><span data-i18n="demo.year">Year</span>
-                                    </div>
-                                </div>
-                                <div class="demo-day-layout">
-                                    <div class="demo-day-card">
-                                        <div class="demo-day-top"><span data-i18n="demo.july2026">July 2026</span><span data-i18n="demo.thursdayToday">Thursday · Today</span></div>
-                                        <div class="demo-day-body">
-                                            <span class="demo-day-number">23</span>
-                                            <div class="demo-day-lunar" data-i18n="demo.lunarDate">Sixth lunar month · day 10</div>
-                                            <div class="demo-day-term" data-i18n="demo.greatHeat">Great Heat</div>
-                                            <div class="demo-day-note" data-i18n="demo.noRecord">No record yet — click to add one</div>
-                                            <div class="demo-day-quote">
-                                                <span data-i18n="demo.quoteText">"Take rest; a field that has rested gives a bountiful crop."</span>
-                                                <span class="demo-day-quote-author" data-i18n="demo.quoteAuthor">— Ovid · daily quote</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="demo-metrics">
-                                        <div class="demo-metric"><small data-i18n="demo.annualRemaining">Annual leave left</small><strong>4 <span data-i18n="demo.days">days</span></strong></div>
-                                        <div class="demo-metric"><small data-i18n="demo.monthLeave">Leave this month</small><strong>5 <span data-i18n="demo.days">days</span></strong></div>
-                                        <div class="demo-metric"><small data-i18n="demo.attendance">Attendance</small><strong>4 / 23</strong></div>
-                                        <div class="demo-metric"><small data-i18n="demo.takeHome">Estimated take-home</small><strong class="accent">¥13,337.39</strong></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.dayShot">Day view and daily summary</span><span>01</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.calendar">Calendar</span>
-                                        <h3 data-i18n="demo.monthTitle">Holidays, makeup days and leave, colour-coded</h3>
-                                    </div>
-                                    <div class="demo-segment">
-                                        <span data-i18n="demo.day">Day</span><span data-i18n="demo.week">Week</span>
-                                        <span class="on" data-i18n="demo.month">Month</span><span data-i18n="demo.year">Year</span>
-                                    </div>
-                                </div>
-                                <div class="demo-month">
-                                    <div class="cal-head">
-                                        <span class="cal-month" data-i18n="preview.calendarMonth">October 2025</span>
-                                        <span class="cal-lunar">乙巳年 · 蛇年</span>
-                                        <span class="cal-nav" aria-hidden="true"><span><i class="ph ph-caret-left"></i></span><span><i class="ph ph-caret-right"></i></span></span>
-                                    </div>
-                                    <div class="cal-grid" role="img"
-                                        aria-label="October 2025 calendar. October 1 to 8 are the National Day and Mid-Autumn holiday. Saturday October 11 is a makeup workday. October 16 and 17 are annual leave, October 20 is personal leave, October 24 is sick leave. Attended workdays are checked; October 28 is today.">
-                                        <span class="wd" data-i18n="week.mon">MON</span><span class="wd" data-i18n="week.tue">TUE</span><span class="wd" data-i18n="week.wed">WED</span><span class="wd" data-i18n="week.thu">THU</span><span class="wd" data-i18n="week.fri">FRI</span><span class="wd" data-i18n="week.sat">SAT</span><span class="wd" data-i18n="week.sun">SUN</span>
-
-                                        <div class="day is-out is-att"><span class="d-n">29</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-out is-att"><span class="d-n">30</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-hol"><span class="d-n">1</span><span class="d-s">国庆</span></div>
-                                        <div class="day is-hol"><span class="d-n">2</span><span class="d-s">休</span></div>
-                                        <div class="day is-hol"><span class="d-n">3</span><span class="d-s">休</span></div>
-                                        <div class="day is-hol"><span class="d-n">4</span><span class="d-s">休</span></div>
-                                        <div class="day is-hol"><span class="d-n">5</span><span class="d-s">休</span></div>
-
-                                        <div class="day is-hol"><span class="d-n">6</span><span class="d-s">中秋</span></div>
-                                        <div class="day is-hol"><span class="d-n">7</span><span class="d-s">休</span></div>
-                                        <div class="day is-hol"><span class="d-n">8</span><span class="d-s">寒露</span></div>
-                                        <div class="day is-att"><span class="d-n">9</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att"><span class="d-n">10</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-makeup"><span class="d-n">11</span><span class="d-s">班</span></div>
-                                        <div class="day is-wknd"><span class="d-n">12</span><span class="d-s">廿一</span></div>
-
-                                        <div class="day is-att"><span class="d-n">13</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att"><span class="d-n">14</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att"><span class="d-n">15</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-annual"><span class="d-n">16</span><span class="d-s">年假</span></div>
-                                        <div class="day is-annual"><span class="d-n">17</span><span class="d-s">年假</span></div>
-                                        <div class="day is-wknd"><span class="d-n">18</span><span class="d-s">廿七</span></div>
-                                        <div class="day is-wknd"><span class="d-n">19</span><span class="d-s">廿八</span></div>
-
-                                        <div class="day is-personal"><span class="d-n">20</span><span class="d-s">事假</span></div>
-                                        <div class="day is-att"><span class="d-n">21</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att"><span class="d-n">22</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att"><span class="d-n">23</span><span class="d-s">霜降</span></div>
-                                        <div class="day is-sick"><span class="d-n">24</span><span class="d-s">病假</span></div>
-                                        <div class="day is-wknd"><span class="d-n">25</span><span class="d-s">初五</span></div>
-                                        <div class="day is-wknd"><span class="d-n">26</span><span class="d-s">初六</span></div>
-
-                                        <div class="day is-att"><span class="d-n">27</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day is-att is-today"><span class="d-n">28</span><span class="d-s"><i class="ph ph-check"></i></span></div>
-                                        <div class="day"><span class="d-n">29</span><span class="d-s">初九</span></div>
-                                        <div class="day"><span class="d-n">30</span><span class="d-s">初十</span></div>
-                                        <div class="day"><span class="d-n">31</span><span class="d-s">十一</span></div>
-                                        <div class="day is-out is-wknd"><span class="d-n">1</span><span class="d-s">十二</span></div>
-                                        <div class="day is-out is-wknd"><span class="d-n">2</span><span class="d-s">十三</span></div>
-                                    </div>
-
-                                    <div class="cal-legend">
-                                        <span class="lg"><i style="background:var(--st-work)"></i><span data-i18n="legend.attended">Attended</span></span>
-                                        <span class="lg"><i style="background:var(--st-holiday)"></i><span data-i18n="legend.holiday">Holiday</span></span>
-                                        <span class="lg"><i style="background:var(--st-makeup)"></i><span data-i18n="legend.makeup">Makeup workday</span></span>
-                                        <span class="lg"><i style="background:var(--st-annual)"></i><span data-i18n="legend.annual">Annual leave</span></span>
-                                        <span class="lg"><i style="background:var(--st-sick)"></i><span data-i18n="legend.sick">Sick leave</span></span>
-                                        <span class="lg"><i style="background:var(--st-personal)"></i><span data-i18n="legend.personal">Personal leave</span></span>
-                                        <span class="lg"><i style="background:var(--st-weekend)"></i><span data-i18n="legend.weekend">Weekend</span></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.monthShot">Month view with holidays and makeup workdays</span><span>02</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.statistics">Statistics</span>
-                                        <h3 data-i18n="demo.statsTitle">See the month, then zoom out to the year</h3>
-                                    </div>
-                                    <div class="demo-segment"><span data-i18n="demo.monthly">Monthly</span><span class="on" data-i18n="demo.yearly">Yearly</span></div>
-                                </div>
-                                <div class="demo-stats-layout">
-                                    <div class="demo-stats-main">
-                                        <div class="demo-summary-grid">
-                                            <div><small data-i18n="demo.totalLeave">Total leave</small><strong>13</strong></div>
-                                            <div><small data-i18n="demo.attended">Attended</small><strong>10</strong></div>
-                                            <div><small data-i18n="demo.overtimeHours">Overtime</small><strong>8h</strong></div>
-                                            <div><small data-i18n="demo.holidays">Holidays</small><strong>33</strong></div>
-                                            <div><small data-i18n="demo.weekends">Weekends</small><strong>84</strong></div>
-                                        </div>
-                                        <div class="demo-bars" aria-hidden="true">
-                                            <i class="demo-bar" style="height:24%"></i><i class="demo-bar" style="height:42%"></i>
-                                            <i class="demo-bar" style="height:22%"></i><i class="demo-bar" style="height:25%"></i>
-                                            <i class="demo-bar" style="height:26%"></i><i class="demo-bar" style="height:48%"></i>
-                                            <i class="demo-bar active" style="height:82%"></i><i class="demo-bar" style="height:8%"></i>
-                                            <i class="demo-bar" style="height:6%"></i><i class="demo-bar" style="height:5%"></i>
-                                            <i class="demo-bar" style="height:4%"></i><i class="demo-bar" style="height:4%"></i>
-                                        </div>
-                                    </div>
-                                    <div class="demo-panel demo-quota">
-                                        <h4 data-i18n="demo.leaveAllowance">Leave allowance</h4>
-                                        <div class="demo-quota-row">
-                                            <div class="demo-quota-label"><span data-i18n="demo.annualLeave">Annual leave</span><span>6 / 10</span></div>
-                                            <div class="demo-progress"><i style="width:60%"></i></div>
-                                        </div>
-                                        <div class="demo-quota-row">
-                                            <div class="demo-quota-label"><span data-i18n="demo.compLeave">Comp leave</span><span>2 / 5</span></div>
-                                            <div class="demo-progress"><i style="width:40%"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.statsShot">Monthly and yearly statistics</span><span>03</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.tools">Tools</span>
-                                        <h3 data-i18n="demo.toolsTitle">Three practical jobs, kept out of the way</h3>
-                                    </div>
-                                </div>
-                                <div class="demo-tools-grid">
-                                    <div class="demo-tool-card"><span class="demo-tool-no">01</span><h4 data-i18n="demo.payslip">Payslip</h4><p data-i18n="demo.payslipText">Calculate take-home pay and export a clean image.</p></div>
-                                    <div class="demo-tool-card"><span class="demo-tool-no">02</span><h4 data-i18n="demo.leaveNote">Leave note</h4><p data-i18n="demo.leaveNoteText">Generate a formal note from your saved record.</p></div>
-                                    <div class="demo-tool-card"><span class="demo-tool-no">03</span><h4 data-i18n="demo.ticketReminder">Ticket reminder</h4><p data-i18n="demo.ticketText">Know the train-ticket sale date before the rush.</p></div>
-                                    <div class="demo-ticket-list">
-                                        <div class="demo-ticket-row"><span data-i18n="demo.newYear">New Year's Day · sale Dec 17</span><b data-i18n="demo.expired">Passed</b></div>
-                                        <div class="demo-ticket-row"><span data-i18n="demo.springFestival">Spring Festival · sale Jan 31</span><b data-i18n="demo.expired">Passed</b></div>
-                                        <div class="demo-ticket-row"><span data-i18n="demo.midAutumn">Mid-Autumn Festival · sale Sep 10</span><b data-i18n="demo.days49">49 days</b></div>
-                                        <div class="demo-ticket-row"><span data-i18n="demo.nationalDay">National Day · sale Sep 16</span><b data-i18n="demo.days55">55 days</b></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.toolsShot">Three focused utilities</span><span>04</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.settings">Settings</span>
-                                        <h3 data-i18n="demo.settingsTitle">Make the calendar match your job</h3>
-                                    </div>
-                                </div>
-                                <div class="demo-settings-layout">
-                                    <div class="demo-settings-nav">
-                                        <span data-i18n="demo.profile">Profile</span><span class="on" data-i18n="demo.workSchedule">Work schedule</span>
-                                        <span data-i18n="demo.payDeductions">Pay and deductions</span><span data-i18n="demo.allowance">Leave allowance</span>
-                                        <span data-i18n="demo.dataSync">Data and sync</span><span data-i18n="demo.appearance">Appearance</span>
-                                    </div>
-                                    <div class="demo-settings-form">
-                                        <h4 data-i18n="demo.workSchedule">Work schedule</h4>
-                                        <p data-i18n="demo.scheduleHelp">Determines expected workdays and daily-pay conversion.</p>
-                                        <div class="demo-field-grid">
-                                            <div class="demo-field"><label data-i18n="demo.workdaysWeek">Workdays per week</label><div class="demo-input">5</div></div>
-                                            <div class="demo-field"><label data-i18n="demo.hoursDay">Standard hours per day</label><div class="demo-input">8</div></div>
-                                            <div class="demo-field"><label data-i18n="demo.payCalculation">Pay calculation</label><div class="demo-input" data-i18n="demo.monthlySalary">Monthly salary</div></div>
-                                        </div>
-                                        <div class="demo-rest-days">
-                                            <span class="on" data-i18n="week.sun">SUN</span><span data-i18n="week.mon">MON</span><span data-i18n="week.tue">TUE</span>
-                                            <span data-i18n="week.wed">WED</span><span data-i18n="week.thu">THU</span><span data-i18n="week.fri">FRI</span><span class="on" data-i18n="week.sat">SAT</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.settingsShot">Settings that match your work week</span><span>05</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.data">Data</span>
-                                        <h3 data-i18n="demo.dataTitle">Local by default, backed up when you say so</h3>
-                                    </div>
-                                </div>
-                                <div class="demo-data-layout">
-                                    <div class="demo-panel demo-backup">
-                                        <div class="demo-backup-head">
-                                            <h4 data-i18n="demo.webdavBackup">WebDAV cloud backup</h4>
-                                            <span class="demo-badge" data-i18n="demo.connected">Connected</span>
-                                        </div>
-                                        <div class="demo-backup-row"><span data-i18n="demo.server">Server</span><b>dav.jianguoyun.com</b></div>
-                                        <div class="demo-backup-row"><span data-i18n="demo.lastBackup">Last backup</span><b data-i18n="demo.backupTime">Today 09:12 · verified</b></div>
-                                        <div class="demo-backup-row"><span data-i18n="demo.scope">Includes</span><b data-i18n="demo.scopeText">Records, settings and quotas</b></div>
-                                        <div class="demo-actions"><span data-i18n="demo.restore">Restore</span><span class="primary" data-i18n="demo.backupNow">Back up now</span></div>
-                                    </div>
-                                    <div class="demo-data-list">
-                                        <div class="demo-data-item">
-                                            <b data-i18n="demo.localFirst">100% local by default</b>
-                                            <span data-i18n="demo.localFirstText">Data lives in your browser — no account, no analytics.</span>
-                                        </div>
-                                        <div class="demo-data-item">
-                                            <b data-i18n="demo.csv">CSV import &amp; export</b>
-                                            <span data-i18n="demo.csvText">Take records to Excel, or move between devices with validated imports.</span>
-                                        </div>
-                                        <div class="demo-data-item">
-                                            <b data-i18n="demo.offline">Offline-ready PWA</b>
-                                            <span data-i18n="demo.offlineText">Install once — it opens with or without a network, on desktop and phone.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.dataShot">WebDAV backup and data ownership</span><span>06</span></figcaption>
-                        </figure>
-                        <figure class="product-shot" data-carousel-slide aria-hidden="true">
-                            <div class="feature-demo">
-                                <div class="demo-head">
-                                    <div>
-                                        <span class="demo-kicker" data-i18n="demo.dailyRecord">Daily record</span>
-                                        <h3 data-i18n="demo.editorTitle">Mark attendance or leave in seconds</h3>
-                                    </div>
-                                </div>
-                                <div class="demo-editor-layout">
-                                    <div class="demo-editor">
-                                        <strong data-i18n="demo.july23">July 23 · Thursday</strong>
-                                        <div class="demo-statuses">
-                                            <span class="on" data-i18n="demo.work">Work</span><span data-i18n="demo.personal">Personal</span>
-                                            <span data-i18n="demo.sick">Sick</span><span data-i18n="demo.annual">Annual</span><span data-i18n="demo.comp">Comp</span><span data-i18n="demo.overtime">Overtime</span>
-                                        </div>
-                                        <div class="demo-textarea" data-i18n="demo.reasonPlaceholder">Reason (optional when working)</div>
-                                        <div class="demo-more" data-i18n="demo.moreOptions">More options · note, handoff and custom hours</div>
-                                        <div class="demo-actions"><span data-i18n="demo.cancel">Cancel</span><span class="primary" data-i18n="demo.save">Save</span></div>
-                                    </div>
-                                    <div class="demo-editor-tip">
-                                        <b data-i18n="demo.mobileFriendly">Built for quick mobile entry</b>
-                                        <span data-i18n="demo.mobileFriendlyText">The same editor becomes a bottom sheet on phones, with large status targets and aligned actions.</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <figcaption><span data-i18n="preview.editorShot">Fast daily record editor</span><span>07</span></figcaption>
-                        </figure>
-
-                        <button class="carousel-arrow prev" type="button" data-carousel-prev
-                            data-i18n-attr="aria-label:preview.previous" aria-label="Previous screenshot">
-                            <i class="ph ph-caret-left" aria-hidden="true"></i>
-                        </button>
-                        <button class="carousel-arrow next" type="button" data-carousel-next
-                            data-i18n-attr="aria-label:preview.next" aria-label="Next screenshot">
-                            <i class="ph ph-caret-right" aria-hidden="true"></i>
-                        </button>
-                    </div>
-
-                    <div class="carousel-controls" role="group"
-                        data-i18n-attr="aria-label:preview.slidePicker" aria-label="Choose feature preview">
-                        <button class="carousel-dot is-active" type="button" data-carousel-dot="0"
-                            data-i18n-attr="aria-label:preview.slide1" aria-label="Show day view preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="1"
-                            data-i18n-attr="aria-label:preview.slide2" aria-label="Show month calendar preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="2"
-                            data-i18n-attr="aria-label:preview.slide3" aria-label="Show statistics preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="3"
-                            data-i18n-attr="aria-label:preview.slide4" aria-label="Show tools preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="4"
-                            data-i18n-attr="aria-label:preview.slide5" aria-label="Show settings preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="5"
-                            data-i18n-attr="aria-label:preview.slide6" aria-label="Show data and backup preview"></button>
-                        <button class="carousel-dot" type="button" data-carousel-dot="6"
-                            data-i18n-attr="aria-label:preview.slide7" aria-label="Show daily editor preview"></button>
-                    </div>
-                </div>
-
-                <p class="preview-cap" data-reveal data-i18n-html="preview.caption">Built directly in HTML for sharp detail at every size —
-                    open the <a href="app.html">live demo</a> to try the real interactions.</p>
-            </div>
-        </section>
+        <section class="section" id="preview"><div class="wrap"><div class="section-head"><h2 data-i18n="settings.heading">Settings and integrations, built around real work.</h2><p data-i18n="settings.intro">Every category below is available in RestCal and saved locally as you make changes.</p></div><div class="settings-summary"><article><span class="settings-summary-icon"><i class="ph ph-user-circle" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.profile">Profile</h3><p data-i18n="setting.profileText">Save your name, workplace and hire date for records and leave requests.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-calendar-dots" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.schedule">Work schedule</h3><p data-i18n="setting.scheduleText">Set weekly workdays, daily hours, pay calculation method and default rest days.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-wallet" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.salary">Pay & deductions</h3><p data-i18n="setting.salaryText">Configure salary, fixed deductions, tax estimates, payday and leave deduction rates.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-chart-donut" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.quota">Leave allowance</h3><p data-i18n="setting.quotaText">Set annual and compensatory leave allowances, including their expiration rules.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-train" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.tickets">Ticket reminders</h3><p data-i18n="setting.ticketsText">Choose outbound and return plans, ticket sale lead time and reminder time.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-note-pencil" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.leaveDoc">Leave request template</h3><p data-i18n="setting.leaveDocText">Reuse the applicant, recipient, common reasons and handoff details.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-plugs-connected" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.connections">Accounts & connections</h3><p data-i18n="setting.connectionsText">Connect Google Calendar, choose sync content and save a default recipient email.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-cloud-arrow-up" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.data">Data & sync</h3><p data-i18n="setting.dataText">Import or export CSV, create ICS calendars, and back up or restore with WebDAV.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-palette" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.appearance">Appearance</h3><p data-i18n="setting.appearanceText">Switch between system, light and dark themes, with Chinese or English.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-gear-six" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.advanced">Advanced settings</h3><p data-i18n="setting.advancedText">Run setup again, export personal settings or reset local data when needed.</p></div></article></div></div></section>
 
         <!-- ============================================================ Use cases -->
-        <section class="section" id="use-cases">
-            <div class="wrap">
-                <div class="section-head" data-reveal>
-                    <p class="eyebrow" data-i18n="audience.label">Who it's for</p>
-                    <h2 data-i18n="audience.title">For people who count their days</h2>
-                    <p data-i18n="audience.intro">RestCal is deliberately small. If any of these sound like you, it will probably fit.</p>
-                </div>
 
-                <div class="cases-grid">
-                    <article class="case" data-reveal style="--case-c: var(--st-work)">
-                        <span class="c-k">记录</span>
-                        <h3 data-i18n="audience.recordTitle">The record keeper</h3>
-                        <p data-i18n="audience.recordText">Office workers who want every sick day and half-afternoon in one place, with monthly
-                            and yearly totals ready when review season comes.</p>
-                    </article>
-
-                    <article class="case" data-reveal style="--case-c: var(--st-personal)">
-                        <span class="c-k">算账</span>
-                        <h3 data-i18n="audience.payTitle">The paycheck realist</h3>
-                        <p data-i18n="audience.payText">Anyone deciding whether a day off is worth it. See the deduction before you send the
-                            request — not on payday.</p>
-                    </article>
-
-                    <article class="case" data-reveal style="--case-c: var(--st-holiday)">
-                        <span class="c-k">规划</span>
-                        <h3 data-i18n="audience.planTitle">The holiday strategist</h3>
-                        <p data-i18n="audience.planText">Bridge two annual-leave days into a nine-day break. Plan around makeup workdays
-                            instead of being surprised by them.</p>
-                    </article>
-
-                    <article class="case" data-reveal style="--case-c: var(--st-annual)">
-                        <span class="c-k">极简</span>
-                        <h3 data-i18n="audience.simpleTitle">The tool minimalist</h3>
-                        <p data-i18n="audience.simpleText">No required account, subscription, or cloud dependency. Keep everything local, or
-                            opt into CSV and WebDAV backup when you need it.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
 
         <!-- ============================================================ Open source -->
         <section class="section" id="open-source">
-            <div class="wrap oss">
-                <div class="oss-text" data-reveal>
-                    <p class="eyebrow" data-i18n="oss.label">Open source</p>
-                    <h2 data-i18n="oss.title">Plain web technology, MIT licensed</h2>
-                    <p data-i18n-html="oss.intro">RestCal is built with plain HTML, CSS, and JavaScript — no framework and no analytics.
-                        Clone it, run the local server, or package the included Windows app.
-                        Read the source in an afternoon, or fork it to match your company's leave rules.</p>
-
-                    <div class="oss-chips">
-                        <span data-i18n="oss.chipLicense">MIT License</span>
-                        <span data-i18n="oss.chipBuild">No build step</span>
-                        <span data-i18n="oss.chipPwa">Offline-first PWA</span>
-                        <span data-i18n="oss.chipWindows">Portable Windows .exe</span>
-                        <span data-i18n="oss.chipIcs">RFC 5545 ICS export</span>
-                        <span data-i18n="oss.chipData">Holiday data 2004–2026</span>
-                    </div>
-
-                    <div class="oss-ctas">
-                        <a class="btn btn-seal" href="https://github.com/skywalker23241/restcal-abohack">
-                            <i class="ph ph-star" aria-hidden="true"></i>
-                            <span data-i18n="oss.star">Star on GitHub</span>
-                        </a>
-                        <a class="btn btn-ghost" href="https://github.com/skywalker23241/restcal-abohack/issues" data-i18n="common.issue">Report an issue</a>
-                    </div>
-
-                    <p class="oss-star" data-i18n="oss.note">If RestCal saves you a payroll surprise, a star helps other people find it.
-                        Issues and pull requests are welcome.</p>
-                </div>
-
-                <div class="terminal" data-reveal aria-label="Terminal showing how to run RestCal locally">
-                    <div class="terminal-bar"><i></i><i></i><i></i>&nbsp; restcal — local</div>
-                    <div class="terminal-body">
-                        <p class="ln"><span class="p">$</span> git clone https://github.com/skywalker23241/restcal-abohack</p>
-                        <p class="ln"><span class="p">$</span> cd restcal</p>
-                        <p class="ln"><span class="p">$</span> node server.js</p>
-                        <p class="ln">&nbsp;</p>
-                        <p class="ln"><span class="ok"><i class="ph ph-check" aria-hidden="true"></i></span> <span data-i18n="terminal.running">RestCal running at http://localhost:8765</span></p>
-                        <p class="ln"><span class="c" data-i18n="terminal.note"># no install, no dependencies, no build step</span></p>
+            <div class="wrap">
+                <div class="source-shell">
+                    <div class="oss">
+                        <div class="oss-text">
+                            <span class="eyebrow" data-i18n="oss.label">Open source</span>
+                            <h2 data-i18n="oss.title">Plain web technology, MIT licensed</h2>
+                            <p data-i18n="oss.intro">RestCal is built with plain HTML, CSS, and JavaScript — no framework and no analytics.</p>
+                            <div class="oss-chips" aria-label="Project highlights">
+                                <span data-i18n="oss.chipLicense">MIT License</span>
+                                <span data-i18n="oss.chipBuild">No build step</span>
+                                <span data-i18n="oss.chipPwa">Offline-first PWA</span>
+                                <span data-i18n="oss.chipData">Holiday data 2004–2026</span>
+                            </div>
+                            <div class="oss-ctas">
+                                <a class="btn btn-seal" href="https://github.com/skywalker23241/restcal-abohack"><i class="ph ph-github-logo" aria-hidden="true"></i><span data-i18n="oss.star">Star on GitHub</span></a>
+                                <a class="btn btn-ghost" href="https://github.com/skywalker23241/restcal-abohack/blob/main/LICENSE">MIT License</a>
+                            </div>
+                            <p class="oss-star" data-i18n="oss.note">Issues and pull requests are welcome.</p>
+                        </div>
+                        <div class="terminal" aria-label="RestCal local setup commands">
+                            <div class="terminal-bar"><i></i><i></i><i></i><span>restcal / local</span></div>
+                            <div class="terminal-body">
+                                <div><span class="ln">01</span> <span class="p">$</span> git clone github.com/skywalker23241/restcal-abohack</div>
+                                <div><span class="ln">02</span> <span class="p">$</span> cd restcal-abohack</div>
+                                <div><span class="ln">03</span> <span class="p">$</span> node server.js</div>
+                                <div><span class="ln">04</span> <span class="ok">✓</span> <span data-i18n="terminal.running">RestCal running at http://localhost:8765</span></div>
+                                <div><span class="ln">05</span> <span class="c" data-i18n="terminal.note"># no install, no dependencies, no build step</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1965,7 +1718,8 @@
                 </div>
             </div>
         </section>
-    </main>
+    <section class="home-download wrap" id="download"><div class="home-download-heading"><div><h2><span data-i18n="dl.title">RestCal, on your device.</span></h2><p><span data-i18n="dl.intro">Free for Windows and Android. Or start in your browser.</span></p></div><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1">v2.1.1 <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a></div><div class="home-download-grid"><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-setup.exe"><i class="ph ph-windows-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name0">Windows installer</span></h3><p><span data-i18n="dl.desc0">Install with desktop shortcuts</span></p><span class="home-download-action"><span data-i18n="dl.action0">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-portable.exe"><i class="ph ph-lightning" aria-hidden="true"></i><h3><span data-i18n="dl.name1">Windows portable</span></h3><p><span data-i18n="dl.desc1">Download and run directly</span></p><span class="home-download-action"><span data-i18n="dl.action1">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-win.zip"><i class="ph ph-file-zip" aria-hidden="true"></i><h3><span data-i18n="dl.name2">Windows ZIP</span></h3><p><span data-i18n="dl.desc2">Extract to a folder of your choice</span></p><span class="home-download-action"><span data-i18n="dl.action2">Download ZIP</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-android.apk"><i class="ph ph-android-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name3">Android APK</span></h3><p><span data-i18n="dl.desc3">Install on your Android phone</span></p><span class="home-download-action"><span data-i18n="dl.action3">Download APK</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a></div><div class="home-download-bottom"><a href="app.html"><span data-i18n="dl.web">Use the web app</span></a><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1"><span data-i18n="dl.notes">Release notes & checksums</span></a></div><p class="home-download-detail"><span data-i18n="dl.signing">Windows builds are unsigned. Android APK uses a debug signature.</span></p></section>
+</main>
 
     <!-- ============================================================ Footer -->
     <footer class="footer">
@@ -1991,7 +1745,7 @@
                     <ul>
                         <li><a href="#features" data-i18n="nav.features">Features</a></li>
                         <li><a href="#preview" data-i18n="nav.preview">Preview</a></li>
-                        <li><a href="#use-cases" data-i18n="nav.audience">Who it's for</a></li>
+                        <li><a href="#download" data-i18n="dl.nav">Who it's for</a></li>
                     </ul>
                 </nav>
 
@@ -2016,27 +1770,123 @@
 
             <div class="footer-bottom">
                 <p data-i18n="footer.copyright">RestCal © 2026 · Free and open source.</p>
-                <p data-i18n="footer.privacy">Local by default. No analytics. Optional WebDAV sync.</p>
+                <p><span data-i18n="footer.privacy">Local by default. No analytics. Optional WebDAV sync.</span> · <a href="privacy.html" data-i18n="footer.privacyLink">Privacy Policy</a></p>
             </div>
 
             <div class="footer-wordmark" aria-hidden="true">RestCal <span>休历</span></div>
         </div>
     </footer>
 
+    <aside class="cookie-banner" id="cookieBanner" aria-labelledby="cookieTitle" hidden>
+        <span class="cookie-banner-icon" aria-hidden="true"><i class="ph ph-cookie"></i></span>
+        <div class="cookie-banner-copy">
+            <strong id="cookieTitle" data-i18n="cookie.title">Cookies & local storage</strong>
+            <p><span data-i18n="cookie.text">RestCal uses local storage for language preferences and app data. We do not use advertising or analytics cookies.</span> <a href="privacy.html" data-i18n="cookie.link">Learn more</a></p>
+        </div>
+        <button class="btn btn-seal" id="cookieAccept" type="button" data-i18n="cookie.accept">Got it</button>
+    </aside>
+
     <script>
         const translations = {
             en: {
+"hero.tabrecord": "Mark dates",
+"hero.detailstatus": "Mark attendance, leave or overtime",
+"hero.detailrange": "Apply to a date range",
+"hero.detailnote": "Keep a note with the date",
+"hero.tabtickets": "Ticket reminders",
+"hero.detailroundtrip": "Outbound and return sale dates",
+"hero.detailexport": "Export a calendar reminder",
+"hero.email": "Open your email app with the request",
+"hero.tableave": "Leave note",
+"hero.extraform": "Dates, reason and handoff",
+"hero.extraexport": "Preview, save or send by email",
+"hero.tabsettings": "Settings",
+"hero.extraschedule": "Set your own working week",
+"hero.extradefaults": "Pay, leave quotas and templates",
+"hero.quote": "A daily quote, beside your plans",
+"main.title": "From a day off to a clear record.",
+"main.intro": "Start with your calendar. Leave balances, pay and leave requests follow from it.",
+"main.calendar": "Mark dates and keep daily notes",
+"main.calendarText": "Select a date to mark attendance, leave or overtime. Add a reason or note, and use start and end dates to apply a record across a range.",
+"main.salary": "Estimate pay before payday",
+"main.salaryText": "Set salary, fixed deductions and leave deduction rates. Estimate monthly take-home pay and export a payslip image.",
+"main.stats": "Keep track of leave balances",
+"main.statsText": "See used and remaining annual or compensatory leave. Review attendance and overtime with monthly charts and yearly heatmaps.",
+"main.note": "Leave requests, ready for email",
+"main.noteText": "Fill in dates, reason and handoff details. Copy the text, save an image or open your default email app with the request, ready to review and send.",
+"main.ticket": "Plan both legs of your trip",
+"main.ticketText": "Track outbound and return train-ticket sale dates for public holidays. Adjust travel preferences and export calendar reminders; check 12306 for the actual sale time.",
+"main.backup": "Keep a copy of your records",
+"main.backupText": "Records stay on your device by default. Export or import CSV backups, or use WebDAV to back up and restore on another device.",
+"settings.heading": "Settings and integrations, built around real work.",
+"settings.intro": "Every category below is available in RestCal and saved locally as you make changes.",
+"setting.profile": "Profile",
+"setting.profileText": "Save your name, workplace and hire date for records and leave requests.",
+"setting.schedule": "Work schedule",
+"setting.scheduleText": "Set weekly workdays, daily hours, pay calculation method and default rest days.",
+"setting.salary": "Pay & deductions",
+"setting.salaryText": "Configure salary, fixed deductions, tax estimates, payday and leave deduction rates.",
+"setting.quota": "Leave allowance",
+"setting.quotaText": "Set annual and compensatory leave allowances, including their expiration rules.",
+"setting.tickets": "Ticket reminders",
+"setting.ticketsText": "Choose outbound and return plans, ticket sale lead time and reminder time.",
+"setting.leaveDoc": "Leave request template",
+"setting.leaveDocText": "Reuse the applicant, recipient, common reasons and handoff details.",
+"setting.connections": "Accounts & connections",
+"setting.connectionsText": "Connect Google Calendar, choose sync content and save a default recipient email.",
+"setting.data": "Data & sync",
+"setting.dataText": "Import or export CSV, create ICS calendars, and back up or restore with WebDAV.",
+"setting.appearance": "Appearance",
+"setting.appearanceText": "Switch between system, light and dark themes, with Chinese or English.",
+"setting.advanced": "Advanced settings",
+"setting.advancedText": "Run setup again, export personal settings or reset local data when needed.",
+"source.title": "Free, open source and local by default.",
+"source.text": "Use RestCal without an account. Install the web app for offline use, and choose whether to connect calendars or configure backups.",
+"hero.tabcalendar": "Calendar",
+"hero.tabstats": "Statistics",
+"hero.tabtools": "Tools",
+"hero.calloutviews": "Day, week, month & year",
+"hero.calloutpay": "Leave and daily deductions",
+"hero.calloutrecord": "Select a day to add a record",
+"hero.calloutbalance": "See your remaining leave",
+"hero.calloutchart": "Review leave across the year",
+"hero.calloutsalary": "Calculate pay and export payslips",
+"hero.callouthabit": "Keep up with daily habits",
+"hero.calloutconnect": "Calendar export and email",
+"dl.title": "RestCal, on your device.",
+"dl.intro": "Free for Windows and Android. Or start in your browser.",
+"dl.name0": "Windows installer",
+"dl.desc0": "Install with desktop shortcuts",
+"dl.action0": "Download EXE",
+"dl.name1": "Windows portable",
+"dl.desc1": "Download and run directly",
+"dl.action1": "Download EXE",
+"dl.name2": "Windows ZIP",
+"dl.desc2": "Extract to a folder of your choice",
+"dl.action2": "Download ZIP",
+"dl.name3": "Android APK",
+"dl.desc3": "Install on your Android phone",
+"dl.action3": "Download APK",
+"dl.web": "Use the web app",
+"dl.notes": "Release notes & checksums",
+"dl.signing": "Windows builds are unsigned. Android APK uses a debug signature.",
+"dl.nav": "Download",
                 "meta.title": "RestCal — Leave, attendance & holiday planning in one clean calendar",
                 "meta.description": "RestCal is a free, open-source calendar for tracking leave and attendance, planning around statutory holidays and makeup workdays, and estimating salary deductions. No account required; data is stored locally by default with optional WebDAV sync.",
                 "nav.features": "Features",
-                "nav.preview": "Preview",
+                "nav.preview": "Settings & extras",
                 "nav.audience": "Who it's for",
                 "nav.openSource": "Open source",
                 "common.liveDemo": "Live Demo",
                 "common.github": "View on GitHub",
                 "common.issue": "Report an issue",
+                "hero.noteViews": "Day, week, month & year",
+                "hero.notePay": "See leave and daily deductions",
+                "hero.noteRecord": "Select a day to add a record",
+                "hero.shotCaption": "Actual app interface. Preview only; open the calendar to add records.",
                 "hero.product": "RestCal Calendar",
                 "hero.title": "Rest, <em>calculated.</em>",
+                "hero.phrases": [["Rest, ", "calculated."], ["Leave, ", "planned."], ["Workdays, ", "understood."], ["Time off, ", "made clear."]],
                 "hero.subtitle": "See leave, attendance, holidays and pay together in one beautifully simple, private calendar.",
                 "hero.open": "Open RestCal free",
                 "hero.meta": "No account · Local by default · Optional sync",
@@ -2163,20 +2013,112 @@
                 "footer.explore": "Explore", "footer.product": "Product", "footer.community": "Community",
                 "footer.issue": "Report an issue ↗",
                 "footer.copyright": "RestCal © 2026 · Free and open source.",
-                "footer.privacy": "Local by default. No analytics. Optional WebDAV sync."
+                "footer.privacy": "Local by default. No analytics. Optional WebDAV sync.",
+                "footer.privacyLink": "Privacy Policy",
+                "cookie.title": "Cookies & local storage",
+                "cookie.text": "RestCal uses local storage for language preferences and app data. We do not use advertising or analytics cookies.",
+                "cookie.link": "Learn more",
+                "cookie.accept": "Got it"
             },
             zh: {
+"hero.tabrecord": "日期标记",
+"hero.detailstatus": "选择出勤、请假或加班状态",
+"hero.detailrange": "选择起止日期，批量标记",
+"hero.detailnote": "写下当天备注，方便回顾",
+"hero.tabtickets": "购票提醒",
+"hero.detailroundtrip": "去程与返程，分别提醒开售",
+"hero.detailexport": "将购票提醒导出到日历",
+"hero.email": "带上请假条，打开默认邮箱",
+"hero.tableave": "请假条",
+"hero.extraform": "填写日期、理由与交接安排",
+"hero.extraexport": "预览请假条，保存图片或发邮件",
+"hero.tabsettings": "设置",
+"hero.extraschedule": "工作时长与休息日，按实际设置",
+"hero.extradefaults": "薪资、额度和模板，统一管理",
+"hero.quote": "每日格言，给忙碌留一点余白",
+"main.title": "从请假到核算，把重要的事做好。",
+"main.intro": "先记好每一天，再看假期余额、核算工资、生成请假条。",
+"main.calendar": "标记日期，也记下当天备注",
+"main.calendarText": "点击日期标记出勤、请假或加班，填写理由和当天备注；选择起止日期，还能批量应用到一段时间。",
+"main.salary": "工资变化，提前有数",
+"main.salaryText": "设置工资、固定扣除和各类请假扣款比例，估算当月实发，并导出工资条图片。",
+"main.stats": "假期余额与统计，随时掌握",
+"main.statsText": "查看年假、调休的已用和剩余额度，按月、按年回顾出勤与加班，支持图表和全年热力图。",
+"main.note": "请假条，生成后用邮件发送",
+"main.noteText": "填写日期、理由与交接安排，生成正式请假条。可复制文字、保存图片，或带着请假内容打开默认邮箱，确认后发送。",
+"main.ticket": "往返车票，提前安排",
+"main.ticketText": "查看节假日去程、返程车票的开售日与倒计时，按出行习惯调整并导出提醒；实际起售时间以 12306 为准。",
+"main.backup": "记录与设置，一起备份",
+"main.backupText": "数据默认保存在本机。CSV 导入导出或 WebDAV 备份，支持记录和设置一起迁移、恢复。",
+"settings.heading": "设置与扩展，围绕真实工作来配置。",
+"settings.intro": "以下分类均已在休历中提供，修改后会自动保存在本机。",
+"setting.profile": "个人资料",
+"setting.profileText": "保存姓名或昵称、工作单位和入职日期，用于记录与请假条。",
+"setting.schedule": "工作制度",
+"setting.scheduleText": "设置每周工作天数、每日标准工时、工资计算方式和默认休息日。",
+"setting.salary": "薪资与扣款",
+"setting.salaryText": "配置月薪、固定扣除、个税预估、发薪日和各类请假扣款比例。",
+"setting.quota": "假期额度",
+"setting.quotaText": "设置年假与调休额度，并分别选择额度的到期清零规则。",
+"setting.tickets": "购票提醒",
+"setting.ticketsText": "选择去程与返程安排、火车票预售天数和购票提醒时间。",
+"setting.leaveDoc": "请假条模板",
+"setting.leaveDocText": "预设申请人、称呼、常用请假理由和工作交接说明。",
+"setting.connections": "账号与连接",
+"setting.connectionsText": "连接 Google 日历、选择同步内容，并保存默认收件邮箱。",
+"setting.data": "数据与同步",
+"setting.dataText": "导入导出 CSV、生成 ICS 日历，并通过 WebDAV 备份或恢复数据。",
+"setting.appearance": "外观",
+"setting.appearanceText": "切换跟随系统、浅色或深色主题，并选择中文或 English。",
+"setting.advanced": "高级设置",
+"setting.advancedText": "重新运行首次引导、导出个人设置，或按需清除本地数据。",
+"source.title": "免费开源，数据默认留在本机。",
+"source.text": "无需账号即可使用，安装为应用后支持离线记录。日历连接与备份由你按需开启。",
+"hero.tabcalendar": "日历",
+"hero.tabstats": "统计",
+"hero.tabtools": "工具",
+"hero.calloutviews": "日、周、月、年，随时切换",
+"hero.calloutpay": "请假记录与每日扣款",
+"hero.calloutrecord": "点击日期，记录出勤与请假",
+"hero.calloutbalance": "假期还剩多少，一眼看清",
+"hero.calloutchart": "每月请假天数，全年对比",
+"hero.calloutsalary": "核算工资，导出工资条",
+"hero.callouthabit": "日常习惯，轻松打卡",
+"hero.calloutconnect": "日历导出与邮箱联动",
+"dl.title": "选择你的休历版本。",
+"dl.intro": "Windows 和 Android 免费使用，也可以直接打开网页版。",
+"dl.name0": "Windows 安装版",
+"dl.desc0": "安装使用，创建桌面快捷方式",
+"dl.action0": "下载 EXE",
+"dl.name1": "Windows 免安装版",
+"dl.desc1": "下载后直接运行",
+"dl.action1": "下载 EXE",
+"dl.name2": "Windows 解压版",
+"dl.desc2": "解压到文件夹后使用",
+"dl.action2": "下载 ZIP",
+"dl.name3": "Android 版",
+"dl.desc3": "下载 APK 安装到手机",
+"dl.action3": "下载 APK",
+"dl.web": "直接使用网页版",
+"dl.notes": "更新说明与文件校验",
+"dl.signing": "Windows 版本暂未代码签名，Android APK 使用调试签名。",
+"dl.nav": "下载",
                 "meta.title": "休历 RestCal — 请假、出勤、节假日与工资核算日历",
                 "meta.description": "休历是一款免费开源的请假与出勤日历，可结合中国法定节假日和调休安排，自动估算扣薪与到手工资。无需注册，默认本地存储，也可按需启用 WebDAV 同步。",
                 "nav.features": "功能",
-                "nav.preview": "预览",
+                "nav.preview": "设置与扩展",
                 "nav.audience": "适合谁",
                 "nav.openSource": "开源",
                 "common.liveDemo": "立即体验",
                 "common.github": "在 GitHub 查看",
                 "common.issue": "反馈问题",
+                "hero.noteViews": "日、周、月、年，随时切换",
+                "hero.notePay": "请假记录与每日扣款，一眼看清",
+                "hero.noteRecord": "点击日期，记录出勤与请假",
+                "hero.shotCaption": "真实应用界面；此处为截图预览，打开日历即可记录。",
                 "hero.product": "休历 · RestCal",
-                "hero.title": "休息/<em>计算</em>",
+                "hero.title": "把休息，<em>安排明白。</em>",
+                "hero.phrases": [["把休息，", "安排明白。"], ["把假期，", "规划从容。"], ["把出勤，", "记录清楚。"], ["把工资，", "算得明白。"]],
                 "hero.subtitle": "把请假、出勤、节假日和工资核算，清清楚楚放进一个私密日历。",
                 "hero.open": "免费使用休历",
                 "hero.meta": "无需账号 · 默认本地 · 可选同步",
@@ -2304,12 +2246,87 @@
                 "footer.explore": "探索", "footer.product": "产品", "footer.community": "社区",
                 "footer.issue": "反馈问题 ↗",
                 "footer.copyright": "RestCal © 2026 · 免费且开源。",
-                "footer.privacy": "默认本地存储、无分析，可选 WebDAV 同步。"
+                "footer.privacy": "默认本地存储、无分析，可选 WebDAV 同步。",
+                "footer.privacyLink": "隐私政策",
+                "cookie.title": "Cookie 与本地存储",
+                "cookie.text": "休历使用本地存储保存语言偏好和应用数据，不使用广告或分析 Cookie。",
+                "cookie.link": "了解详情",
+                "cookie.accept": "知道了"
             }
         };
 
         const languageToggle = document.getElementById("languageToggle");
         const descriptionMeta = document.querySelector('meta[name="description"]');
+        const heroTypewriter = document.getElementById("heroTypewriter");
+        const heroTitlePrefix = heroTypewriter.querySelector(".hero-title-prefix");
+        const heroTitleTyped = heroTypewriter.querySelector(".hero-title-typed");
+        const cookieBanner = document.getElementById("cookieBanner");
+        const cookieAccept = document.getElementById("cookieAccept");
+        const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        let typewriterTimer;
+        let typewriterRun = 0;
+
+        function startTypewriter(phrases) {
+            clearTimeout(typewriterTimer);
+            const run = ++typewriterRun;
+            let phraseIndex = 0;
+
+            const showWithoutMotion = () => {
+                const [prefix, typed] = phrases[0];
+                heroTitlePrefix.textContent = prefix;
+                heroTitlePrefix.classList.remove("is-changing");
+                heroTitleTyped.textContent = typed;
+                heroTitleTyped.classList.remove("is-typing");
+                heroTypewriter.setAttribute("aria-label", prefix + typed);
+            };
+
+            if (reduceMotion.matches || !phrases.length) {
+                showWithoutMotion();
+                return;
+            }
+
+            heroTitleTyped.classList.add("is-typing");
+
+            const typePhrase = () => {
+                if (run !== typewriterRun) return;
+                const [prefix, typed] = phrases[phraseIndex];
+                const characters = Array.from(typed);
+                let length = 0;
+                heroTitlePrefix.textContent = prefix;
+                if (heroTitlePrefix.classList.contains("is-changing")) {
+                    void heroTitlePrefix.offsetWidth;
+                    heroTitlePrefix.classList.remove("is-changing");
+                }
+                heroTitleTyped.textContent = "";
+                heroTypewriter.setAttribute("aria-label", prefix + typed);
+
+                const typeNext = () => {
+                    if (run !== typewriterRun) return;
+                    heroTitleTyped.textContent = characters.slice(0, ++length).join("");
+                    if (length < characters.length) {
+                        typewriterTimer = setTimeout(typeNext, 92);
+                    } else {
+                        typewriterTimer = setTimeout(deleteNext, 1900);
+                    }
+                };
+
+                const deleteNext = () => {
+                    if (run !== typewriterRun) return;
+                    heroTitleTyped.textContent = characters.slice(0, --length).join("");
+                    if (length > 0) {
+                        typewriterTimer = setTimeout(deleteNext, 48);
+                    } else {
+                        heroTitlePrefix.classList.add("is-changing");
+                        phraseIndex = (phraseIndex + 1) % phrases.length;
+                        typewriterTimer = setTimeout(typePhrase, 240);
+                    }
+                };
+
+                typewriterTimer = setTimeout(typeNext, 180);
+            };
+
+            typePhrase();
+        }
 
         function getSavedLanguage() {
             try { return localStorage.getItem("restcal-language"); } catch { return null; }
@@ -2349,6 +2366,7 @@
             languageToggle.setAttribute("aria-label", switchingToChinese ? "切换到中文" : "Switch to English");
             languageToggle.title = switchingToChinese ? "切换到中文" : "Switch to English";
             languageToggle.dataset.language = activeLanguage;
+            startTypewriter(copy["hero.phrases"]);
             setSavedLanguage(activeLanguage);
         }
 
@@ -2356,79 +2374,16 @@
         applyLanguage(initialLanguage);
         languageToggle.addEventListener("click", () => applyLanguage(languageToggle.dataset.language === "zh" ? "en" : "zh"));
 
-        // Product screenshot carousel
-        const productCarousel = document.querySelector("[data-product-carousel]");
-        if (productCarousel) {
-            const slides = [...productCarousel.querySelectorAll("[data-carousel-slide]")];
-            const dots = [...productCarousel.querySelectorAll("[data-carousel-dot]")];
-            const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-            let activeSlide = 0;
-            let carouselTimer = 0;
-            let touchStartX = 0;
-
-            const showSlide = index => {
-                activeSlide = (index + slides.length) % slides.length;
-                slides.forEach((slide, slideIndex) => {
-                    const isActive = slideIndex === activeSlide;
-                    slide.classList.toggle("is-active", isActive);
-                    slide.setAttribute("aria-hidden", String(!isActive));
-                });
-                dots.forEach((dot, dotIndex) => {
-                    const isActive = dotIndex === activeSlide;
-                    dot.classList.toggle("is-active", isActive);
-                    if (isActive) dot.setAttribute("aria-current", "true");
-                    else dot.removeAttribute("aria-current");
-                });
-            };
-
-            const stopCarousel = () => {
-                clearTimeout(carouselTimer);
-                carouselTimer = 0;
-            };
-
-            const startCarousel = () => {
-                stopCarousel();
-                if (prefersReducedMotion || document.hidden) return;
-                carouselTimer = setTimeout(() => {
-                    showSlide(activeSlide + 1);
-                    startCarousel();
-                }, 5500);
-            };
-
-            const moveCarousel = direction => {
-                showSlide(activeSlide + direction);
-                startCarousel();
-            };
-
-            productCarousel.querySelector("[data-carousel-prev]").addEventListener("click", () => moveCarousel(-1));
-            productCarousel.querySelector("[data-carousel-next]").addEventListener("click", () => moveCarousel(1));
-            dots.forEach(dot => dot.addEventListener("click", () => {
-                showSlide(Number(dot.dataset.carouselDot));
-                startCarousel();
-            }));
-
-            productCarousel.addEventListener("keydown", event => {
-                if (event.key === "ArrowLeft") moveCarousel(-1);
-                if (event.key === "ArrowRight") moveCarousel(1);
-            });
-            productCarousel.addEventListener("mouseenter", stopCarousel);
-            productCarousel.addEventListener("mouseleave", startCarousel);
-            productCarousel.addEventListener("focusin", stopCarousel);
-            productCarousel.addEventListener("focusout", startCarousel);
-            productCarousel.addEventListener("touchstart", event => {
-                touchStartX = event.changedTouches[0].clientX;
-                stopCarousel();
-            }, { passive: true });
-            productCarousel.addEventListener("touchend", event => {
-                const distance = event.changedTouches[0].clientX - touchStartX;
-                if (Math.abs(distance) > 45) showSlide(activeSlide + (distance < 0 ? 1 : -1));
-                startCarousel();
-            }, { passive: true });
-            document.addEventListener("visibilitychange", () => document.hidden ? stopCarousel() : startCarousel());
-
-            showSlide(0);
-            startCarousel();
+        try {
+            cookieBanner.hidden = localStorage.getItem("restcal-cookie-notice") === "acknowledged";
+        } catch {
+            cookieBanner.hidden = false;
         }
+
+        cookieAccept.addEventListener("click", () => {
+            cookieBanner.hidden = true;
+            try { localStorage.setItem("restcal-cookie-notice", "acknowledged"); } catch { /* storage unavailable */ }
+        });
 
         // Sticky nav hairline
         const nav = document.querySelector(".nav");
@@ -2436,16 +2391,45 @@
         addEventListener("scroll", onScroll, { passive: true });
         onScroll();
 
-        // Scroll reveals (skipped when reduced motion is preferred)
+        // Layered scroll reveals, with short per-grid staggering.
+        const setReveal = (element, type = "soft", delay = 0) => {
+            element.dataset.reveal = type;
+            element.style.setProperty("--reveal-delay", `${delay}ms`);
+        };
+
+        document.querySelectorAll(".section-head, .home-download-heading, .home-download-bottom, .home-download-detail")
+            .forEach(element => setReveal(element));
+
+        document.querySelectorAll(".features-grid, .settings-summary, .home-download-grid").forEach(grid => {
+            Array.from(grid.children).forEach((card, index) => setReveal(card, "card", Math.min(index * 70, 350)));
+        });
+
+        document.querySelectorAll(".source-shell, .cta").forEach(element => setReveal(element, "panel"));
+        document.querySelectorAll(".footer-grid > *, .footer-bottom").forEach((element, index) => setReveal(element, "soft", index * 65));
+
+        const revealElements = document.querySelectorAll("[data-reveal]");
         if (matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
             const io = new IntersectionObserver(entries => {
-                for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-            }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-            document.querySelectorAll("[data-reveal]").forEach(el => io.observe(el));
+                for (const entry of entries) {
+                    if (!entry.isIntersecting) continue;
+                    entry.target.classList.add("in");
+                    entry.target.addEventListener("animationend", () => {
+                        entry.target.removeAttribute("data-reveal");
+                        entry.target.classList.remove("in");
+                        entry.target.style.removeProperty("--reveal-delay");
+                    }, { once: true });
+                    io.unobserve(entry.target);
+                }
+            }, { threshold: 0.1, rootMargin: "0px 0px -7% 0px" });
+            revealElements.forEach(element => io.observe(element));
         } else {
-            document.querySelectorAll("[data-reveal]").forEach(el => el.classList.add("in"));
+            revealElements.forEach(element => {
+                element.removeAttribute("data-reveal");
+                element.style.removeProperty("--reveal-delay");
+            });
         }
     </script>
+<script src="assets/js/hero-carousel.js"></script>
 </body>
 
 </html>

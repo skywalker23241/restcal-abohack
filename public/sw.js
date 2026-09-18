@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v2.1.1";
+const CACHE_VERSION = "v2.1.1-hero-records";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";
@@ -8,6 +8,9 @@ const CALENDAR_CACHE = "xiuli-calendar-data-v1";
 const PRECACHE = [
     "./",
     "index.html",
+    "assets/js/hero-carousel.js",
+    "assets/css/hero-annotations.css",
+    "assets/vendor/neat-annotations/neat-annotations.css",
     "app.html",
     "assets/js/app-i18n-v1.4.9.js",
     "assets/js/calendar-years.js",

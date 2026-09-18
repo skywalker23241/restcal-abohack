@@ -11,6 +11,7 @@
         "serve": "node server.js",
         "build:calendar": "node scripts/build-calendar-bundle.js",
         "screenshots": "node scripts/readme-screenshots.cjs",
+        "screenshots:hero": "node scripts/hero-screenshots.cjs",
         "verify:structure": "node scripts/verify-structure.js",
         "verify:server": "node scripts/verify-server.js",
         "verify:mobile": "electron scripts/verify-mobile.js",

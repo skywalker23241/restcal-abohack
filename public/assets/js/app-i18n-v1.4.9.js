@@ -67,7 +67,7 @@
         "暂无记录": "No records yet", "暂无数据": "No data", "暂无安排": "None scheduled", "暂无": "None", "未设置": "Not set", "待设置": "Set up first", "未填写": "Not provided", "未标记": "Not marked",
         "核心状态": "Key status", "筛选": "Filter", "今日状态": "Today", "本月请假": "Leave this month", "本月出勤": "Attendance", "扣薪 / 实收": "Deduction / net", "已标记 / 应出勤": "Marked / expected", "按当前工资设置估算": "Estimated from current pay settings", "设置月薪后自动估算": "Set a monthly salary to estimate",
         "本月暂无请假": "No leave this month", "最近提醒": "Next reminder", "已开售": "On sale", "已开始": "Started",
-        "应出勤": "Expected", "已出勤": "Attended", "总请假": "Total leave", "事假": "Personal leave", "病假": "Sick leave", "年假": "Annual leave", "调休": "Comp leave", "周末": "Weekend", "节假日": "Holiday", "工作日": "Workday", "出勤": "Present", "调休上班": "Make-up workday", "班": "Makeup",
+        "应出勤": "Expected", "已出勤": "Attended", "总请假": "Total leave", "事假": "Personal leave", "病假": "Sick leave", "年假": "Annual leave", "调休": "Comp leave", "加班小时": "Overtime hours", "周末": "Weekend", "节假日": "Holiday", "工作日": "Workday", "出勤": "Present", "调休上班": "Make-up workday", "班": "Makeup",
         "设置": "Settings", "工资、假期额度和请假条默认内容会自动保存在本机浏览器。": "Pay, leave allowance and leave-note defaults are saved in this browser.",
         "个人与工作制度": "Profile and work schedule", "工资与扣款": "Pay and deductions", "假期额度": "Leave allowance", "请假条默认值": "Leave note defaults", "数据管理": "Data management", "WebDav 云备份": "WebDAV cloud backup",
         "姓名或昵称": "Name or nickname", "工作单位": "Company", "入职日期": "Start date", "每周工作天数": "Workdays per week", "每日标准工作时长": "Standard hours per day", "每日标准工作时长（小时）": "Standard hours per day", "小时": "hours", "工资计算方式": "Pay calculation", "默认休息日": "Default rest days",
@@ -315,6 +315,8 @@
             const lunarDays = ["初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"];
             const lunar = trimmed.match(/^(闰)?(正月|一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|冬月|十一月|腊月|十二月)(初一|初二|初三|初四|初五|初六|初七|初八|初九|初十|十一|十二|十三|十四|十五|十六|十七|十八|十九|二十|廿一|廿二|廿三|廿四|廿五|廿六|廿七|廿八|廿九|三十)$/);
             if (lunar) translated = `Lunar ${lunar[1] ? "leap " : ""}${lunarMonths[lunar[2]]}/${lunarDays.indexOf(lunar[3]) + 1}`;
+            const datedLunar = trimmed.match(/^(\d{4}-\d{2}-\d{2}) · ((?:闰)?(?:正月|一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|冬月|十一月|腊月|十二月)(?:初一|初二|初三|初四|初五|初六|初七|初八|初九|初十|十一|十二|十三|十四|十五|十六|十七|十八|十九|二十|廿一|廿二|廿三|廿四|廿五|廿六|廿七|廿八|廿九|三十))$/);
+            if (datedLunar) translated = `${datedLunar[1]} · ${translateCore(datedLunar[2])}`;
         }
         if (!translated) {
             const allowance = trimmed.match(/^(年假|调休)额度未设置$/);
@@ -335,8 +337,8 @@
             if (roundTripGuide) translated = `Outbound: ${roundTripGuide[1] === "假期前一天晚上" ? "the evening before the holiday" : "the first holiday day"}; return: ${roundTripGuide[2] === "假期结束后一天" ? "one day after the holiday" : "the last holiday day"}. Sales open ${roundTripGuide[3]} days ahead with a ${roundTripGuide[4]} reminder. Check 12306 for the actual sale time.`;
             const weekdayToday = trimmed.match(/^(周[一二三四五六日]) · 今天$/);
             if (weekdayToday && EN[weekdayToday[1]]) translated = `${EN[weekdayToday[1]]} · Today`;
-            const ticketSaleWeekday = trimmed.match(/^(周[一二三四五六日]) · 开售$/);
-            if (ticketSaleWeekday && EN[ticketSaleWeekday[1]]) translated = `${EN[ticketSaleWeekday[1]]} · On sale`;
+            const ticketSaleWeekday = trimmed.match(/^(周[一二三四五六日]|Sun|Mon|Tue|Wed|Thu|Fri|Sat) · 开售$/);
+            if (ticketSaleWeekday) translated = `${EN[ticketSaleWeekday[1]] || ticketSaleWeekday[1]} · On sale`;
         }
         if (!translated) {
             const greeting = trimmed.match(/^(夜深了|早上好|上午好|下午好|晚上好)，(.+)$/);
@@ -381,7 +383,7 @@
                 [/^上传成功：已备份 (\d+) 条记录和全部用户设置（(.+)）。$/, "Upload successful: $1 records and all user settings backed up ($2)."],
                 [/^恢复成功：新增 (\d+) 条，更新 (\d+) 条，用户设置已恢复。$/, "Restore successful: $1 added, $2 updated, and user settings restored."],
                 [/^例如[：:]?\s*(.+)$/, "e.g. $1"],
-                [/^(\d{4}) 年$/, "$1"],
+                [/^(\d{4})\s*年$/, "$1"],
                 [/^(\d{1,2}) 月$/, "$1"],
                 [/^(\d{1,2})月$/, "$1"],
                 [/^(\d+(?:\.\d+)?) 天$/, "$1 days"],
