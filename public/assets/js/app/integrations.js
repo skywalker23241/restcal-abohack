@@ -28,35 +28,28 @@ function saveIntegrationPreferences() {
 }
 
 async function refreshGoogleConnection() {
-    if (!window.xiuliGoogleCalendar) {
-        googleConnection = {connected: false, unavailable: true};
-        renderGoogleConnection();
-        return;
-    }
-    try {
-        googleConnection = await window.xiuliGoogleCalendar.status();
-    } catch (error) {
-        googleConnection = {connected: false, error: error.message};
-    }
+    const nativeApp = Boolean(window.xiuliGoogleCalendar)
+        || document.documentElement.classList.contains("android-shell");
+    googleConnection = {connected: false, unavailable: true, development: nativeApp};
     renderGoogleConnection();
 }
 
 function renderGoogleConnection() {
-    const connected = Boolean(googleConnection.connected);
-    els.googleCalendarBadge.textContent = connected ? "已连接" : googleConnection.unavailable ? "桌面版可用" : "未连接";
-    els.googleCalendarBadge.classList.toggle("connected", connected);
-    els.googleCalendarOptions.hidden = !connected;
-    els.googleCalendarConnect.hidden = connected;
-    els.googleCalendarSync.hidden = !connected;
-    els.googleCalendarDisconnect.hidden = !connected;
-    if (connected) {
-        const last = googleConnection.lastSyncedAt ? ` · 上次同步 ${formatSyncTime(googleConnection.lastSyncedAt)}` : "";
-        els.googleCalendarMeta.textContent = `${googleConnection.email || "Google 账号"}${last}`;
-    } else {
-        els.googleCalendarMeta.textContent = googleConnection.unavailable
-            ? "自动同步目前支持休历桌面版；仍可使用下方日历文件导出"
-            : "单向同步到专属的「休历」日历，不改动其他日程";
-    }
+    const development = Boolean(googleConnection.development);
+    const card = els.googleCalendarConnect.closest(".connection-card");
+    card.classList.toggle("is-web-disabled", !development);
+    card.classList.toggle("is-coming-soon", development);
+    els.googleCalendarBadge.textContent = development ? "开发中" : "暂不可用";
+    els.googleCalendarBadge.classList.remove("connected");
+    els.googleCalendarMeta.textContent = development
+        ? "这项功能还在开发中，敬请期待。"
+        : "网页版暂不支持连接 Google 日历；仍可使用下方的日历文件导出。";
+    els.googleCalendarOptions.hidden = true;
+    els.googleCalendarConnect.hidden = false;
+    els.googleCalendarConnect.disabled = true;
+    els.googleCalendarConnect.textContent = development ? "开发中" : "连接 Google";
+    els.googleCalendarSync.hidden = true;
+    els.googleCalendarDisconnect.hidden = true;
 }
 
 function formatSyncTime(value) {
@@ -66,13 +59,10 @@ function formatSyncTime(value) {
 }
 
 function openGoogleConfig() {
-    if (!window.xiuliGoogleCalendar) {
-        showToast("Google 自动同步目前支持休历桌面版", "error", {duration: 5000});
-        return;
-    }
-    els.googleConfigStatus.textContent = "";
-    openBackdrop(els.googleConfigModal);
-    els.googleClientId.focus({preventScroll: true});
+    const message = window.xiuliGoogleCalendar || document.documentElement.classList.contains("android-shell")
+        ? "这项功能还在开发中，敬请期待。"
+        : "网页版暂不支持连接 Google 日历。";
+    showToast(message, "error", {duration: 5000});
 }
 
 function closeGoogleConfig() {

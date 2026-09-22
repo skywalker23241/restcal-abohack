@@ -181,21 +181,22 @@ function bindEvents() {
     els.ticketReminders.addEventListener("click", async event => {
         const button = event.target.closest("[data-ticket-export]");
         if (!button || !window.XiuliIcs) return;
-        const item = getTicketReminders(currentYear).find(item => `${item.tripType}:${toISO(item.departure)}` === button.dataset.ticketExport);
-        if (!item) return;
+        const exportKeys = new Set(button.dataset.ticketExport.split(","));
+        const items = getTicketReminders(currentYear).filter(item => exportKeys.has(`${item.tripType}:${toISO(item.departure)}`));
+        if (!items.length) return;
         const content = XiuliIcs.generateIcs({
-            ticketReminders: [item],
+            ticketReminders: items,
             ticketReminderTime: state.ticketPreferences.reminderTime,
             ticketAdvanceDays: state.ticketPreferences.advanceDays,
             eventUrlFor: ({date}) => restcalDateLink(date)
         });
-        const filename = `RestCal-${toISO(item.departure)}-${item.tripLabel}购票提醒.ics`;
+        const filename = `RestCal-${toISO(items[0].holidayStart)}-${items[0].name}往返购票提醒.ics`;
         button.disabled = true;
         try {
             const nativeCalendar = window.Capacitor?.Plugins?.Calendar;
             if (nativeCalendar?.addEvent) {
-                await nativeCalendar.addEvent(ticketCalendarEvent(item));
-                showToast("已打开系统日历，请确认保存");
+                for (const item of items) await nativeCalendar.addEvent(ticketCalendarEvent(item));
+                showToast(`已添加 ${items.length} 个购票提醒`);
                 return;
             }
             if (window.xiuliCalendar?.addEvent) {

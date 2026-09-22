@@ -577,8 +577,18 @@ function renderTicketReminders() {
                 : `${nextReminder.name}${nextReminder.tripLabel}火车票已开售，计划出行 ${formatMonthDay(nextReminder.departure)}`;
     }
 
-    const upcoming = reminders.filter(item => diffDays(reference, item.departure) >= 0);
-    const past = reminders.filter(item => diffDays(reference, item.departure) < 0);
+    const tripsByHoliday = new Map();
+    reminders.forEach(item => {
+        const key = `${item.name}:${toISO(item.holidayStart)}:${toISO(item.holidayEnd)}`;
+        if (!tripsByHoliday.has(key)) tripsByHoliday.set(key, {key, name: item.name, items: []});
+        tripsByHoliday.get(key).items.push(item);
+    });
+    const trips = Array.from(tripsByHoliday.values()).map(trip => ({
+        ...trip,
+        items: trip.items.sort((a, b) => a.departure - b.departure || (a.tripType === "outbound" ? -1 : 1))
+    }));
+    const upcoming = trips.filter(trip => trip.items.some(item => diffDays(reference, item.departure) >= 0));
+    const past = trips.filter(trip => trip.items.every(item => diffDays(reference, item.departure) < 0));
     const holidayIcon = name => {
         if (name.includes("元旦")) return "confetti";
         if (name.includes("春节")) return "gift";
@@ -599,19 +609,27 @@ function renderTicketReminders() {
         if (name.includes("国庆")) return '<img src="assets/images/holiday/national-day.png" alt="" loading="lazy" decoding="async">';
         return "";
     };
-    const card = (item, archived = false) => {
-        const days = diffDays(reference, item.saleDate);
-        const status = archived ? "出发日已过" : days > 0 ? `${days}天后开售` : days === 0 ? "今天开售" : "已到开售日";
-        const statusClass = archived ? "is-muted" : days > 0 ? "is-soon" : "is-open";
-        const imageMarkup = holidayImage(item.name);
-        return `<article class="travel-ticket ${archived ? "is-past" : ""}">
-            <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<i class="ph ph-${holidayIcon(item.name)} icon"></i>`}</span>
+    const tripLeg = item => item ? `<section class="ticket-trip-leg">
+            <div class="ticket-trip-label"><i class="ph ph-${item.tripType === "return" ? "airplane-landing" : "airplane-takeoff"} icon" aria-hidden="true"></i><span>${item.tripLabel}</span></div>
+            <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
+            <div class="ticket-departure"><span>出行日期</span><time datetime="${toISO(item.departure)}">${formatMonthDay(item.departure)}</time><small>${weekdayName(item.departure)}</small></div>
+        </section>` : "";
+    const card = (trip, archived = false) => {
+        const outbound = trip.items.find(item => item.tripType === "outbound");
+        const returning = trip.items.find(item => item.tripType === "return");
+        const imageMarkup = holidayImage(trip.name);
+        const exportKey = trip.items.map(item => `${item.tripType}:${toISO(item.departure)}`).join(",");
+        return `<article class="travel-ticket ${archived ? "is-past no-action" : ""}">
+            <span class="holiday-art ${imageMarkup ? "has-image" : ""}" aria-hidden="true">${imageMarkup || `<i class="ph ph-${holidayIcon(trip.name)} icon"></i>`}</span>
             <div class="travel-ticket-main">
-                <div class="travel-ticket-head"><h3>${escapeHtml(item.name)} · ${item.tripLabel}</h3><span class="ticket-status ${statusClass}">${status}</span></div>
-                <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
-                <div class="ticket-departure"><span>出行日期</span><time datetime="${toISO(item.departure)}">${formatMonthDay(item.departure)}</time><small>${weekdayName(item.departure)}</small></div>
+                <div class="travel-ticket-head"><h3>${escapeHtml(trip.name)}</h3><span class="ticket-status ${archived ? "is-muted" : "is-round-trip"}">${archived ? "已结束" : "往返提醒"}</span></div>
+                <div class="ticket-trip-grid">
+                    ${tripLeg(outbound)}
+                    ${outbound && returning ? `<span class="ticket-trip-connector" aria-hidden="true"><i class="ph ph-train icon"></i></span>` : ""}
+                    ${tripLeg(returning)}
+                </div>
             </div>
-            ${archived ? "" : `<button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${item.tripType}:${toISO(item.departure)}">导出提醒</button>`}
+            ${archived ? "" : `<div class="ticket-card-actions"><button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${exportKey}">导出提醒</button></div>`}
         </article>`;
     };
     els.ticketReminders.innerHTML = `

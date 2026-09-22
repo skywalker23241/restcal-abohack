@@ -229,15 +229,15 @@
                 </div>
             </div>
             <div class="ticket-dialog-body">
-                    <div class="reminder-list" id="ticketReminders"></div>
-                    <aside class="ticket-guide">
-                        <p id="ticketGuideText">提醒默认 09:00，实际起售时间以 12306 为准。</p>
-                        <div class="ticket-links">
-                            <a class="btn" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">查询起售时间</a>
-                            <a class="btn primary" href="https://www.12306.cn/" target="_blank" rel="noopener noreferrer">前往 12306</a>
-                        </div>
-                    </aside>
+                <div class="reminder-list" id="ticketReminders"></div>
             </div>
+            <aside class="ticket-guide">
+                <p id="ticketGuideText">提醒默认 09:00，实际起售时间以 12306 为准。</p>
+                <div class="ticket-links">
+                    <a class="btn" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">查询起售时间</a>
+                    <a class="btn primary" href="https://www.12306.cn/" target="_blank" rel="noopener noreferrer">前往 12306</a>
+                </div>
+            </aside>
         </div>
     </div>
 
@@ -406,6 +406,7 @@
                     <section class="settings-panel" data-settings-panel="profile" hidden>
                         <header class="settings-panel-head">
                             <h3>个人资料</h3>
+                            <p>用于请假条署名和个性化显示，全部选填。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field"><label for="profileNameInput">姓名或昵称</label><input id="profileNameInput" autocomplete="name" placeholder="例如：小明"></div>
@@ -416,6 +417,7 @@
                     <section class="settings-panel" data-settings-panel="schedule" hidden>
                         <header class="settings-panel-head">
                             <h3>工作制度</h3>
+                            <p>决定日历中的应出勤天数和日薪折算。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field"><label for="workdaysInput">每周工作天数</label><input id="workdaysInput" inputmode="numeric" type="number" min="1" max="7" step="1" placeholder="5"></div>
@@ -427,6 +429,7 @@
                     <section class="settings-panel" data-settings-panel="salary" hidden>
                         <header class="settings-panel-head">
                             <h3>薪资与扣款</h3>
+                            <p>用于估算请假扣款和实发工资，数据仅保存在本机。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -471,6 +474,7 @@
                     <section class="settings-panel" data-settings-panel="quota" hidden>
                         <header class="settings-panel-head">
                             <h3>假期额度</h3>
+                            <p>设置每年可用的年假和调休天数，自动统计已用与剩余。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -531,6 +535,7 @@
                     <section class="settings-panel" data-settings-panel="leave-doc" hidden>
                         <header class="settings-panel-head">
                             <h3>请假条模板</h3>
+                            <p>生成请假条时的默认署名、称呼和理由。</p>
                         </header>
                         <div class="settings-grid">
                             <div class="field">
@@ -558,34 +563,8 @@
                     <section class="settings-panel" data-settings-panel="connections" hidden>
                         <header class="settings-panel-head">
                             <h3>账号与连接</h3>
-                            <p>把休历中的重要安排带到你日常使用的日历和邮箱。</p>
+                            <p>设置生成请假条时使用的默认收件邮箱。</p>
                         </header>
-                        <div class="connection-card" id="googleCalendarCard">
-                            <div class="connection-card-main">
-                                <span class="connection-provider-icon google" aria-hidden="true">G</span>
-                                <div class="connection-copy">
-                                    <strong>Google 日历</strong>
-                                    <span id="googleCalendarMeta">单向同步到专属的「休历」日历，不改动其他日程</span>
-                                </div>
-                                <span class="connection-status" id="googleCalendarBadge">未连接</span>
-                            </div>
-                            <div class="connection-options" id="googleCalendarOptions" hidden>
-                                <label class="connection-toggle"><input id="googleCalendarAutoSync" type="checkbox" checked><span>记录变化后自动同步</span></label>
-                                <div class="ics-options" aria-label="Google 日历同步内容">
-                                    <label><input type="checkbox" data-google-category="leave" checked> 请假与调休</label>
-                                    <label><input type="checkbox" data-google-category="overtime" checked> 加班</label>
-                                    <label><input type="checkbox" data-google-category="work"> 普通出勤</label>
-                                    <label><input type="checkbox" data-google-category="notes" checked> 备注</label>
-                                </div>
-                            </div>
-                            <div class="connection-actions">
-                                <button class="btn primary" id="googleCalendarConnect" type="button">连接 Google</button>
-                                <button class="btn" id="googleCalendarSync" type="button" hidden>立即同步</button>
-                                <button class="btn ghost" id="googleCalendarDisconnect" type="button" hidden>断开</button>
-                                <button class="btn ghost" id="openIcsExport" type="button">导出日历文件</button>
-                            </div>
-                            <p class="notice connection-feedback" id="googleCalendarFeedback" aria-live="polite"></p>
-                        </div>
                         <div class="connection-card">
                             <div class="connection-card-main">
                                 <span class="connection-provider-icon mail" aria-hidden="true"><i class="ph ph-envelope-simple icon"></i></span>
@@ -600,11 +579,11 @@
                                 <input id="defaultRecipientEmail" type="email" autocomplete="email" placeholder="例如：manager@example.com">
                             </div>
                         </div>
-                        <p class="privacy-note"><i class="ph ph-shield-check icon" aria-hidden="true"></i><span>休历只能管理由自己创建的日历事项，不读取其他 Google 日程。授权信息加密保存在本机。</span></p>
                     </section>
                     <section class="settings-panel" data-settings-panel="data" hidden>
                         <header class="settings-panel-head">
                             <h3>数据与同步</h3>
+                            <p>所有数据保存在本机浏览器，可通过 CSV 或 WebDAV 备份。</p>
                         </header>
                         <div class="settings-card">
                             <div class="settings-card-head">
@@ -619,6 +598,33 @@
                             </div>
                             <p class="notice" id="csvNotice" aria-live="polite"></p>
                         </div>
+                        <div class="connection-card is-web-disabled" id="googleCalendarCard">
+                            <div class="connection-card-main">
+                                <span class="connection-provider-icon google" aria-hidden="true">G</span>
+                                <div class="connection-copy">
+                                    <strong>Google 日历</strong>
+                                    <span id="googleCalendarMeta">网页版暂不支持连接 Google 日历；仍可使用下方的日历文件导出。</span>
+                                </div>
+                                <span class="connection-status" id="googleCalendarBadge">暂不可用</span>
+                            </div>
+                            <div class="connection-options" id="googleCalendarOptions" hidden>
+                                <label class="connection-toggle"><input id="googleCalendarAutoSync" type="checkbox" checked><span>记录变化后自动同步</span></label>
+                                <div class="ics-options" aria-label="Google 日历同步内容">
+                                    <label><input type="checkbox" data-google-category="leave" checked> 请假与调休</label>
+                                    <label><input type="checkbox" data-google-category="overtime" checked> 加班</label>
+                                    <label><input type="checkbox" data-google-category="work"> 普通出勤</label>
+                                    <label><input type="checkbox" data-google-category="notes" checked> 备注</label>
+                                </div>
+                            </div>
+                            <div class="connection-actions">
+                                <button class="btn" id="googleCalendarConnect" type="button" disabled>连接 Google</button>
+                                <button class="btn" id="googleCalendarSync" type="button" hidden>立即同步</button>
+                                <button class="btn ghost" id="googleCalendarDisconnect" type="button" hidden>断开</button>
+                                <button class="btn ghost" id="openIcsExport" type="button">导出日历文件</button>
+                            </div>
+                            <p class="notice connection-feedback" id="googleCalendarFeedback" aria-live="polite"></p>
+                        </div>
+                        <p class="privacy-note"><i class="ph ph-shield-check icon" aria-hidden="true"></i><span>功能开放前，休历不会请求 Google 授权，也不会向 Google 发送数据。</span></p>
                         <div class="settings-card" id="icsCard">
                             <div class="settings-card-head">
                                 <strong>日历文件导出 (.ics)</strong>
@@ -656,6 +662,7 @@
                     <section class="settings-panel" data-settings-panel="appearance" hidden>
                         <header class="settings-panel-head">
                             <h3>外观</h3>
+                            <p>主题与语言偏好保存在本机。</p>
                         </header>
                         <div class="appearance-row">
                             <div class="appearance-label">
@@ -680,6 +687,7 @@
                     <section class="settings-panel" data-settings-panel="advanced" hidden>
                         <header class="settings-panel-head">
                             <h3>高级设置</h3>
+                            <p>引导、设置导出和数据清理。</p>
                         </header>
                         <div class="csv-actions">
                             <button class="btn" id="rerunOnboarding" type="button">重新运行首次引导</button>
@@ -707,7 +715,7 @@
             </div>
             <footer class="settings-foot">
                 <span class="settings-foot-note">更改会自动保存在本机浏览器</span>
-                <button class="btn primary icon-only" id="settingsDone" type="button" title="完成" aria-label="完成"><i class="ph ph-check icon" aria-hidden="true"></i></button>
+                <button class="btn primary settings-done" id="settingsDone" type="button"><i class="ph ph-check icon" aria-hidden="true"></i><span>完成</span></button>
             </footer>
         </div>
     </div>
