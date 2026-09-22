@@ -1,7 +1,7 @@
 {
     "name": "xiuli",
     "productName": "休历",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "description": "休历 - 管理请假、出勤、工资扣除和节假日火车票购票提醒的本地日历工具",
     "license": "MIT",
     "author": "skywalker23241",
@@ -14,11 +14,15 @@
         "screenshots:hero": "node scripts/hero-screenshots.cjs",
         "verify:structure": "node scripts/verify-structure.js",
         "verify:server": "node scripts/verify-server.js",
+        "verify:cache-version": "node scripts/verify-cache-version.js",
+        "verify:calendar-data": "node scripts/verify-calendar-data.js",
         "verify:mobile": "electron scripts/verify-mobile.js",
         "verify:overview": "electron scripts/verify-overview-modules.js",
         "verify:calendar": "electron scripts/verify-calendar-integration.js",
         "verify:integrations": "electron scripts/verify-integrations.js",
-        "test": "node scripts/test-ics.js",
+        "verify:i18n": "electron scripts/verify-i18n.js",
+        "test": "node scripts/test-ics.js && node scripts/test-payroll.js && node scripts/test-google-sync.js && node scripts/test-webdav-policy.js",
+        "verify": "npm run verify:structure && npm run verify:calendar-data && npm run verify:server && npm test && npm run verify:cache-version",
         "build:android": "node scripts/build-android-web.cjs && cap sync android && cd android && gradlew.bat assembleDebug",
         "dist": "electron-builder --win"
     },
@@ -37,6 +41,7 @@
         "files": [
             "desktop/**",
             "public/**",
+            "shared/**",
             "LICENSE"
         ],
         "protocols": [

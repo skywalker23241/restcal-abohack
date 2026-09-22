@@ -8,14 +8,15 @@ const auditUserData = path.join(os.tmpdir(), `restcal-calendar-audit-${process.p
 fs.mkdirSync(auditUserData, {recursive: true});
 app.setPath("userData", auditUserData);
 
+const {startDevServer} = require("./lib/dev-server.js");
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function run() {
-    require("../server.js");
-    await wait(400);
+    const {origin} = await startDevServer();
     const win = new BrowserWindow({show: false, useContentSize: true, webPreferences: {contextIsolation: true}});
     win.setContentSize(360, 780);
-    await win.loadURL(`http://127.0.0.1:8765/app?date=2026-09-10&audit=${Date.now()}`);
+    await win.loadURL(`${origin}/app?date=2026-09-10&audit=${Date.now()}`);
     await wait(1200);
 
     const audit = await win.webContents.executeJavaScript(`

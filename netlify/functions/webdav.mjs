@@ -1,35 +1,18 @@
 /* Netlify WebDAV 同源转发函数。
  * 浏览器只访问本站 /__webdav，由服务端连接不支持 CORS 的 WebDAV 服务。
+ * 这个入口公网可达，所以用 publicPolicy()：除了三端共用的基线校验，还额外
+ * 要求 HTTPS 并只放行 WEBDAV_ALLOWED_HOSTS 里的主机。规则本体见 shared/webdav-policy.js。
  */
 
-const DEFAULT_ALLOWED_HOSTS = ["dav.jianguoyun.com"];
-const ALLOWED_METHODS = new Set(["GET", "PUT", "PROPFIND", "MKCOL"]);
-const ALLOWED_HEADERS = new Set(["authorization", "cache-control", "content-type", "depth"]);
+import {ALLOWED_HOSTS_ENV, normalizeRequest, publicPolicy} from "../../shared/webdav-policy.js";
+
+const REQUEST_TIMEOUT_MS = 20_000;
 
 function json(status, data) {
     return Response.json(data, {
         status,
         headers: {"Cache-Control": "no-store"}
     });
-}
-
-function allowedHosts() {
-    const configured = Netlify.env.get("WEBDAV_ALLOWED_HOSTS") || "";
-    const hosts = configured
-        .split(",")
-        .map(host => host.trim().toLowerCase())
-        .filter(Boolean);
-    return new Set(hosts.length ? hosts : DEFAULT_ALLOWED_HOSTS);
-}
-
-function forwardedHeaders(input) {
-    const result = new Headers();
-    for (const [name, value] of Object.entries(input || {})) {
-        if (ALLOWED_HEADERS.has(name.toLowerCase()) && typeof value === "string") {
-            result.set(name, value);
-        }
-    }
-    return result;
 }
 
 export default async function webdav(request) {
@@ -43,30 +26,20 @@ export default async function webdav(request) {
         return json(400, {error: "请求格式错误"});
     }
 
-    const method = String(options.method || "GET").toUpperCase();
-    if (!ALLOWED_METHODS.has(method)) return json(400, {error: `不支持 WebDAV 操作 ${method}`});
-
-    let target;
+    let normalized;
     try {
-        target = new URL(options.url);
-    } catch {
-        return json(400, {error: "WebDAV 地址无效"});
-    }
-    if (target.protocol !== "https:") return json(400, {error: "WebDAV 地址必须使用 HTTPS"});
-    if (target.username || target.password) return json(400, {error: "请不要在 WebDAV 地址中包含用户名或密码"});
-    if (!allowedHosts().has(target.hostname.toLowerCase())) {
-        return json(400, {
-            error: `服务器 ${target.hostname} 未加入允许列表，请在 Netlify 环境变量 WEBDAV_ALLOWED_HOSTS 中添加`
-        });
+        normalized = normalizeRequest(options, publicPolicy(Netlify.env.get(ALLOWED_HOSTS_ENV)));
+    } catch (error) {
+        return json(400, {error: error.message});
     }
 
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 20000);
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
-        const upstream = await fetch(target, {
-            method,
-            headers: forwardedHeaders(options.headers),
-            body: options.body == null ? undefined : String(options.body),
+        const upstream = await fetch(normalized.url, {
+            method: normalized.method,
+            headers: normalized.headers,
+            body: normalized.body,
             redirect: "follow",
             signal: controller.signal
         });

@@ -10,6 +10,8 @@ fs.mkdirSync(auditUserData, {recursive: true});
 fs.mkdirSync(shotsDir, {recursive: true});
 app.setPath("userData", auditUserData);
 
+const {startDevServer} = require("./lib/dev-server.js");
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function capture(win, name) {
@@ -26,8 +28,7 @@ async function capture(win, name) {
 }
 
 async function run() {
-    require("../server.js");
-    await wait(400);
+    const {origin} = await startDevServer();
     const win = new BrowserWindow({
         show: false,
         useContentSize: true,
@@ -35,7 +36,7 @@ async function run() {
     });
 
     win.setContentSize(1440, 900);
-    await win.loadURL(`http://127.0.0.1:8765/app.html?overview-audit=${Date.now()}`);
+    await win.loadURL(`${origin}/app.html?overview-audit=${Date.now()}`);
     await wait(1000);
     const desktopAudit = await win.webContents.executeJavaScript(`
         (async () => {

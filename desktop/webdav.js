@@ -1,39 +1,16 @@
-const {net} = require("electron");
+/* 桌面版的 WebDAV 转发：渲染进程走 IPC 把请求交给主进程，由 Electron 的 net 模块
+ * 发出（不受渲染进程的 CORS 限制，也支持 PROPFIND、MKCOL 这类 WebDAV 方法）。
+ * 请求校验走与网页版、server.js 共用的基线策略；这条链路只在用户自己机器上，
+ * 所以用 LOOPBACK_POLICY 保留任意主机与明文 HTTP，自建 Nextcloud、群晖才能连。
+ */
 
-const ALLOWED_METHODS = new Set(["GET", "PUT", "PROPFIND", "MKCOL"]);
+const {net} = require("electron");
+const {LOOPBACK_POLICY, normalizeRequest: normalize} = require("../shared/webdav-policy.js");
+
 const REQUEST_TIMEOUT_MS = 25_000;
 
-function normalizeRequest({method, url, headers, body} = {}) {
-    const normalizedMethod = String(method || "GET").toUpperCase();
-    if (!ALLOWED_METHODS.has(normalizedMethod)) {
-        throw new Error(`不支持 WebDAV 操作 ${normalizedMethod}`);
-    }
-
-    let target;
-    try {
-        target = new URL(String(url || ""));
-    } catch {
-        throw new Error("WebDAV 地址无效");
-    }
-    if (target.protocol !== "https:" && target.protocol !== "http:") {
-        throw new Error("WebDAV 地址必须以 http:// 或 https:// 开头");
-    }
-    if (target.username || target.password) {
-        throw new Error("请不要在 WebDAV 地址中包含用户名或密码");
-    }
-
-    const normalizedHeaders = {};
-    for (const [name, value] of Object.entries(headers || {})) {
-        if (value == null || /^content-length$/i.test(name)) continue;
-        normalizedHeaders[String(name)] = String(value);
-    }
-
-    return {
-        method: normalizedMethod,
-        url: target.toString(),
-        headers: normalizedHeaders,
-        body: body == null ? undefined : String(body)
-    };
+function normalizeRequest(options = {}) {
+    return normalize(options, LOOPBACK_POLICY);
 }
 
 async function request(options = {}) {

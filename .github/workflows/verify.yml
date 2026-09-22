@@ -1,0 +1,73 @@
+# 休历的持续检查。
+#
+# 这里只跑不需要 Electron、不需要装依赖的脚本：仓库没有 node_modules 也能
+# 在干净检出上直接执行，所以 CI 秒级完成。需要 Electron 或图形界面的
+# verify:mobile / verify:overview / verify:calendar / verify:integrations
+# 仍然在本地发布前手动跑，见 CONTRIBUTING.md。
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # verify-cache-version.js 需要基点提交来做对比。
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 结构、资源引用与无障碍约定
+        run: node scripts/verify-structure.js
+
+      - name: 内置备用节假日数据与打包数据一致
+        run: node scripts/verify-calendar-data.js
+
+      - name: 本地静态服务与路由
+        run: node scripts/verify-server.js
+
+      - name: iCalendar 导出
+        run: node scripts/test-ics.js
+
+      - name: 工资与个税核算
+        run: node scripts/test-payroll.js
+
+      - name: Google 日历同步协议
+        run: node scripts/test-google-sync.js
+
+      - name: WebDAV 转发策略
+        run: node scripts/test-webdav-policy.js
+
+      - name: 解析缓存版本对比基点
+        id: base
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "ref=$PR_BASE_SHA" >> "$GITHUB_OUTPUT"
+          elif git rev-parse --verify --quiet "$PUSH_BEFORE_SHA^{commit}" > /dev/null; then
+            echo "ref=$PUSH_BEFORE_SHA" >> "$GITHUB_OUTPUT"
+          else
+            # 新分支首推或强推后旧 tip 已不存在，没有可靠基点可比。
+            echo "没有可用的对比基点，跳过 PWA 缓存版本检查。"
+            echo "ref=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: PWA 缓存版本已随 public/ 改动递增
+        if: steps.base.outputs.ref != ''
+        run: node scripts/verify-cache-version.js "${BASE_REF}"
+        env:
+          BASE_REF: ${{ steps.base.outputs.ref }}

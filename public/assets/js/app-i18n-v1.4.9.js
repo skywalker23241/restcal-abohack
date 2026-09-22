@@ -246,12 +246,13 @@
         "月份查看、请假管理、工资计算和数据备份": "Browse months, manage leave, estimate pay and back up data",
         "个人资料": "Profile", "薪资与扣款": "Pay and deductions", "请假条模板": "Leave note template", "账号与连接": "Accounts and connections", "数据与同步": "Data and sync", "外观": "Appearance", "高级设置": "Advanced",
         "把休历中的重要安排带到你日常使用的日历和邮箱。": "Bring important RestCal plans into the calendar and email apps you use every day.",
-        "Google 日历": "Google Calendar", "单向同步，Google 日历不会反向修改休历": "One-way sync; Google Calendar never changes RestCal", "未连接": "Not connected", "桌面版可用": "Desktop only",
+        "Google 日历": "Google Calendar", "单向同步到专属的「休历」日历，不改动其他日程": "One-way sync into a dedicated RestCal calendar; your other events are untouched", "未连接": "Not connected", "桌面版可用": "Desktop only",
+        "断开 Google 日历？": "Disconnect Google Calendar?", "休历将停止后续同步；已经建好的「休历」日历及其中的事项会保留在 Google 账号里。": "RestCal will stop syncing. The RestCal calendar and its events stay in your Google account.",
         "记录变化后自动同步": "Sync automatically after changes", "请假与调休": "Leave and comp time", "普通出勤": "Regular attendance", "备注": "Notes", "连接 Google": "Connect Google", "立即同步": "Sync now", "断开": "Disconnect",
         "系统默认邮箱": "Default email app", "生成请假条后，可直接带着主题和正文打开邮件应用。": "After generating a leave note, open your email app with the subject and message filled in.", "可用": "Available",
         "默认收件邮箱": "Default recipient", "例如：manager@example.com": "e.g. manager@example.com", "休历只能管理由自己创建的日历事项，不读取其他 Google 日程。授权信息加密保存在本机。": "RestCal can only manage calendar events it created and does not read your other Google events. Authorization is encrypted on this device.",
-        "连接 Google 日历": "Connect Google Calendar", "使用系统浏览器完成安全授权": "Authorize securely in your system browser", "Google OAuth 客户端 ID": "Google OAuth client ID", "当前开发版本需要填写一次桌面应用类型的 OAuth 客户端 ID。正式发行时可预置，普通用户无需看到此项。": "This development build needs a desktop OAuth client ID once. Release builds can include it so regular users never see this field.",
-        "如何创建客户端 ID": "How to create a client ID", "在 Google Cloud Console 启用 Google Calendar API，配置 OAuth 同意屏幕，然后创建“桌面应用”类型的客户端。客户端 ID 不是密码，但请勿在此填写客户端密钥。": "Enable Google Calendar API in Google Cloud Console, configure the OAuth consent screen, then create a Desktop app client. The client ID is not a password; do not enter a client secret here.",
+        "连接 Google 日历": "Connect Google Calendar", "使用系统浏览器完成安全授权": "Authorize securely in your system browser", "Google OAuth 客户端 ID": "Google OAuth client ID", "当前开发版本需要填写一次桌面应用类型的 OAuth 客户端 ID 与密钥。正式发行时可预置，普通用户无需看到此项。": "This development build needs a desktop OAuth client ID and secret once. Release builds can include them so regular users never see these fields.", "客户端密钥": "Client secret", "Google 的桌面应用客户端虽然使用 PKCE，换取令牌时仍然必须带上密钥，否则会失败。Google 自身也说明安装类应用无法保守秘密，所以它不等同于账号密码；即便如此，它也和授权令牌一样加密保存在本机，不会进入备份或同步。": "Google's desktop clients use PKCE but still require the client secret when exchanging the code, otherwise the exchange fails. Google itself notes that installed apps cannot keep secrets, so it is not an account password; even so, RestCal stores it encrypted on this device alongside the token, and it never enters backups or sync.",
+        "如何创建客户端 ID": "How to create a client ID", "在 Google Cloud Console 启用 Google Calendar API，配置 OAuth 同意屏幕（把自己的账号加入测试用户），然后创建“桌面应用”类型的客户端，把生成的客户端 ID 和密钥一起填在上方。": "Enable the Google Calendar API in Google Cloud Console, configure the OAuth consent screen (add your own account as a test user), then create a Desktop app client and enter both the client ID and secret above.",
         "前往 Google 授权": "Continue to Google", "邮件发送": "Send by email",
         "日历与邮箱": "Calendar and email", "连接 Google、邮箱或导出日历": "Connect Google, email, or export a calendar", "导出日历文件": "Export calendar file",
         "‹ 设置": "‹ Settings", "返回设置目录": "Back to settings list", "关闭设置": "Close settings",
@@ -324,7 +325,22 @@
         "专项附加扣除（元 / 月）": "Special deductions (CNY/mo)", "专项扣除": "Special deductions",
         "年假有效期": "Annual leave validity", "调休有效期": "Comp leave validity",
         "次年 3 月 31 日清零 (推荐)": "Expires Mar 31 next year (Recommended)", "次年 3 月 31 日清零": "Expires Mar 31 next year", "次年 6 月 30 日清零": "Expires Jun 30 next year", "当年度 12 月 31 日清零": "Expires Dec 31 current year", "永久有效 / 不自动清零": "Never expires",
-        "可添加备注或加班记录": "Notes and overtime can be marked", "去规划": "Plan leave"
+        "可添加备注或加班记录": "Notes and overtime can be marked", "去规划": "Plan leave",
+
+        // 快捷概览自定义
+        "快捷概览": "Quick overview", "自定义快捷概览": "Customize quick overview",
+        "当前快捷概览": "Current quick overview", "当前布局": "Current layout", "可选模块": "Available modules",
+        "选择最常查看的 1–3 个模块": "Pick the 1–3 modules you check most",
+        "恢复默认": "Reset to default", "上移": "Move up", "下移": "Move down", "移除": "Remove", "添加": "Add",
+
+        // 日历导出与 Google 同步的勾选项
+        "日历导出内容": "Calendar export contents", "Google 日历同步内容": "Google Calendar sync contents",
+        "请假": "Leave", "抢票提醒": "Ticket reminders",
+        "自动同步目前支持休历桌面版；仍可使用下方日历文件导出": "Auto-sync is desktop-only; you can still export a calendar file below",
+        "Google 自动同步目前支持休历桌面版": "Google auto-sync is available in the RestCal desktop app",
+
+        // 节日简称（拼在 · 复合文本里出现）与占位示例
+        "端午": "Dragon Boat Festival", "项目上线": "product launch"
     };
 
     function translateCore(value) {
@@ -361,6 +377,16 @@
             const ticketSaleWeekday = trimmed.match(/^(周[一二三四五六日]|Sun|Mon|Tue|Wed|Thu|Fri|Sat) · 开售$/);
             if (ticketSaleWeekday) translated = `${EN[ticketSaleWeekday[1]] || ticketSaleWeekday[1]} · On sale`;
         }
+        if (!translated && trimmed.includes(" · ")) {
+            // 用 · 拼起来的复合文本（周几 · 农历 · 节日、节日 · 去程、节日 · 9月25日 …）逐段翻译。
+            // 比给每一种组合写一条正则要稳：新的拼法自动就能翻。只有确实有段被翻译了
+            // 才采用结果，否则保持原样，不掩盖真正的漏翻。
+            const segments = trimmed.split(" · ");
+            const translatedSegments = segments.map(segment => translateCore(segment));
+            if (translatedSegments.some((value, index) => value !== segments[index])) {
+                translated = translatedSegments.join(" · ");
+            }
+        }
         if (!translated) {
             const greeting = trimmed.match(/^(夜深了|早上好|上午好|下午好|晚上好)，(.+)$/);
             if (greeting) translated = `${EN[greeting[1]]}, ${greeting[2]}`;
@@ -393,6 +419,16 @@
             if (localized.some((part, index) => part !== parts[index])) translated = localized.join(", ");
         }
         if (!translated) {
+            // 热力图格子的 title：日期 + 节日/调休说明。
+            const datedTerm = trimmed.match(/^(\d{4}-\d{2}-\d{2}) (\S+)$/);
+            if (datedTerm && EN[datedTerm[2]]) translated = `${datedTerm[1]} ${EN[datedTerm[2]]}`;
+            // 快捷概览自定义里的上移/下移：后半截是已经翻过的模块名。
+            const moveModule = trimmed.match(/^(上移|下移) (.+)$/);
+            if (moveModule) translated = `${EN[moveModule[1]]} ${moveModule[2]}`;
+            // “例如：X”的示例部分也要翻，否则会得到 “e.g. 项目上线” 这种中英夹杂。
+            const example = trimmed.match(/^例如[：:]\s*(.+)$/);
+            if (example) translated = `e.g. ${translateCore(example[1])}`;
+
             const rules = [
                 [/^导入成功：(\d+) 条记录已合并，用户设置已恢复。$/, "Import successful: $1 records merged and user settings restored."],
                 [/^(\d{4}) 年官方节假日数据尚未发布$/, "Official holiday data for $1 has not been published"],
@@ -408,6 +444,7 @@
                 [/^(\d{1,2}) 月$/, "$1"],
                 [/^(\d{1,2})月$/, "$1"],
                 [/^(\d+(?:\.\d+)?) 天$/, "$1 days"],
+                [/^(\d+(?:\.\d+)?) 小时 \((\d+(?:\.\d+)?) 天\)$/, "$1 h ($2 days)"],
                 [/^(\d+)\s*\/\s*(\d+) 天$/, "$1 / $2 days"],
                 [/^周末 (\d+)$/, "Weekend $1"],
                 [/^(\d{4}-\d{2}-\d{2}) 周日$/, "$1 Sun"], [/^(\d{4}-\d{2}-\d{2}) 周一$/, "$1 Mon"], [/^(\d{4}-\d{2}-\d{2}) 周二$/, "$1 Tue"], [/^(\d{4}-\d{2}-\d{2}) 周三$/, "$1 Wed"], [/^(\d{4}-\d{2}-\d{2}) 周四$/, "$1 Thu"], [/^(\d{4}-\d{2}-\d{2}) 周五$/, "$1 Fri"], [/^(\d{4}-\d{2}-\d{2}) 周六$/, "$1 Sat"],
@@ -442,8 +479,11 @@
                 [/^(\d{1,2})月(\d{1,2})日$/, "$1/$2"],
                 [/^：已用 (\d+(?:\.\d+)?) 天 \/ 额度 (\d+(?:\.\d+)?) 天 \/ 剩余 (\d+(?:\.\d+)?) 天$/, ": $1 used / $2 total / $3 left"]
             ];
-            for (const [pattern, replacement] of rules) {
-                if (pattern.test(trimmed)) { translated = trimmed.replace(pattern, replacement); break; }
+            // 上面那些需要递归翻译的规则更具体，已经出结果就不要被这里的通用规则盖掉。
+            if (!translated) {
+                for (const [pattern, replacement] of rules) {
+                    if (pattern.test(trimmed)) { translated = trimmed.replace(pattern, replacement); break; }
+                }
             }
         }
         if (!translated) return value;

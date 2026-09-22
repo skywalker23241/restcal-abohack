@@ -2,6 +2,8 @@ const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
+const {LOOPBACK_POLICY, normalizeRequest} = require("./shared/webdav-policy.js");
+const {quoteSource, quoteRequestUrl} = require("./shared/quote-sources.js");
 
 const root = path.join(__dirname, "public");
 const port = Number(process.env.PORT || 8765);
@@ -22,6 +24,9 @@ const types = {
 // 网页/PWA 版的 WebDav 同源代理：浏览器无法直接跨域访问坚果云等不发 CORS 头的
 // 服务器，这里在 Node 端（不受 CORS 限制）转发请求。安全上：要求自定义请求头
 // X-Xiuli-Proxy（迫使跨站请求走预检而被浏览器拦截），且服务仅监听 127.0.0.1。
+// 但本机任何能发 HTTP 请求的进程都还是能调到它，所以转发什么同样要受约束：
+// 校验走三端共用的 shared/webdav-policy.js（方法、协议、请求头白名单），只是本地
+// 开发服务器不限主机名与明文 HTTP，否则连不了自建 Nextcloud、群晖。
 // 入参 { method, url, headers, body } 与返回 { ok, status, statusText, body } 与桌面版 IPC 一致。
 function proxyWebdav(req, res) {
   const sendJson = (code, obj) => {
@@ -42,23 +47,20 @@ function proxyWebdav(req, res) {
       sendJson(400, { error: "请求格式错误" });
       return;
     }
-    let target;
+    let normalized;
     try {
-      target = new URL(opts.url);
-    } catch {
-      sendJson(400, { error: "WebDav 地址无效" });
+      normalized = normalizeRequest(opts, LOOPBACK_POLICY);
+    } catch (error) {
+      sendJson(400, { error: error.message });
       return;
     }
-    if (target.protocol !== "https:" && target.protocol !== "http:") {
-      sendJson(400, { error: "地址必须以 http:// 或 https:// 开头" });
-      return;
-    }
+    const target = new URL(normalized.url);
     const transport = target.protocol === "https:" ? https : http;
-    const payload = opts.body == null ? null : Buffer.from(String(opts.body), "utf-8");
-    const headers = { ...(opts.headers || {}) };
+    const payload = normalized.body == null ? null : Buffer.from(normalized.body, "utf-8");
+    const headers = { ...normalized.headers };
     if (payload) headers["Content-Length"] = payload.length;
 
-    const upstream = transport.request(target, { method: opts.method || "GET", headers }, up => {
+    const upstream = transport.request(target, { method: normalized.method, headers }, up => {
       const out = [];
       up.on("data", chunk => out.push(chunk));
       up.on("end", () => {
@@ -78,23 +80,17 @@ function proxyWebdav(req, res) {
   });
 }
 
-// 每日一言代理。英文源 api.quotable.io 的 HTTPS 证书长期过期，浏览器无法直连，
-// 服务端改走明文 HTTP 转发；中文源一言（hitokoto.cn）证书正常，代理只为让前端
-// 两种语言共用同一入口（内容为公开格言，不含敏感信息）。请求时给上游 URL 追加
-// 时间戳参数：一言经 Cloudflare，相同 URL 短时间内会命中边缘缓存返回同一条。
-const quoteSources = {
-  zh: { url: "https://v1.hitokoto.cn/?c=d&c=i&c=k&max_length=60", transport: https, textField: "hitokoto" },
-  en: { url: "http://api.quotable.io/quotes/random?maxLength=120", transport: http, textField: "content" }
-};
-
+// 每日一言代理。上游源与「为什么要代理」的说明集中在 shared/quote-sources.js，
+// 线上的 netlify/functions/quote.mjs 用的是同一份配置。
 function proxyQuote(res, lang) {
-  const source = quoteSources[lang] || quoteSources.en;
+  const source = quoteSource(lang);
+  const transport = source.url.startsWith("https:") ? https : http;
   const sendJson = (code, obj) => {
     if (res.headersSent) return;
     res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
     res.end(JSON.stringify(obj));
   };
-  const request = source.transport.get(`${source.url}&_=${Date.now()}`, { timeout: 6000 }, upstream => {
+  const request = transport.get(quoteRequestUrl(source), { timeout: 6000 }, upstream => {
     const chunks = [];
     upstream.on("data", chunk => chunks.push(chunk));
     upstream.on("end", () => {
@@ -158,6 +154,17 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { "Content-Type": types[path.extname(file)] || "application/octet-stream" });
     res.end(data);
   });
+});
+
+// 端口被占时必须大声报错：没有这个处理时，校验脚本 require 本文件会在启动失败后
+// 继续跑，转而去测已经占着该端口的另一个服务的内容——看着通过，其实什么都没验。
+server.on("error", error => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`端口 ${port} 已被占用（另一个休历服务？）。用 PORT=其他端口 重试。`);
+  } else {
+    console.error(`服务启动失败：${error.message}`);
+  }
+  process.exit(1);
 });
 
 server.listen(port, "127.0.0.1", () => {

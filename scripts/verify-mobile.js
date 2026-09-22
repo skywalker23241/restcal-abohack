@@ -5,8 +5,10 @@ const { app, BrowserWindow } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
+const {startDevServer} = require("./lib/dev-server.js");
+
 const shotsDir = path.join(__dirname, "shots");
-const URL = "http://127.0.0.1:8765/app.html";
+let URL = "";
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -72,8 +74,7 @@ async function capture(win, name) {
 
 async function run() {
     fs.mkdirSync(shotsDir, { recursive: true });
-    require(path.join(__dirname, "..", "server.js"));
-    await wait(500);
+    URL = `${(await startDevServer()).origin}/app.html`;
 
     const win = new BrowserWindow({
         show: false,

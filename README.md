@@ -9,12 +9,13 @@
 **请假、出勤、工资核算、购票提醒 —— 一页搞定的中国职场日历**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-![Release](https://img.shields.io/badge/release-v2.1.1-b4382a)
+[![Verify](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml/badge.svg)](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml)
+![Release](https://img.shields.io/badge/release-v2.2.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.1.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="休历天视图：当日日历卡片、假期额度、出勤和预计实发概览" width="100%">
 
@@ -30,7 +31,7 @@
 
 应用界面支持中文与英文一键切换；语言、主题以及所有业务设置都可以随 CSV 或 WebDAV 完整备份和恢复。
 
-## 🆕 v2.1.1 更新
+## 🆕 v2.2.0 更新
 
 - 修复桌面版 WebDAV 在系统代理或特定证书环境下无法连接的问题。
 - 新增 Google 日历单向同步、系统日历导出和默认邮箱发送，休历记录可以自然进入现有工作流。
@@ -140,7 +141,7 @@
 | 方式 | 适合场景 | 上手方法 |
 |---|---|---|
 | **在线版** | 大多数用户 | 直接打开 [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html)，可安装为 PWA |
-| **桌面版** | Windows 免浏览器使用 | 从 [v2.1.1 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1) 下载便携版、安装版或 ZIP |
+| **桌面版** | Windows 免浏览器使用 | 从 [v2.2.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0) 下载便携版、安装版或 ZIP |
 | **本地运行** | 开发或内网使用 | 克隆仓库后 `node server.js`，访问 `http://localhost:8765/app.html` |
 
 也可以直接双击打开 `public/app.html` 使用（`public/index.html` 是介绍页，应用本体在 `public/app.html`）。`file://` 模式本身可以离线运行，但浏览器不会注册 Service Worker，也不能将其安装为 PWA；需要 PWA 能力时请通过 HTTP(S) 打开。
@@ -159,14 +160,14 @@
 
 最新 Android 版：[RestCal v2.1.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1)
 
-Windows 离线版：[RestCal v2.1.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1)
+Windows 离线版：[RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
 
 | 下载 | 用途 |
 |---|---|
-| [`RestCal-2.1.1-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-portable.exe) | 免安装，下载后直接运行 |
-| [`RestCal-2.1.1-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-setup.exe) | Windows 安装程序，可选择安装目录 |
-| [`RestCal-2.1.1-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-win.zip) | 解压后运行 `休历.exe` |
-| [`SHA256SUMS-2.1.1.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/SHA256SUMS-2.1.1.txt) | 下载文件完整性校验值 |
+| [`RestCal-2.2.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-portable.exe) | 免安装，下载后直接运行 |
+| [`RestCal-2.2.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-setup.exe) | Windows 安装程序，可选择安装目录 |
+| [`RestCal-2.2.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-win.zip) | 解压后运行 `休历.exe` |
+| [`SHA256SUMS-2.2.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt) | 下载文件完整性校验值 |
 
 三个程序包均包含应用和 2004–2026 年中国日历数据，无网络时也能使用。当前构建尚未进行代码签名，Windows SmartScreen 可能在首次运行时显示提醒。
 
@@ -284,7 +285,8 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 │   ├── sw.js             # PWA 离线缓存
 │   └── assets/
 │       ├── css/          # 页面样式
-│       ├── js/           # 应用脚本与离线日历数据包
+│       ├── js/           # 独立模块（纯计算、i18n、离线日历数据包）
+│       │   └── app/      # 主脚本分片，按关注点拆分，加载顺序见 app.html
 │       ├── icons/        # PWA 与桌面版图标
 │       ├── images/       # 社交分享图与产品截图
 │       └── vendor/       # 本地化的节假日、农历数据
@@ -294,6 +296,7 @@ WEBDAV_ALLOWED_HOSTS=dav.jianguoyun.com,dav.example.com
 ├── netlify.toml          # Netlify 发布与 Function 配置
 ├── desktop/main.js       # Electron 桌面壳（Windows exe）
 ├── package.json          # 桌面版依赖与打包配置
+├── shared/               # 网页/桌面/本地服务共用的服务端配置（WebDAV 转发策略、每日一言上游）
 ├── server.js             # 本地静态预览服务器（含 WebDAV 同源代理）
 ├── README.md             # 中文文档
 └── README.en.md          # English documentation

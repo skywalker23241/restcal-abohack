@@ -11,12 +11,13 @@ app.setPath("userData", auditUserData);
 const googleCalendar = require("../desktop/google-calendar");
 const desktopWebdav = require("../desktop/webdav");
 
+const {startDevServer} = require("./lib/dev-server.js");
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 let davServer = null;
 
 async function run() {
-    require("../server.js");
-    await wait(400);
+    const {origin} = await startDevServer();
     davServer = http.createServer((request, response) => {
         if (request.method !== "PROPFIND") {
             response.writeHead(405).end();
@@ -51,7 +52,7 @@ async function run() {
             sandbox: true
         }
     });
-    await win.loadURL(`http://127.0.0.1:8765/app.html?integration-audit=${Date.now()}`);
+    await win.loadURL(`${origin}/app.html?integration-audit=${Date.now()}`);
     await wait(1200);
     const audit = await win.webContents.executeJavaScript(`
         (async () => {

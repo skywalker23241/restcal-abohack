@@ -147,7 +147,7 @@ if (!gotLock) {
         ipcMain.handle("calendar:add-event", (_event, options) => openCalendarFile(options || {}));
         ipcMain.handle("mail:compose", (_event, options) => composeEmail(options || {}));
         ipcMain.handle("google-calendar:status", () => googleCalendar.status());
-        ipcMain.handle("google-calendar:connect", (_event, clientId) => googleCalendar.connect(clientId));
+        ipcMain.handle("google-calendar:connect", (_event, clientId, clientSecret) => googleCalendar.connect(clientId, clientSecret));
         ipcMain.handle("google-calendar:sync", (_event, events) => googleCalendar.syncEvents(events));
         ipcMain.handle("google-calendar:disconnect", () => googleCalendar.disconnect());
         ipcMain.handle("calendar:get-launch-url", () => {

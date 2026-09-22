@@ -24,6 +24,13 @@ node_modules/
 # Desktop build output
 dist/
 
+# Release binaries: distributed as GitHub Release assets only, never committed.
+# Each committed release adds tens of MB to every future clone. The checksums
+# (releases/SHA256SUMS-*.txt) and notes (releases/RELEASE_NOTES-*.md) stay in Git.
+releases/*.apk
+releases/*.exe
+releases/*.zip
+
 # Visual verification output
 scripts/shots/
 

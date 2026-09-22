@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v2.1.1-hero-records";
+const CACHE_VERSION = "v2.2.0-architecture-google-sync";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";
@@ -15,8 +15,23 @@ const PRECACHE = [
     "assets/js/app-i18n-v1.4.9.js",
     "assets/js/calendar-years.js",
     "assets/js/ics-exporter.js",
+    "assets/js/payroll.js",
     "assets/js/onboarding.js",
     "assets/js/product-tour.js",
+    // 主脚本分片，顺序与 app.html 一致。
+    "assets/js/app/shell.js",
+    "assets/js/app/form-controls.js",
+    "assets/js/app/events.js",
+    "assets/js/app/calendar-view.js",
+    "assets/js/app/stats.js",
+    "assets/js/app/day-modal.js",
+    "assets/js/app/search.js",
+    "assets/js/app/integrations.js",
+    "assets/js/app/reports.js",
+    "assets/js/app/settings-sync.js",
+    "assets/js/app/calendar-data.js",
+    "assets/js/app/core.js",
+    "assets/js/app/bootstrap.js",
     "assets/css/styles.css",
     "assets/vendor/phosphor/regular/style.css",
     "assets/vendor/phosphor/regular/Phosphor.woff2",

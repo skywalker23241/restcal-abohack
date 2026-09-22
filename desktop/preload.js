@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld("xiuliMail", {
 
 contextBridge.exposeInMainWorld("xiuliGoogleCalendar", {
     status: () => ipcRenderer.invoke("google-calendar:status"),
-    connect: clientId => ipcRenderer.invoke("google-calendar:connect", clientId),
+    connect: (clientId, clientSecret) => ipcRenderer.invoke("google-calendar:connect", clientId, clientSecret),
     sync: events => ipcRenderer.invoke("google-calendar:sync", events),
     disconnect: () => ipcRenderer.invoke("google-calendar:disconnect")
 });

@@ -83,12 +83,33 @@ for (const icon of manifest.icons || []) requireFile(localReference(icon.src), "
 
 const serviceWorker = fs.readFileSync(path.join(publicDir, "sw.js"), "utf8");
 const precacheSource = serviceWorker.match(/const PRECACHE = \[([\s\S]*?)\];/);
+const precached = new Set();
 if (!precacheSource) {
     errors.push("sw.js: PRECACHE list not found");
 } else {
     for (const match of precacheSource[1].matchAll(/"([^"]+)"/g)) {
         const reference = localReference(match[1]);
-        if (reference) requireFile(reference, "sw.js");
+        if (reference) {
+            requireFile(reference, "sw.js");
+            precached.add(reference);
+        }
+    }
+}
+
+// 每一个被页面引用的本地脚本 / 样式都必须在 PRECACHE 里。漏一个，已安装的 PWA
+// 离线时就拿不到它，页面会半残；主脚本拆成多个分片后这个坑特别容易踩。
+// （图片不在此列：缺失只是观感问题，不会让应用跑不起来。）
+for (const htmlName of ["index.html", "app.html"]) {
+    const html = fs.readFileSync(path.join(publicDir, htmlName), "utf8");
+    const assets = [
+        ...[...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/gi)].map(m => m[1]),
+        ...[...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*\bhref=["']([^"']+)["']/gi)].map(m => m[1])
+    ];
+    for (const asset of assets) {
+        const reference = localReference(asset);
+        if (reference && !precached.has(reference)) {
+            errors.push(`sw.js: PRECACHE 缺少 ${htmlName} 引用的 ${reference}`);
+        }
     }
 }
 
