@@ -158,7 +158,7 @@ The application shell and bundled holiday, lunar-calendar, and solar-term data f
 
 ## 💻 Windows desktop app
 
-Latest Android release: [RestCal v2.1.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1)
+Latest Android release: [RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
 
 Windows offline release: [RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
 
@@ -199,7 +199,7 @@ npm run build:android
 
 The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk` and can be installed directly on an Android phone for testing. `mobile/` is generated from `public/app.html` and `public/assets/` by `scripts/build-android-web.cjs`; do not edit it manually.
 
-Installable APK: [RestCal-2.1.1-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-android.apk). This build includes native Android WebDAV and system-calendar bridges; see [SHA256SUMS-2.1.1.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/SHA256SUMS-2.1.1.txt) for the checksum.
+Installable APK: [RestCal-2.2.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-android.apk). This build includes native Android WebDAV and system-calendar bridges; see [SHA256SUMS-2.2.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt) for the checksum.
 
 ## 🛠 Deploy your own instance
 

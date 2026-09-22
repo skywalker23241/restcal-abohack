@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v2.2.0-architecture-google-sync";
+const CACHE_VERSION = "v2.2.0-android-download";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";

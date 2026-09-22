@@ -16,6 +16,7 @@
 - `RestCal-2.2.0-portable.exe`：Windows 免安装版。
 - `RestCal-2.2.0-setup.exe`：Windows 安装版。
 - `RestCal-2.2.0-win.zip`：Windows 解压版。
-- `SHA256SUMS-2.2.0.txt`：Windows 文件完整性校验。
+- `RestCal-2.2.0-android.apk`：Android 安装包（调试签名）。
+- `SHA256SUMS-2.2.0.txt`：文件完整性校验。
 
-本次 Release 暂未附带 Android APK：当前构建环境未安装 JDK 17。Windows 构建未进行代码签名，首次运行时可能出现 SmartScreen 提示。
+Windows 构建未进行代码签名，首次运行时可能出现 SmartScreen 提示。

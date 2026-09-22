@@ -158,7 +158,7 @@
 
 ## 💻 桌面版（Windows）
 
-最新 Android 版：[RestCal v2.1.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1)
+最新 Android 版：[RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
 
 Windows 离线版：[RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
 
@@ -199,7 +199,7 @@ npm run build:android
 
 Debug APK 输出在 `android/app/build/outputs/apk/debug/app-debug.apk`，可直接传到手机安装测试。`mobile/` 是由 `scripts/build-android-web.cjs` 从 `public/app.html` 和 `public/assets/` 生成的构建目录，不需要手动编辑。
 
-当前可直接安装的 APK：[RestCal-2.1.1-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-android.apk)。该版本包含 Android 原生 WebDAV 与系统日历通道，SHA256 见 [SHA256SUMS-2.1.1.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/SHA256SUMS-2.1.1.txt)。
+当前可直接安装的 APK：[RestCal-2.2.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-android.apk)。该版本包含 Android 原生 WebDAV 与系统日历通道，SHA256 见 [SHA256SUMS-2.2.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt)。
 
 ## 🛠 部署自己的实例
 
