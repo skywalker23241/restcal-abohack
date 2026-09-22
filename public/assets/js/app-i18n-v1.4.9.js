@@ -196,7 +196,28 @@
         "日": "Day", "周": "Week", "日历视图": "Calendar view",
         "上一天": "Previous day", "下一天": "Next day", "上一周": "Previous week", "下一周": "Next week", "上一年": "Previous year", "下一年": "Next year",
         "点击编辑当天记录": "Tap to edit this day", "今天还没有记录": "No record for today yet",
-        "假期 · 好好休息": "Holiday · enjoy the break", "周末 · 无需打卡": "Weekend · no check-in required",
+        "元旦 · 新岁启封，万事顺意": "New Year's Day · New beginnings, bright possibilities",
+        "春节 · 阖家团圆，新春安康": "Spring Festival · Reunion, warmth, and a joyful new year",
+        "元宵 · 灯火可亲，喜乐团圆": "Lantern Festival · Warm lights, shared joy, and reunion",
+        "龙抬头 · 春回大地，鸿运当头": "Dragon Heads-raising Day · Spring returns with rising fortune",
+        "上巳 · 春日踏青，祓禊纳福": "Shangsi Festival · Welcome spring and gather good fortune",
+        "寒食 · 春风寄思，清明在心": "Cold Food Festival · Remember loved ones in the spring breeze",
+        "清明 · 慎终追远，踏青惜春": "Qingming Festival · Remember the past and welcome the spring",
+        "劳动节 · 致敬奋斗，也别忘了休息": "Labour Day · Celebrate hard work—and take a well-earned rest",
+        "端午 · 粽香安康，顺遂如意": "Dragon Boat Festival · May health and good fortune be with you",
+        "七夕 · 星河为证，所愿皆成": "Qixi Festival · May every wish beneath the stars come true",
+        "中元 · 缅怀先人，心怀敬意": "Ghost Festival · Remember those before us with respect",
+        "中秋 · 月满人团圆，心安即归处": "Mid-Autumn Festival · Full moon, warm hearts, together again",
+        "重阳 · 登高望远，敬老安康": "Double Ninth Festival · Climb high and wish our elders well",
+        "寒衣 · 遥寄思念，愿岁寒有暖": "Winter Clothing Festival · Sending remembrance and warmth from afar",
+        "下元 · 消灾解厄，平安顺遂": "Xiayuan Festival · May troubles pass and peace remain",
+        "腊八 · 粥暖岁寒，静候新春": "Laba Festival · Warm porridge for winter, awaiting the spring",
+        "小年 · 辞旧迎新，人间小团圆": "Little New Year · Farewell to the old and gather in warmth",
+        "除夕 · 辞旧迎新，阖家守岁": "New Year's Eve · Welcome the new year together",
+        "国庆 · 山河锦绣，假日愉快": "National Day · Celebrate the nation and enjoy the holiday",
+        "胜利纪念日 · 铭记历史，珍爱和平": "Victory Day · Remember history and cherish peace",
+        "假日 · 愿你自在从容，平安喜乐": "Holiday · Wishing you ease, peace, and joy",
+        "周末 · 无需打卡": "Weekend · no check-in required",
         "1月": "Jan", "2月": "Feb", "3月": "Mar", "4月": "Apr", "5月": "May", "6月": "Jun", "7月": "Jul", "8月": "Aug", "9月": "Sep", "10月": "Oct", "11月": "Nov", "12月": "Dec",
         "本月与全年的出勤、请假和额度使用情况。": "Attendance, leave and allowance usage for this month and the year.",
         "票据生成、数据备份和出行提醒。": "Receipts, data backup and travel reminders.",
@@ -209,7 +230,7 @@
         "开始核算": "Calculate pay", "填写请假日期和理由，预览并下载请假条": "Enter leave dates and a reason, then preview and download a leave note.", "创建请假条": "Create leave note", "填写信息，生成请假条": "Enter details and create a leave note",
         "查看本年度法定节假日火车票开售时间": "View train-ticket sale dates for this year's public holidays.", "查看节假日火车票开售日": "View holiday ticket sale dates", "查看提醒": "View reminders", "收起提醒": "Hide reminders",
         "本年度暂无购票提醒": "No ticket reminders this year", "本年度购票提醒均已结束": "This year's ticket reminders have ended", "本年度暂无节假日火车票开售节点。": "No public-holiday train-ticket sale dates this year.",
-        "年度趋势": "Yearly trend", "最近记录": "Recent records", "设置额度": "Set allowance", "查看额度": "View allowance", "查看": "View", "去备份": "Back up", "撤销": "Undo",
+        "年度趋势": "Yearly trend", "最近记录": "Recent records", "快速返回最近编辑的日期": "Jump back to recently edited dates", "设置额度": "Set allowance", "查看额度": "View allowance", "查看": "View", "去备份": "Back up", "撤销": "Undo",
         "还没有记录，点击日历中的日期开始标记。": "No records yet. Select a date in the calendar to start.",
         "完成初始设置": "Finish setting up", "填写工作制度、工资和假期额度，统计会更准确。": "Add your work schedule, pay and leave allowances for more accurate statistics.",
         "继续设置": "Continue setup", "暂不需要": "Not now",
@@ -279,7 +300,7 @@
         "应用到所选范围内的每一天，包括周末和节假日。": "Applies to every date in the selected range, including weekends and holidays.", "所选范围没有可记录的日期。": "The selected range contains no dates to record.",
         "周末可添加备注，状态不可标记": "Weekends support notes only; status marking is unavailable.", "周末只能添加备注，不能标记出勤状态。": "Weekends support notes only; attendance status cannot be marked.",
         "可选择多个周末，保存后会将同一条备注应用到所选周末。": "Select multiple weekends to apply the same note to them.", "所选范围没有周末日期。": "The selected range contains no weekends.",
-        "元旦": "New Year's Day", "春节": "Spring Festival", "清明节": "Qingming Festival", "劳动节": "Labour Day", "端午节": "Dragon Boat Festival", "中秋": "Mid-Autumn Festival", "中秋节": "Mid-Autumn Festival", "国庆节": "National Day",
+        "元旦": "New Year's Day", "春节": "Spring Festival", "元宵节": "Lantern Festival", "龙抬头": "Dragon Heads-raising Day", "上巳节": "Shangsi Festival", "寒食节": "Cold Food Festival", "清明节": "Qingming Festival", "劳动节": "Labour Day", "端午节": "Dragon Boat Festival", "七夕节": "Qixi Festival", "中元节": "Ghost Festival", "中秋": "Mid-Autumn Festival", "中秋节": "Mid-Autumn Festival", "重阳节": "Double Ninth Festival", "寒衣节": "Winter Clothing Festival", "下元节": "Xiayuan Festival", "腊八节": "Laba Festival", "小年": "Little New Year", "除夕": "New Year's Eve", "国庆节": "National Day",
         "小寒": "Minor Cold", "大寒": "Major Cold", "立春": "Start of Spring", "雨水": "Rain Water", "惊蛰": "Awakening of Insects", "春分": "Spring Equinox", "清明": "Pure Brightness", "谷雨": "Grain Rain", "立夏": "Start of Summer", "小满": "Grain Buds", "芒种": "Grain in Ear", "夏至": "Summer Solstice", "小暑": "Minor Heat", "大暑": "Major Heat", "立秋": "Start of Autumn", "处暑": "End of Heat", "白露": "White Dew", "秋分": "Autumn Equinox", "寒露": "Cold Dew", "霜降": "Frost Descent", "立冬": "Start of Winter", "小雪": "Minor Snow", "大雪": "Major Snow", "冬至": "Winter Solstice",
         "加班": "Overtime", "加班工时": "Overtime hours", "加班工时（小时）": "Overtime hours", "调休换算倍率": "Comp rate", "加班事由": "Overtime reason", "批量应用到": "Apply range to",
         "仅工作日": "Workdays only", "仅休息日": "Rest days only", "全部日期": "All dates", "普通出勤": "Regular attendance", "仅备注": "Notes only", "法定节假日": "Public holidays", "调休补班": "Make-up workdays", "抢票提醒时间": "Ticket reminder time",
@@ -323,7 +344,7 @@
             if (allowance) translated = `${EN[allowance[1]]} allowance not set`;
             const setAllowance = trimmed.match(/^设置(年假|调休)额度$/);
             if (setAllowance) translated = `Set ${EN[setAllowance[1]].toLowerCase()} allowance`;
-            const holidayDate = trimmed.match(/^(中秋|中秋节|国庆节|春节|元旦|劳动节|清明节|端午节) · (.+)$/);
+            const holidayDate = trimmed.match(/^(元旦|春节|元宵节|龙抬头|上巳节|寒食节|清明|清明节|劳动节|端午节|七夕节|中元节|中秋|中秋节|重阳节|寒衣节|下元节|腊八节|小年|除夕|国庆节) · (.+)$/);
             if (holidayDate) translated = `${EN[holidayDate[1]]} · ${EN[holidayDate[2]] || holidayDate[2]}`;
             const ticketToday = trimmed.match(/^(.+?)(去程|返程)?火车票今天开售，(?:假期首日|计划出行) (.+)$/);
             if (ticketToday) translated = `${EN[ticketToday[1]] || ticketToday[1]}${ticketToday[2] ? ` ${EN[ticketToday[2]].toLowerCase()}` : ""} train tickets go on sale today; travel date ${translateCore(ticketToday[3])}`;

@@ -1143,6 +1143,8 @@
             pointer-events: none;
         }
 
+        .source-shell-plain::after { content: none; }
+
         .oss {
             position: relative;
             z-index: 1;
@@ -1629,7 +1631,7 @@
                 <a class="nav-gh" href="https://github.com/skywalker23241/restcal-abohack" aria-label="RestCal on GitHub">
                     <i class="ph ph-github-logo" aria-hidden="true"></i>
                 </a>
-                <a class="btn btn-seal" href="app.html" data-i18n="common.liveDemo">Live Demo</a>
+                <a class="btn btn-seal" href="app.html" data-i18n="common.liveDemo">Open RestCal</a>
             </div>
         </div>
     </header>
@@ -1656,46 +1658,117 @@
             </div>
         </section>
 
-        <!-- ============================================================ Features -->
-        <section class="section" id="features"><div class="wrap"><div class="section-head"><h2 data-i18n="main.title">From a day off to a clear record.</h2><p data-i18n="main.intro">Start with your calendar. Leave balances, pay and leave requests follow from it.</p></div><div class="features-grid"><article class="feature"><div class="feature-icon"><i class="ph ph-calendar-blank" aria-hidden="true"></i></div><h3 data-i18n="main.calendar">Attendance and leave, together</h3><p data-i18n="main.calendarText">Record attendance, leave, overtime and notes. Switch between day, week, month and year, or mark multiple workdays at once.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-wallet" aria-hidden="true"></i></div><h3 data-i18n="main.salary">Estimate pay before payday</h3><p data-i18n="main.salaryText">Set salary, fixed deductions and leave deduction rates. Estimate monthly take-home pay and export a payslip image.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-chart-bar" aria-hidden="true"></i></div><h3 data-i18n="main.stats">Keep track of leave balances</h3><p data-i18n="main.statsText">See used and remaining annual or compensatory leave. Review attendance and overtime with monthly charts and yearly heatmaps.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-note-pencil" aria-hidden="true"></i></div><h3 data-i18n="main.note">Prepare a leave request</h3><p data-i18n="main.noteText">Fill in dates, reason and handoff details. Generate the text, download an image or open your email app with the request.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-train" aria-hidden="true"></i></div><h3 data-i18n="main.ticket">Plan both legs of your trip</h3><p data-i18n="main.ticketText">See outbound and return train-ticket sale dates for public holidays. Adjust travel preferences and export reminders to your calendar.</p></article><article class="feature"><div class="feature-icon"><i class="ph ph-cloud-arrow-up" aria-hidden="true"></i></div><h3 data-i18n="main.backup">Keep a copy of your records</h3><p data-i18n="main.backupText">Records stay on your device by default. Export or import CSV backups, or use WebDAV to back up and restore on another device.</p></article></div></div></section>
+        <!-- ============================================================ Core scenarios -->
+        <section class="section" id="features">
+            <div class="wrap">
+                <div class="section-head">
+                    <span class="eyebrow" data-i18n="features.label">Everyday work calendar</span>
+                    <h2 data-i18n="main.title">Mark it once. Let the rest add up.</h2>
+                    <p data-i18n="main.intro">RestCal is a personal calendar for people working in China. It connects leave, attendance, working days, holidays and pay without turning them into separate chores.</p>
+                </div>
+                <div class="features-grid">
+                    <article class="feature">
+                        <div class="feature-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></div>
+                        <h3 data-i18n="main.calendar">Take a day off, and the totals update</h3>
+                        <p data-i18n="main.calendarText">Mark leave, compensatory time, overtime or attendance on the calendar. RestCal then updates actual working days, leave balances and yearly totals for you.</p>
+                    </article>
+                    <article class="feature">
+                        <div class="feature-icon"><i class="ph ph-wallet" aria-hidden="true"></i></div>
+                        <h3 data-i18n="main.salary">See the pay impact before taking leave</h3>
+                        <p data-i18n="main.salaryText">Combine salary, fixed deductions, attendance and leave records for a practical estimate of how time off may change this month’s pay.</p>
+                    </article>
+                    <article class="feature">
+                        <div class="feature-icon"><i class="ph ph-confetti" aria-hidden="true"></i></div>
+                        <h3 data-i18n="main.ticket">Chinese holidays are more than red dates</h3>
+                        <p data-i18n="main.ticketText">See statutory holidays, makeup workdays, lunar dates and solar terms together. Plan a break and calculate ticket reminders using an adjustable presale period.</p>
+                    </article>
+                    <article class="feature">
+                        <div class="feature-icon"><i class="ph ph-shield-check" aria-hidden="true"></i></div>
+                        <h3 data-i18n="main.backup">Your calendar data stays under your control</h3>
+                        <p data-i18n="main.backupText">Use RestCal without registering. Data is stored on your device by default, and is only sent to a service you choose when you enable sync or backup.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
 
-        <!-- ============================================================ Preview -->
-        <section class="section" id="preview"><div class="wrap"><div class="section-head"><h2 data-i18n="settings.heading">Settings and integrations, built around real work.</h2><p data-i18n="settings.intro">Every category below is available in RestCal and saved locally as you make changes.</p></div><div class="settings-summary"><article><span class="settings-summary-icon"><i class="ph ph-user-circle" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.profile">Profile</h3><p data-i18n="setting.profileText">Save your name, workplace and hire date for records and leave requests.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-calendar-dots" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.schedule">Work schedule</h3><p data-i18n="setting.scheduleText">Set weekly workdays, daily hours, pay calculation method and default rest days.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-wallet" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.salary">Pay & deductions</h3><p data-i18n="setting.salaryText">Configure salary, fixed deductions, tax estimates, payday and leave deduction rates.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-chart-donut" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.quota">Leave allowance</h3><p data-i18n="setting.quotaText">Set annual and compensatory leave allowances, including their expiration rules.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-train" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.tickets">Ticket reminders</h3><p data-i18n="setting.ticketsText">Choose outbound and return plans, ticket sale lead time and reminder time.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-note-pencil" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.leaveDoc">Leave request template</h3><p data-i18n="setting.leaveDocText">Reuse the applicant, recipient, common reasons and handoff details.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-plugs-connected" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.connections">Accounts & connections</h3><p data-i18n="setting.connectionsText">Connect Google Calendar, choose sync content and save a default recipient email.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-cloud-arrow-up" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.data">Data & sync</h3><p data-i18n="setting.dataText">Import or export CSV, create ICS calendars, and back up or restore with WebDAV.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-palette" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.appearance">Appearance</h3><p data-i18n="setting.appearanceText">Switch between system, light and dark themes, with Chinese or English.</p></div></article><article><span class="settings-summary-icon"><i class="ph ph-gear-six" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="setting.advanced">Advanced settings</h3><p data-i18n="setting.advancedText">Run setup again, export personal settings or reset local data when needed.</p></div></article></div></div></section>
+        <!-- ============================================================ Audience -->
+        <section class="section" id="audience">
+            <div class="wrap">
+                <div class="section-head">
+                    <span class="eyebrow" data-i18n="audience.label">Does this sound familiar?</span>
+                    <h2 data-i18n="audience.title">You may need RestCal if…</h2>
+                    <p data-i18n="audience.intro">These are ordinary questions, but they are surprisingly easy to lose track of.</p>
+                </div>
+                <div class="cases-grid">
+                    <article class="case" style="--case-c: var(--st-personal)"><span class="c-k">01</span><h3 data-i18n="audience.payTitle">Before taking leave</h3><p data-i18n="audience.payText">You always want to work out roughly how much pay a day off will affect.</p></article>
+                    <article class="case" style="--case-c: var(--st-annual)"><span class="c-k">02</span><h3 data-i18n="audience.recordTitle">When checking leave balances</h3><p data-i18n="audience.recordText">You often forget how much annual or compensatory leave you have already used.</p></article>
+                    <article class="case" style="--case-c: var(--seal)"><span class="c-k">03</span><h3 data-i18n="audience.planTitle">When planning a long break</h3><p data-i18n="audience.planText">Spring Festival and National Day plans keep getting tangled up with makeup workdays.</p></article>
+                    <article class="case" style="--case-c: var(--st-work)"><span class="c-k">04</span><h3 data-i18n="audience.simpleTitle">When keeping a personal record</h3><p data-i18n="audience.simpleText">You want to track attendance and private pay or leave data without signing up for a complicated HR system.</p></article>
+                </div>
+            </div>
+        </section>
 
-        <!-- ============================================================ Use cases -->
+        <!-- ============================================================ Extra tools -->
+        <section class="section" id="preview">
+            <div class="wrap">
+                <div class="section-head">
+                    <span class="eyebrow" data-i18n="extras.label">More practical tools</span>
+                    <h2 data-i18n="settings.heading">Useful when you need them, quiet when you don’t.</h2>
+                    <p data-i18n="settings.intro">These supporting tools stay connected to the same calendar without changing RestCal’s focus.</p>
+                </div>
+                <div class="settings-summary">
+                    <article><span class="settings-summary-icon"><i class="ph ph-receipt" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.payslip">Payslips</h3><p data-i18n="extras.payslipText">Review estimated pay details and export a clear payslip image.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-note-pencil" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.leaveNote">Leave requests</h3><p data-i18n="extras.leaveNoteText">Turn saved dates, reasons and handoff notes into a request ready to send.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-check-circle" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.habits">Habit check-ins</h3><p data-i18n="extras.habitsText">Keep lightweight daily check-ins beside your work calendar when useful.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-google-logo" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.google">Google Calendar</h3><p data-i18n="extras.googleText">Connect and choose what to sync only when you want to.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-file-csv" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.exports">CSV & ICS</h3><p data-i18n="extras.exportsText">Move records with CSV or add plans to other calendar apps with ICS.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-cloud-arrow-up" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.webdav">WebDAV backup</h3><p data-i18n="extras.webdavText">Back up and restore records through a WebDAV service you choose.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-device-mobile" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.pwa">Installable PWA</h3><p data-i18n="extras.pwaText">Install the web app on desktop or mobile and keep using it offline.</p></div></article>
+                    <article><span class="settings-summary-icon"><i class="ph ph-windows-logo" aria-hidden="true"></i></span><div class="settings-summary-copy"><h3 data-i18n="extras.windows">Windows app</h3><p data-i18n="extras.windowsText">Choose an installer, portable app or ZIP package for Windows.</p></div></article>
+                </div>
+            </div>
+        </section>
 
+        <!-- ============================================================ Downloads -->
+        <section class="home-download wrap" id="download">
+            <div class="home-download-heading"><div><h2><span data-i18n="dl.title">RestCal, on your device.</span></h2><p><span data-i18n="dl.intro">Free for Windows and Android. Or start in your browser.</span></p></div><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1">v2.1.1 <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a></div>
+            <div class="home-download-grid"><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-setup.exe"><i class="ph ph-windows-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name0">Windows installer</span></h3><p><span data-i18n="dl.desc0">Install with desktop shortcuts</span></p><span class="home-download-action"><span data-i18n="dl.action0">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-portable.exe"><i class="ph ph-lightning" aria-hidden="true"></i><h3><span data-i18n="dl.name1">Windows portable</span></h3><p><span data-i18n="dl.desc1">Download and run directly</span></p><span class="home-download-action"><span data-i18n="dl.action1">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-win.zip"><i class="ph ph-file-zip" aria-hidden="true"></i><h3><span data-i18n="dl.name2">Windows ZIP</span></h3><p><span data-i18n="dl.desc2">Extract to a folder of your choice</span></p><span class="home-download-action"><span data-i18n="dl.action2">Download ZIP</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-android.apk"><i class="ph ph-android-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name3">Android APK</span></h3><p><span data-i18n="dl.desc3">Install on your Android phone</span></p><span class="home-download-action"><span data-i18n="dl.action3">Download APK</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a></div>
+            <div class="home-download-bottom"><a href="app.html"><span data-i18n="dl.web">Use the web app</span></a><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1"><span data-i18n="dl.notes">Release notes & checksums</span></a></div>
+            <p class="home-download-detail"><span data-i18n="dl.signing">Windows builds are unsigned. Android APK uses a debug signature.</span></p>
+        </section>
+
+        <!-- ============================================================ Data control -->
+        <section class="section" id="data-control">
+            <div class="wrap">
+                <div class="source-shell source-shell-plain">
+                    <div class="source-summary">
+                        <div>
+                            <span class="eyebrow" data-i18n="privacy.label">Privacy & data control</span>
+                            <h2 data-i18n="privacy.title">Local by default. Connections are your choice.</h2>
+                            <p data-i18n="privacy.text">Your records are stored on your device by default. Only when you enable sync or backup is relevant data sent to Google Calendar, WebDAV or another service you select.</p>
+                        </div>
+                        <a class="btn btn-ghost" href="privacy.html" data-i18n="privacy.action">Read the privacy policy</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- ============================================================ Open source -->
         <section class="section" id="open-source">
             <div class="wrap">
                 <div class="source-shell">
-                    <div class="oss">
+                    <div class="source-summary">
                         <div class="oss-text">
                             <span class="eyebrow" data-i18n="oss.label">Open source</span>
-                            <h2 data-i18n="oss.title">Plain web technology, MIT licensed</h2>
-                            <p data-i18n="oss.intro">RestCal is built with plain HTML, CSS, and JavaScript — no framework and no analytics.</p>
+                            <h2 data-i18n="oss.title">Free, open source, and yours to run.</h2>
+                            <p data-i18n="oss.intro">Use RestCal online, install it as a PWA or Windows app, or get the source from GitHub and host it yourself.</p>
                             <div class="oss-chips" aria-label="Project highlights">
                                 <span data-i18n="oss.chipLicense">MIT License</span>
-                                <span data-i18n="oss.chipBuild">No build step</span>
-                                <span data-i18n="oss.chipPwa">Offline-first PWA</span>
-                                <span data-i18n="oss.chipData">Holiday data 2004–2026</span>
-                            </div>
-                            <div class="oss-ctas">
-                                <a class="btn btn-seal" href="https://github.com/skywalker23241/restcal-abohack"><i class="ph ph-github-logo" aria-hidden="true"></i><span data-i18n="oss.star">Star on GitHub</span></a>
-                                <a class="btn btn-ghost" href="https://github.com/skywalker23241/restcal-abohack/blob/main/LICENSE">MIT License</a>
-                            </div>
-                            <p class="oss-star" data-i18n="oss.note">Issues and pull requests are welcome.</p>
-                        </div>
-                        <div class="terminal" aria-label="RestCal local setup commands">
-                            <div class="terminal-bar"><i></i><i></i><i></i><span>restcal / local</span></div>
-                            <div class="terminal-body">
-                                <div><span class="ln">01</span> <span class="p">$</span> git clone github.com/skywalker23241/restcal-abohack</div>
-                                <div><span class="ln">02</span> <span class="p">$</span> cd restcal-abohack</div>
-                                <div><span class="ln">03</span> <span class="p">$</span> node server.js</div>
-                                <div><span class="ln">04</span> <span class="ok">✓</span> <span data-i18n="terminal.running">RestCal running at http://localhost:8765</span></div>
-                                <div><span class="ln">05</span> <span class="c" data-i18n="terminal.note"># no install, no dependencies, no build step</span></div>
+                                <span data-i18n="oss.chipBuild">Local-first</span>
+                                <span data-i18n="oss.chipPwa">Self-hostable</span>
                             </div>
                         </div>
+                        <a class="btn btn-seal" href="https://github.com/skywalker23241/restcal-abohack"><i class="ph ph-github-logo" aria-hidden="true"></i><span data-i18n="oss.star">View on GitHub</span></a>
                     </div>
                 </div>
             </div>
@@ -1705,20 +1778,18 @@
         <section class="section">
             <div class="wrap">
                 <div class="cta" data-reveal>
-                    <h2 data-i18n="cta.title">Know where your days go.</h2>
-                    <p data-i18n="cta.text">Open the demo, mark a few days, and watch the month settle into place — attendance,
-                        quotas, and pay, all accounted for.</p>
+                    <h2 data-i18n="cta.title">Keep workdays, time off and pay clear.</h2>
+                    <p data-i18n="cta.text">Open RestCal and mark a few days. Attendance, leave balances, working days and estimated pay will update together.</p>
                     <div class="cta-btns">
                         <a class="btn btn-cream" href="app.html">
-                            <span data-i18n="cta.open">Open Live Demo</span>
+                            <span data-i18n="cta.open">Start using RestCal</span>
                             <i class="ph ph-arrow-right" aria-hidden="true"></i>
                         </a>
-                        <a class="btn btn-outline-cream" href="https://github.com/skywalker23241/restcal-abohack" data-i18n="common.github">View on GitHub</a>
+                        <a class="btn btn-outline-cream" href="#download" data-i18n="dl.nav">Download</a>
                     </div>
                 </div>
             </div>
         </section>
-    <section class="home-download wrap" id="download"><div class="home-download-heading"><div><h2><span data-i18n="dl.title">RestCal, on your device.</span></h2><p><span data-i18n="dl.intro">Free for Windows and Android. Or start in your browser.</span></p></div><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1">v2.1.1 <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a></div><div class="home-download-grid"><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-setup.exe"><i class="ph ph-windows-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name0">Windows installer</span></h3><p><span data-i18n="dl.desc0">Install with desktop shortcuts</span></p><span class="home-download-action"><span data-i18n="dl.action0">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-portable.exe"><i class="ph ph-lightning" aria-hidden="true"></i><h3><span data-i18n="dl.name1">Windows portable</span></h3><p><span data-i18n="dl.desc1">Download and run directly</span></p><span class="home-download-action"><span data-i18n="dl.action1">Download EXE</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-win.zip"><i class="ph ph-file-zip" aria-hidden="true"></i><h3><span data-i18n="dl.name2">Windows ZIP</span></h3><p><span data-i18n="dl.desc2">Extract to a folder of your choice</span></p><span class="home-download-action"><span data-i18n="dl.action2">Download ZIP</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a><a class="home-download-card" href="https://github.com/skywalker23241/restcal-abohack/releases/download/v2.1.1/RestCal-2.1.1-android.apk"><i class="ph ph-android-logo" aria-hidden="true"></i><h3><span data-i18n="dl.name3">Android APK</span></h3><p><span data-i18n="dl.desc3">Install on your Android phone</span></p><span class="home-download-action"><span data-i18n="dl.action3">Download APK</span><i class="ph ph-download-simple" aria-hidden="true"></i></span></a></div><div class="home-download-bottom"><a href="app.html"><span data-i18n="dl.web">Use the web app</span></a><a href="https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.1.1"><span data-i18n="dl.notes">Release notes & checksums</span></a></div><p class="home-download-detail"><span data-i18n="dl.signing">Windows builds are unsigned. Android APK uses a debug signature.</span></p></section>
 </main>
 
     <!-- ============================================================ Footer -->
@@ -1752,7 +1823,7 @@
                 <nav class="footer-column" aria-label="Product">
                     <h3 data-i18n="footer.product">Product</h3>
                     <ul>
-                        <li><a href="app.html" data-i18n="common.liveDemo">Live Demo</a></li>
+                        <li><a href="app.html" data-i18n="common.liveDemo">Open RestCal</a></li>
                         <li><a href="#open-source" data-i18n="nav.openSource">Open source</a></li>
                         <li><a href="https://github.com/skywalker23241/restcal-abohack/blob/main/LICENSE">MIT License</a></li>
                     </ul>
@@ -1804,22 +1875,22 @@
 "hero.extraschedule": "Set your own working week",
 "hero.extradefaults": "Pay, leave quotas and templates",
 "hero.quote": "A daily quote, beside your plans",
-"main.title": "From a day off to a clear record.",
-"main.intro": "Start with your calendar. Leave balances, pay and leave requests follow from it.",
-"main.calendar": "Mark dates and keep daily notes",
-"main.calendarText": "Select a date to mark attendance, leave or overtime. Add a reason or note, and use start and end dates to apply a record across a range.",
-"main.salary": "Estimate pay before payday",
-"main.salaryText": "Set salary, fixed deductions and leave deduction rates. Estimate monthly take-home pay and export a payslip image.",
-"main.stats": "Keep track of leave balances",
-"main.statsText": "See used and remaining annual or compensatory leave. Review attendance and overtime with monthly charts and yearly heatmaps.",
-"main.note": "Leave requests, ready for email",
-"main.noteText": "Fill in dates, reason and handoff details. Copy the text, save an image or open your default email app with the request, ready to review and send.",
-"main.ticket": "Plan both legs of your trip",
-"main.ticketText": "Track outbound and return train-ticket sale dates for public holidays. Adjust travel preferences and export calendar reminders; check 12306 for the actual sale time.",
-"main.backup": "Keep a copy of your records",
-"main.backupText": "Records stay on your device by default. Export or import CSV backups, or use WebDAV to back up and restore on another device.",
-"settings.heading": "Settings and integrations, built around real work.",
-"settings.intro": "Every category below is available in RestCal and saved locally as you make changes.",
+"main.title": "Mark it once. Let the rest add up.",
+"main.intro": "RestCal is a personal calendar for people working in China. It connects leave, attendance, working days, holidays and pay without turning them into separate chores.",
+"main.calendar": "Take a day off, and the totals update",
+"main.calendarText": "Mark leave, compensatory time, overtime or attendance on the calendar. RestCal then updates actual working days, leave balances and yearly totals for you.",
+"main.salary": "See the pay impact before taking leave",
+"main.salaryText": "Combine salary, fixed deductions, attendance and leave records for a practical estimate of how time off may change this month’s pay.",
+"main.stats": "Leave and attendance at a glance",
+"main.statsText": "Review leave balances, attendance and overtime across the month or year.",
+"main.note": "Prepare a leave request",
+"main.noteText": "Turn saved dates, reasons and handoff notes into a request ready to send.",
+"main.ticket": "Chinese holidays are more than red dates",
+"main.ticketText": "See statutory holidays, makeup workdays, lunar dates and solar terms together. Plan a break and calculate ticket reminders using an adjustable presale period.",
+"main.backup": "Your calendar data stays under your control",
+"main.backupText": "Use RestCal without registering. Data is stored on your device by default, and is only sent to a service you choose when you enable sync or backup.",
+"settings.heading": "Useful when you need them, quiet when you don’t.",
+"settings.intro": "These supporting tools stay connected to the same calendar without changing RestCal’s focus.",
 "setting.profile": "Profile",
 "setting.profileText": "Save your name, workplace and hire date for records and leave requests.",
 "setting.schedule": "Work schedule",
@@ -1873,11 +1944,11 @@
 "dl.nav": "Download",
                 "meta.title": "RestCal — Leave, attendance & holiday planning in one clean calendar",
                 "meta.description": "RestCal is a free, open-source calendar for tracking leave and attendance, planning around statutory holidays and makeup workdays, and estimating salary deductions. No account required; data is stored locally by default with optional WebDAV sync.",
-                "nav.features": "Features",
-                "nav.preview": "Settings & extras",
-                "nav.audience": "Who it's for",
+                "nav.features": "Core scenarios",
+                "nav.preview": "More tools",
+                "nav.audience": "Who it helps",
                 "nav.openSource": "Open source",
-                "common.liveDemo": "Live Demo",
+                "common.liveDemo": "Open RestCal",
                 "common.github": "View on GitHub",
                 "common.issue": "Report an issue",
                 "hero.noteViews": "Day, week, month & year",
@@ -1891,9 +1962,9 @@
                 "hero.open": "Open RestCal free",
                 "hero.meta": "No account · Local by default · Optional sync",
                 "hero.imageAlt": "RestCal day view showing the daily calendar card, leave allowance and attendance summary",
-                "features.label": "Features",
-                "features.title": "Built around what a day off actually costs",
-                "features.intro": "Small tools that share one calendar — mark a day once, and the statistics, quotas, and salary math all update together.",
+                "features.label": "Everyday work calendar",
+                "features.title": "A calendar for leave, attendance and pay",
+                "features.intro": "Mark a day once, and the useful totals update together.",
                 "features.calendarTitle": "Day, week, month & year views",
                 "features.calendarText": "Switch from a tear-off day page to weekly, monthly, or yearly views while keeping lunar dates, holidays and makeup workdays visible.",
                 "features.statsTitle": "Monthly & yearly statistics",
@@ -1935,7 +2006,7 @@
                 "preview.slide6": "Show data and backup preview",
                 "preview.slide7": "Show daily editor preview",
                 "preview.calendarMonth": "October 2025",
-                "preview.caption": "Built directly in HTML for sharp detail at every size — open the <a href=\"app.html\">live demo</a> to try the real interactions.",
+                "preview.caption": "These are real RestCal screens. <a href=\"app.html\">Open RestCal</a> to start adding your own records.",
                 "demo.calendar": "Calendar",
                 "demo.dayTitle": "A focused page for every day",
                 "demo.day": "Day", "demo.week": "Week", "demo.month": "Month", "demo.year": "Year",
@@ -1954,9 +2025,9 @@
                 "demo.tools": "Tools", "demo.toolsTitle": "Three practical jobs, kept out of the way",
                 "demo.payslip": "Payslip", "demo.payslipText": "Calculate take-home pay and export a clean image.",
                 "demo.leaveNote": "Leave note", "demo.leaveNoteText": "Generate a formal note from your saved record.",
-                "demo.ticketReminder": "Ticket reminder", "demo.ticketText": "Know the train-ticket sale date before the rush.",
-                "demo.newYear": "New Year's Day · sale Dec 17", "demo.springFestival": "Spring Festival · sale Jan 31",
-                "demo.midAutumn": "Mid-Autumn Festival · sale Sep 10", "demo.nationalDay": "National Day · sale Sep 16",
+                "demo.ticketReminder": "Ticket reminder", "demo.ticketText": "Calculate ticket dates from your trip and an adjustable presale period.",
+                "demo.newYear": "New Year's Day · reminder set", "demo.springFestival": "Spring Festival · reminder set",
+                "demo.midAutumn": "Mid-Autumn Festival · reminder set", "demo.nationalDay": "National Day · reminder set",
                 "demo.expired": "Passed", "demo.days49": "49 days", "demo.days55": "55 days",
                 "demo.settings": "Settings", "demo.settingsTitle": "Make the calendar match your job",
                 "demo.profile": "Profile", "demo.workSchedule": "Work schedule", "demo.payDeductions": "Pay and deductions",
@@ -1977,38 +2048,38 @@
                 "demo.server": "Server", "demo.lastBackup": "Last backup", "demo.backupTime": "Today 09:12 · verified",
                 "demo.scope": "Includes", "demo.scopeText": "Records, settings and quotas",
                 "demo.restore": "Restore", "demo.backupNow": "Back up now",
-                "demo.localFirst": "100% local by default",
-                "demo.localFirstText": "Data lives in your browser — no account, no analytics.",
+                "demo.localFirst": "Local by default",
+                "demo.localFirstText": "Data stays on your device unless you choose a sync or backup service.",
                 "demo.csv": "CSV & calendar export",
                 "demo.csvText": "Take records to Excel, export an ICS calendar, or move between devices with validated imports.",
                 "demo.offline": "Offline-ready PWA",
                 "demo.offlineText": "Install once — it opens with or without a network, on desktop and phone.",
                 "week.mon": "MON", "week.tue": "TUE", "week.wed": "WED", "week.thu": "THU", "week.fri": "FRI", "week.sat": "SAT", "week.sun": "SUN",
                 "legend.attended": "Attended", "legend.holiday": "Holiday", "legend.makeup": "Makeup workday", "legend.annual": "Annual leave", "legend.sick": "Sick leave", "legend.personal": "Personal leave", "legend.weekend": "Weekend",
-                "audience.label": "Who it's for",
-                "audience.title": "For people who count their days",
-                "audience.intro": "RestCal is deliberately small. If any of these sound like you, it will probably fit.",
-                "audience.recordTitle": "The record keeper",
-                "audience.recordText": "Office workers who want every sick day and half-afternoon in one place, with monthly and yearly totals ready when review season comes.",
-                "audience.payTitle": "The paycheck realist",
-                "audience.payText": "Anyone deciding whether a day off is worth it. See the deduction before you send the request — not on payday.",
-                "audience.planTitle": "The holiday strategist",
-                "audience.planText": "Bridge two annual-leave days into a nine-day break. Plan around makeup workdays instead of being surprised by them.",
-                "audience.simpleTitle": "The tool minimalist",
-                "audience.simpleText": "No required account, subscription, or cloud dependency. Keep everything local, or opt into CSV and WebDAV backup when you need it.",
+                "audience.label": "Does this sound familiar?",
+                "audience.title": "You may need RestCal if…",
+                "audience.intro": "These are ordinary questions, but they are surprisingly easy to lose track of.",
+                "audience.recordTitle": "When checking leave balances",
+                "audience.recordText": "You often forget how much annual or compensatory leave you have already used.",
+                "audience.payTitle": "Before taking leave",
+                "audience.payText": "You always want to work out roughly how much pay a day off will affect.",
+                "audience.planTitle": "When planning a long break",
+                "audience.planText": "Spring Festival and National Day plans keep getting tangled up with makeup workdays.",
+                "audience.simpleTitle": "When keeping a personal record",
+                "audience.simpleText": "You want to track attendance and private pay or leave data without signing up for a complicated HR system.",
                 "oss.label": "Open source",
-                "oss.title": "Plain web technology, MIT licensed",
-                "oss.intro": "RestCal is built with plain HTML, CSS, and JavaScript — no framework and no analytics. Clone it, run the local server, or package the included Windows app. Read the source in an afternoon, or fork it to match your company's leave rules.",
-                "oss.chipLicense": "MIT License", "oss.chipBuild": "No build step", "oss.chipPwa": "Offline-first PWA", "oss.chipWindows": "Portable Windows .exe", "oss.chipIcs": "RFC 5545 ICS export", "oss.chipData": "Holiday data 2004–2026",
-                "oss.star": "Star on GitHub",
-                "oss.note": "If RestCal saves you a payroll surprise, a star helps other people find it. Issues and pull requests are welcome.",
-                "terminal.running": "RestCal running at http://localhost:8765",
-                "terminal.note": "# no install, no dependencies, no build step",
-                "cta.title": "Know where your days go.",
-                "cta.text": "Open the demo, mark a few days, and watch the month settle into place — attendance, quotas, and pay, all accounted for.",
-                "cta.open": "Open Live Demo",
+                "oss.title": "Free, open source, and yours to run.",
+                "oss.intro": "Use RestCal online, install it as a PWA or Windows app, or get the source from GitHub and host it yourself.",
+                "oss.chipLicense": "MIT License", "oss.chipBuild": "Local-first", "oss.chipPwa": "Self-hostable", "oss.chipWindows": "Windows app", "oss.chipIcs": "ICS export", "oss.chipData": "Chinese holiday data",
+                "oss.star": "View on GitHub",
+                "oss.note": "Issues and pull requests are welcome.",
+                "terminal.running": "RestCal is ready",
+                "terminal.note": "# self-host when you want to",
+                "cta.title": "Keep workdays, time off and pay clear.",
+                "cta.text": "Open RestCal and mark a few days. Attendance, leave balances, working days and estimated pay will update together.",
+                "cta.open": "Start using RestCal",
                 "footer.tagline": "休历 · Make sense of your time off",
-                "footer.intro": "A small, private calendar for understanding your time off, working days, and what they cost.",
+                "footer.intro": "A personal work calendar for leave, attendance, Chinese holidays and their impact on pay.",
                 "footer.telegram": "Join our Telegram",
                 "footer.explore": "Explore", "footer.product": "Product", "footer.community": "Community",
                 "footer.issue": "Report an issue ↗",
@@ -2018,7 +2089,28 @@
                 "cookie.title": "Cookies & local storage",
                 "cookie.text": "RestCal uses local storage for language preferences and app data. We do not use advertising or analytics cookies.",
                 "cookie.link": "Learn more",
-                "cookie.accept": "Got it"
+                "cookie.accept": "Got it",
+                "extras.label": "More practical tools",
+                "extras.payslip": "Payslips",
+                "extras.payslipText": "Review estimated pay details and export a clear payslip image.",
+                "extras.leaveNote": "Leave requests",
+                "extras.leaveNoteText": "Turn saved dates, reasons and handoff notes into a request ready to send.",
+                "extras.habits": "Habit check-ins",
+                "extras.habitsText": "Keep lightweight daily check-ins beside your work calendar when useful.",
+                "extras.google": "Google Calendar",
+                "extras.googleText": "Connect and choose what to sync only when you want to.",
+                "extras.exports": "CSV & ICS",
+                "extras.exportsText": "Move records with CSV or add plans to other calendar apps with ICS.",
+                "extras.webdav": "WebDAV backup",
+                "extras.webdavText": "Back up and restore records through a WebDAV service you choose.",
+                "extras.pwa": "Installable PWA",
+                "extras.pwaText": "Install the web app on desktop or mobile and keep using it offline.",
+                "extras.windows": "Windows app",
+                "extras.windowsText": "Choose an installer, portable app or ZIP package for Windows.",
+                "privacy.label": "Privacy & data control",
+                "privacy.title": "Local by default. Connections are your choice.",
+                "privacy.text": "Your records are stored on your device by default. Only when you enable sync or backup is relevant data sent to Google Calendar, WebDAV or another service you select.",
+                "privacy.action": "Read the privacy policy"
             },
             zh: {
 "hero.tabrecord": "日期标记",
@@ -2036,22 +2128,22 @@
 "hero.extraschedule": "工作时长与休息日，按实际设置",
 "hero.extradefaults": "薪资、额度和模板，统一管理",
 "hero.quote": "每日格言，给忙碌留一点余白",
-"main.title": "从请假到核算，把重要的事做好。",
-"main.intro": "先记好每一天，再看假期余额、核算工资、生成请假条。",
-"main.calendar": "标记日期，也记下当天备注",
-"main.calendarText": "点击日期标记出勤、请假或加班，填写理由和当天备注；选择起止日期，还能批量应用到一段时间。",
-"main.salary": "工资变化，提前有数",
-"main.salaryText": "设置工资、固定扣除和各类请假扣款比例，估算当月实发，并导出工资条图片。",
-"main.stats": "假期余额与统计，随时掌握",
-"main.statsText": "查看年假、调休的已用和剩余额度，按月、按年回顾出勤与加班，支持图表和全年热力图。",
-"main.note": "请假条，生成后用邮件发送",
-"main.noteText": "填写日期、理由与交接安排，生成正式请假条。可复制文字、保存图片，或带着请假内容打开默认邮箱，确认后发送。",
-"main.ticket": "往返车票，提前安排",
-"main.ticketText": "查看节假日去程、返程车票的开售日与倒计时，按出行习惯调整并导出提醒；实际起售时间以 12306 为准。",
-"main.backup": "记录与设置，一起备份",
-"main.backupText": "数据默认保存在本机。CSV 导入导出或 WebDAV 备份，支持记录和设置一起迁移、恢复。",
-"settings.heading": "设置与扩展，围绕真实工作来配置。",
-"settings.intro": "以下分类均已在休历中提供，修改后会自动保存在本机。",
+"main.title": "标记一次，后面的账自动算。",
+"main.intro": "休历是为中国职场人准备的个人日历，把请假、出勤、工作日、节假日和工资影响放在一起，不必分开记、反复算。",
+"main.calendar": "请一天假，后面的账自动算",
+"main.calendarText": "只需在日历上标记请假、调休、加班或出勤，实际工作日、假期使用情况和年度数据会随之更新。",
+"main.salary": "请假之前，先看看会扣多少钱",
+"main.salaryText": "结合工资、固定扣除、出勤和请假记录，快速估算当月工资变化。它不是财务软件，只帮你提前有个数。",
+"main.stats": "假期与出勤，一眼看清",
+"main.statsText": "按月或按年查看假期余额、出勤和加班情况。",
+"main.note": "需要时，再生成请假条",
+"main.noteText": "把已记录的日期、理由和交接安排整理成可以直接发送的请假申请。",
+"main.ticket": "中国节假日，本来就不只是红色日期",
+"main.ticketText": "法定节假日、调休补班、农历和节气放在一起看。规划假期时，还能根据可调整的预售期自动计算购票节点并提醒。",
+"main.backup": "你的日历数据，由你自己掌控",
+"main.backupText": "无需注册即可使用，数据默认保存在你的设备上。只有主动启用同步或备份时，相关数据才会发送到你选择的服务。",
+"settings.heading": "需要时顺手用，不需要时不打扰。",
+"settings.intro": "这些辅助能力都围绕同一张日历展开，但不会改变休历作为职场个人日历的重点。",
 "setting.profile": "个人资料",
 "setting.profileText": "保存姓名或昵称、工作单位和入职日期，用于记录与请假条。",
 "setting.schedule": "工作制度",
@@ -2105,11 +2197,11 @@
 "dl.nav": "下载",
                 "meta.title": "休历 RestCal — 请假、出勤、节假日与工资核算日历",
                 "meta.description": "休历是一款免费开源的请假与出勤日历，可结合中国法定节假日和调休安排，自动估算扣薪与到手工资。无需注册，默认本地存储，也可按需启用 WebDAV 同步。",
-                "nav.features": "功能",
-                "nav.preview": "设置与扩展",
+                "nav.features": "使用场景",
+                "nav.preview": "更多工具",
                 "nav.audience": "适合谁",
                 "nav.openSource": "开源",
-                "common.liveDemo": "立即体验",
+                "common.liveDemo": "立即使用休历",
                 "common.github": "在 GitHub 查看",
                 "common.issue": "反馈问题",
                 "hero.noteViews": "日、周、月、年，随时切换",
@@ -2123,9 +2215,9 @@
                 "hero.open": "免费使用休历",
                 "hero.meta": "无需账号 · 默认本地 · 可选同步",
                 "hero.imageAlt": "休历天视图，展示当日日历卡片、假期额度与出勤概览",
-                "features.label": "核心功能",
-                "features.title": "每一次休息，都算得清清楚楚",
-                "features.intro": "所有工具共用一张日历——只需标记一次，统计、额度和工资核算便会同步更新。",
+                "features.label": "职场个人日历",
+                "features.title": "请假、出勤和工资影响，一张日历说清楚",
+                "features.intro": "每一天只需标记一次，需要的统计会一起更新。",
                 "features.calendarTitle": "日、周、月、年四种视图",
                 "features.calendarText": "从撕页日历切换到周、月或年视图，农历、法定节假日和调休补班始终清晰可见。",
                 "features.statsTitle": "月度与年度统计",
@@ -2167,7 +2259,7 @@
                 "preview.slide6": "显示数据与备份预览",
                 "preview.slide7": "显示每日记录预览",
                 "preview.calendarMonth": "2025 年 10 月",
-                "preview.caption": "直接使用 HTML 构建，在任何尺寸下都保持清晰——打开<a href=\"app.html\">在线体验</a>，亲自尝试真实交互。",
+                "preview.caption": "这里展示的都是真实休历界面。<a href=\"app.html\">立即使用休历</a>，开始记录你自己的日历。",
                 "demo.calendar": "日历",
                 "demo.dayTitle": "每一天都有专属页面",
                 "demo.day": "日", "demo.week": "周", "demo.month": "月", "demo.year": "年",
@@ -2187,9 +2279,9 @@
                 "demo.tools": "工具", "demo.toolsTitle": "三个实用任务，随用随开",
                 "demo.payslip": "工资核算与工资条", "demo.payslipText": "核算本月到手工资，并导出清晰图片。",
                 "demo.leaveNote": "生成请假条", "demo.leaveNoteText": "根据已保存的记录生成正式请假条。",
-                "demo.ticketReminder": "购票提醒", "demo.ticketText": "提前掌握节假日火车票开售日期。",
-                "demo.newYear": "元旦 · 12 月 17 日开售", "demo.springFestival": "春节 · 1 月 31 日开售",
-                "demo.midAutumn": "中秋 · 9 月 10 日开售", "demo.nationalDay": "国庆 · 9 月 16 日开售",
+                "demo.ticketReminder": "购票提醒", "demo.ticketText": "根据出发日期和可调整的预售期自动计算购票节点。",
+                "demo.newYear": "元旦 · 已设置提醒", "demo.springFestival": "春节 · 已设置提醒",
+                "demo.midAutumn": "中秋 · 已设置提醒", "demo.nationalDay": "国庆 · 已设置提醒",
                 "demo.expired": "已过期", "demo.days49": "还有 49 天", "demo.days55": "还有 55 天",
                 "demo.settings": "设置", "demo.settingsTitle": "让日历真正匹配你的工作",
                 "demo.profile": "个人资料", "demo.workSchedule": "工作制度", "demo.payDeductions": "薪资和扣款",
@@ -2210,38 +2302,38 @@
                 "demo.server": "服务器", "demo.lastBackup": "上次备份", "demo.backupTime": "今天 09:12 · 已校验",
                 "demo.scope": "备份内容", "demo.scopeText": "记录、设置与假期额度",
                 "demo.restore": "恢复数据", "demo.backupNow": "立即备份",
-                "demo.localFirst": "默认 100% 本地",
-                "demo.localFirstText": "数据保存在你的浏览器里——无账号、无统计追踪。",
+                "demo.localFirst": "默认保存在本地",
+                "demo.localFirstText": "除非你主动选择同步或备份服务，数据会留在你的设备上。",
                 "demo.csv": "CSV 与日历导出",
                 "demo.csvText": "随时把记录带去 Excel、导出 ICS 日历，或经校验导入在设备间迁移。",
                 "demo.offline": "PWA 离线可用",
                 "demo.offlineText": "安装一次，有没有网络都能打开，桌面手机皆可。",
                 "week.mon": "周一", "week.tue": "周二", "week.wed": "周三", "week.thu": "周四", "week.fri": "周五", "week.sat": "周六", "week.sun": "周日",
                 "legend.attended": "已出勤", "legend.holiday": "节假日", "legend.makeup": "调休补班", "legend.annual": "年假", "legend.sick": "病假", "legend.personal": "事假", "legend.weekend": "周末",
-                "audience.label": "适合谁",
-                "audience.title": "为认真计算每一天的人而做",
-                "audience.intro": "休历刻意保持简单。如果下面任何一种描述像你，它大概正适合你。",
-                "audience.recordTitle": "认真记录的人",
-                "audience.recordText": "把每次病假和半天请假都记录在一处，月度、年度总数随时可查，年终复盘不再翻聊天记录。",
-                "audience.payTitle": "在意工资的人",
-                "audience.payText": "请假前先看看会扣多少钱，而不是等到发薪日才发现。",
-                "audience.planTitle": "假期规划高手",
-                "audience.planText": "用两天年假拼出九天长假，提前绕开调休补班，不再被工作日安排打个措手不及。",
-                "audience.simpleTitle": "极简工具爱好者",
-                "audience.simpleText": "无需账号、订阅或云端依赖；可以完全保存在本地，也能按需使用 CSV 与 WebDAV 备份。",
-                "oss.label": "自由开源",
-                "oss.title": "原生 Web 技术，MIT 开源许可",
-                "oss.intro": "休历使用原生 HTML、CSS 和 JavaScript 构建——无框架、无统计追踪。克隆后可运行本地服务，也可打包自带的 Windows 应用。一个下午便能读完源码，并可按公司的请假规则自由修改。",
-                "oss.chipLicense": "MIT 许可", "oss.chipBuild": "无需构建", "oss.chipPwa": "离线优先 PWA", "oss.chipWindows": "Windows 便携版", "oss.chipIcs": "RFC 5545 日历导出", "oss.chipData": "2004–2026 节假日数据",
-                "oss.star": "在 GitHub 点赞",
-                "oss.note": "如果休历帮你避免了一次工资意外，欢迎点个 Star，让更多人找到它。也欢迎提交 Issue 和 PR。",
-                "terminal.running": "休历运行于 http://localhost:8765",
-                "terminal.note": "# 无需安装、没有依赖、无需构建",
-                "cta.title": "每一天，都心中有数。",
-                "cta.text": "打开体验页，标记几天，出勤、假期额度和工资影响便会自动归位。",
-                "cta.open": "立即体验",
+                "audience.label": "这些情况熟悉吗",
+                "audience.title": "你可能正需要休历，如果……",
+                "audience.intro": "都是上班时常见的小问题，却很容易越记越乱。",
+                "audience.recordTitle": "想查假期余额时",
+                "audience.recordText": "年假和调休用了多少，经常记不清。",
+                "audience.payTitle": "准备请假之前",
+                "audience.payText": "总想先算一下，这次请假大概会扣多少钱。",
+                "audience.planTitle": "准备拼长假时",
+                "audience.planText": "春节、国庆想拼假，却总被调休补班绕晕。",
+                "audience.simpleTitle": "想自己记出勤时",
+                "audience.simpleText": "不想注册复杂的 OA 或考勤软件，也希望工资、请假等私人数据默认留在本地。",
+                "oss.label": "免费开源",
+                "oss.title": "免费、开源，也可以自己掌控",
+                "oss.intro": "休历是一个轻量的开源项目。你可以直接在线使用、安装为 PWA 或 Windows 应用，也可以从 GitHub 获取源码自行部署。",
+                "oss.chipLicense": "MIT License", "oss.chipBuild": "Local-first", "oss.chipPwa": "可自行部署", "oss.chipWindows": "Windows 应用", "oss.chipIcs": "ICS 导出", "oss.chipData": "中国节假日数据",
+                "oss.star": "在 GitHub 查看",
+                "oss.note": "欢迎提交 Issue 和 PR。",
+                "terminal.running": "休历已就绪",
+                "terminal.note": "# 需要时可以自行部署",
+                "cta.title": "把工作日、休息和工资影响理清楚。",
+                "cta.text": "打开休历，标记几天。出勤、假期余额、实际工作日和工资估算会一起更新。",
+                "cta.open": "立即使用休历",
                 "footer.tagline": "休历 · 把休息过明白",
-                "footer.intro": "一款小巧、私密的日历，帮你看懂休假、工作日，以及它们对工资的影响。",
+                "footer.intro": "面向中国职场人的个人日历，用来记录请假、调休、加班和出勤，并看清节假日与工资影响。",
                 "footer.telegram": "加入 Telegram 频道",
                 "footer.explore": "探索", "footer.product": "产品", "footer.community": "社区",
                 "footer.issue": "反馈问题 ↗",
@@ -2251,7 +2343,28 @@
                 "cookie.title": "Cookie 与本地存储",
                 "cookie.text": "休历使用本地存储保存语言偏好和应用数据，不使用广告或分析 Cookie。",
                 "cookie.link": "了解详情",
-                "cookie.accept": "知道了"
+                "cookie.accept": "知道了",
+                "extras.label": "更多实用工具",
+                "extras.payslip": "工资条",
+                "extras.payslipText": "查看工资估算明细，并导出清晰的工资条图片。",
+                "extras.leaveNote": "请假条",
+                "extras.leaveNoteText": "把已记录的日期、理由和交接安排整理成可以直接发送的请假申请。",
+                "extras.habits": "习惯打卡",
+                "extras.habitsText": "需要时，在职场日历旁做一些轻量的日常打卡。",
+                "extras.google": "Google Calendar",
+                "extras.googleText": "只有主动连接时，才同步你选择的日历内容。",
+                "extras.exports": "CSV 与 ICS",
+                "extras.exportsText": "用 CSV 迁移记录，或通过 ICS 添加到其他日历应用。",
+                "extras.webdav": "WebDAV 备份",
+                "extras.webdavText": "通过你选择的 WebDAV 服务备份和恢复记录。",
+                "extras.pwa": "PWA 应用",
+                "extras.pwaText": "安装到电脑或手机，没有网络时也能继续使用。",
+                "extras.windows": "Windows 桌面端",
+                "extras.windowsText": "可选择安装版、免安装版或 ZIP 压缩包。",
+                "privacy.label": "隐私与数据控制",
+                "privacy.title": "默认留在本地，连接什么由你决定。",
+                "privacy.text": "记录默认保存在你的设备上。只有当你主动启用同步或备份功能时，相关数据才会发送到 Google Calendar、WebDAV 或你选择的其他服务。",
+                "privacy.action": "查看隐私政策"
             }
         };
 
@@ -2400,7 +2513,7 @@
         document.querySelectorAll(".section-head, .home-download-heading, .home-download-bottom, .home-download-detail")
             .forEach(element => setReveal(element));
 
-        document.querySelectorAll(".features-grid, .settings-summary, .home-download-grid").forEach(grid => {
+        document.querySelectorAll(".features-grid, .cases-grid, .settings-summary, .home-download-grid").forEach(grid => {
             Array.from(grid.children).forEach((card, index) => setReveal(card, "card", Math.min(index * 70, 350)));
         });
 

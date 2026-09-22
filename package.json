@@ -15,6 +15,7 @@
         "verify:structure": "node scripts/verify-structure.js",
         "verify:server": "node scripts/verify-server.js",
         "verify:mobile": "electron scripts/verify-mobile.js",
+        "verify:overview": "electron scripts/verify-overview-modules.js",
         "verify:calendar": "electron scripts/verify-calendar-integration.js",
         "verify:integrations": "electron scripts/verify-integrations.js",
         "test": "node scripts/test-ics.js",

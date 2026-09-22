@@ -373,46 +373,130 @@ h1 {
 /* 移动端底部导航 */
 .bottom-nav {
     position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: max(16px, env(safe-area-inset-left));
     z-index: 15;
     display: none;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid var(--border);
-    background: color-mix(in srgb, var(--card) 94%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding-bottom: env(safe-area-inset-bottom);
+    height: 72px;
+    max-width: 440px;
+    margin-inline: auto;
+    padding: 7px 10px;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid color-mix(in srgb, white 72%, var(--border));
+    border-radius: 999px;
+    background:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.26) 48%, rgba(255, 255, 255, 0.5)),
+        color-mix(in srgb, var(--card) 54%, transparent);
+    box-shadow:
+        0 16px 40px rgba(63, 43, 31, 0.15),
+        0 4px 12px rgba(63, 43, 31, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(24px) saturate(165%);
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+}
+
+.bottom-nav::before {
+    position: absolute;
+    inset: 1px 8% auto;
+    z-index: -1;
+    height: 45%;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.58), transparent);
+    content: "";
+    pointer-events: none;
 }
 
 .bottom-nav-btn {
+    position: relative;
     display: grid;
-    justify-items: center;
-    gap: 2px;
-    min-height: 54px;
-    padding: 8px 4px 6px;
+    min-width: 0;
+    min-height: 58px;
+    padding: 0;
+    place-items: center;
     border: 0;
+    border-radius: 999px;
     background: transparent;
     color: var(--muted);
-    font-size: 11px;
-    font-weight: 600;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    transition: color 220ms ease, transform 220ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.bottom-nav-btn::before {
+    position: absolute;
+    width: 54px;
+    height: 54px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    content: "";
+    opacity: 0;
+    transform: scale(.72);
+    transition:
+        opacity 220ms ease,
+        transform 320ms cubic-bezier(.22, 1, .36, 1),
+        background 220ms ease,
+        box-shadow 220ms ease;
 }
 
 .bottom-nav-btn .icon {
-    width: 20px;
-    height: 20px;
+    position: relative;
+    z-index: 1;
+    width: 27px;
+    height: 27px;
+    font-size: 27px;
+    line-height: 1;
+    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.65));
+    transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .bottom-nav-btn.active {
     color: var(--primary);
 }
 
+.bottom-nav-btn.active::before {
+    border-color: rgba(255, 255, 255, 0.55);
+    background:
+        radial-gradient(circle at 38% 25%, rgba(255, 255, 255, 0.82), transparent 34%),
+        color-mix(in srgb, var(--primary) 14%, rgba(255, 255, 255, 0.58));
+    box-shadow:
+        0 8px 24px color-mix(in srgb, var(--primary) 18%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -8px 18px color-mix(in srgb, var(--primary) 9%, transparent);
+    opacity: 1;
+    transform: scale(1);
+}
+
+.bottom-nav-btn.active .icon {
+    transform: translateY(-1px) scale(1.04);
+}
+
+.bottom-nav-btn:active {
+    transform: scale(.94);
+}
+
 .bottom-nav-btn:focus-visible {
     outline: 0;
-    box-shadow: inset 0 0 0 2px var(--ring-soft);
+    box-shadow: inset 0 0 0 2px var(--ring);
+}
+
+[data-theme="dark"] .bottom-nav {
+    border-color: rgba(255, 255, 255, 0.18);
+    background:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035) 48%, rgba(255, 255, 255, 0.09)),
+        color-mix(in srgb, var(--card) 66%, transparent);
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .bottom-nav::before {
+    opacity: .25;
 }
 
 .api-state {
@@ -490,9 +574,19 @@ h1 {
 
 .overview-strip {
     display: grid;
-    grid-template-columns: repeat(3, minmax(118px, 1fr));
+    grid-template-columns: repeat(var(--overview-count, 3), minmax(0, 1fr));
     align-items: stretch;
+    width: 370px;
+    max-width: 100%;
     gap: 8px;
+}
+
+.overview-shell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    gap: 6px;
 }
 
 /* PC 端三段工具栏使用独立轨道；左右内容宽度变化时，中间视图导航保持固定。 */
@@ -504,7 +598,7 @@ h1 {
 
     #viewCalendar .month-switcher { justify-self: start; }
     #viewCalendar .view-switcher { justify-self: center; }
-    #viewCalendar .overview-strip { justify-self: end; }
+    #viewCalendar .overview-shell { justify-self: end; }
 }
 
 .overview-item {
@@ -574,6 +668,148 @@ h1 {
 .overview-item.is-action:focus-visible {
     outline: 0;
     box-shadow: 0 0 0 3px var(--ring-soft);
+}
+
+.overview-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 62px;
+    gap: 7px;
+    padding: 8px 14px;
+    border: 1px dashed color-mix(in srgb, var(--muted) 48%, var(--border));
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--card) 58%, transparent);
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: color var(--transition-fast) ease, border-color var(--transition-fast) ease, background var(--transition-fast) ease;
+}
+
+.overview-empty .icon {
+    font-size: 16px;
+}
+
+.overview-empty:hover,
+.overview-empty:focus-visible {
+    border-color: color-mix(in srgb, var(--primary) 52%, var(--border));
+    background: color-mix(in srgb, var(--primary) 5%, var(--card));
+    color: var(--primary);
+    outline: 0;
+}
+
+/* ===== 快捷概览自定义 ===== */
+.overview-customize-modal {
+    width: min(680px, calc(100vw - 32px));
+}
+
+.overview-customize-body {
+    display: grid;
+    gap: 22px;
+}
+
+.overview-customizer-preview {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--background) 74%, var(--card));
+}
+
+.overview-customizer-preview .overview-item,
+.overview-customizer-preview .overview-item:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+    box-shadow: none;
+}
+
+.overview-customizer-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.overview-customizer-heading > span {
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.overview-customizer-list {
+    display: grid;
+    gap: 6px;
+}
+
+.overview-module-row {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 56px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--card) 72%, transparent);
+}
+
+.overview-module-row.is-selected {
+    border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+    background: color-mix(in srgb, var(--primary) 5%, var(--card));
+}
+
+.overview-module-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--accent);
+    color: var(--primary);
+    font-size: 18px;
+}
+
+.overview-module-copy {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+
+.overview-module-copy strong {
+    color: var(--foreground);
+    font-size: 13px;
+}
+
+.overview-module-copy small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.overview-module-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.overview-module-actions .icon-only {
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+}
+
+.overview-module-toggle {
+    min-width: 54px;
+}
+
+.overview-customizer-status {
+    min-height: 18px;
+    margin: -10px 0 0;
+    color: var(--primary);
 }
 
 /* ===== 多习惯打卡 ===== */
@@ -938,6 +1174,93 @@ h1 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.modal-backdrop.recent-records-backdrop {
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+    background: color-mix(in srgb, var(--overlay) 72%, transparent);
+}
+
+.recent-records-panel {
+    display: flex;
+    flex-direction: column;
+    width: min(380px, calc(100vw - 28px));
+    height: 100%;
+    overflow: hidden;
+    border-left: 1px solid var(--border);
+    background: var(--popover);
+    box-shadow: -18px 0 48px color-mix(in srgb, var(--shadow-color) 22%, transparent);
+}
+
+.modal-backdrop.open > .recent-records-panel {
+    animation: recent-panel-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.modal-backdrop.closing > .recent-records-panel {
+    animation: recent-panel-out 0.18s ease both;
+}
+
+.modal-body.recent-records-body {
+    display: block;
+    flex: 1 1 auto;
+    padding: 10px 14px 20px;
+    overflow-y: auto;
+}
+
+.recent-records-body .recent-list {
+    align-content: start;
+    grid-auto-rows: max-content;
+    gap: 9px;
+}
+
+.recent-records-body .recent-row {
+    grid-template-columns: 78px auto minmax(0, 1fr);
+    min-height: 58px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: 0 3px 12px color-mix(in srgb, var(--shadow-color) 7%, transparent);
+}
+
+@media (hover: hover) {
+    .recent-records-body .recent-row:hover {
+        border-color: color-mix(in srgb, var(--primary) 24%, var(--border));
+        background: color-mix(in srgb, var(--primary) 4%, var(--card));
+    }
+}
+
+.recent-records-body .recent-date {
+    color: var(--foreground);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.recent-records-body .tag {
+    justify-self: start;
+}
+
+.recent-records-body .recent-meta {
+    line-height: 1.45;
+}
+
+.recent-records-body .empty-state {
+    min-height: 160px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--card) 64%, transparent);
+}
+
+@keyframes recent-panel-in {
+    from { opacity: 0; transform: translateX(28px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes recent-panel-out {
+    to { opacity: 0; transform: translateX(24px); }
 }
 
 /* ===== 统计视图 ===== */
@@ -2648,6 +2971,10 @@ i.icon {
     justify-items: center;
     padding: 28px 16px 34px;
     background: var(--muted-surface);
+    overflow: hidden;
+    perspective: 1400px;
+    perspective-origin: 68% 78%;
+    isolation: isolate;
 }
 
 .day-page {
@@ -2668,6 +2995,162 @@ i.icon {
     box-shadow: var(--shadow-popover);
     animation: day-in 0.32s ease backwards;
     transition: box-shadow var(--transition-fast) ease;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* 切换日期时两张日历页叠放；纸面从右下角翘起并沿对角线作 3D 翻转。 */
+.calendar-grid.day-page-turning .day-page {
+    grid-area: 1 / 1;
+    pointer-events: none;
+    will-change: transform, opacity, filter;
+}
+
+.page-curl {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    z-index: 4;
+    width: 116px;
+    height: 116px;
+    opacity: 0;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    background:
+        linear-gradient(135deg,
+            transparent 0 47%,
+            color-mix(in srgb, var(--border) 75%, transparent) 48%,
+            color-mix(in srgb, var(--card) 92%, var(--secondary)) 50% 68%,
+            color-mix(in srgb, var(--muted-surface) 78%, var(--card)) 100%);
+    filter: drop-shadow(-12px -12px 13px rgba(35, 27, 22, 0.18));
+    transform: scale(0.05) rotate(0.01deg);
+    transform-origin: 100% 100%;
+    pointer-events: none;
+}
+
+.day-page.page-leave-forward {
+    z-index: 2;
+    transform-origin: 0 0;
+    animation: day-page-turn-forward 0.56s cubic-bezier(0.48, 0.06, 0.25, 1) both;
+}
+
+.day-page.page-enter-forward {
+    z-index: 1;
+    animation: day-page-reveal-forward 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.day-page.page-leave-backward {
+    z-index: 1;
+    animation: day-page-recede-backward 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.day-page.page-enter-backward {
+    z-index: 2;
+    transform-origin: 0 0;
+    animation: day-page-turn-backward 0.56s cubic-bezier(0.2, 0.78, 0.25, 1) both;
+}
+
+.day-page.page-leave-forward .page-curl {
+    animation: day-curl-lift 0.56s cubic-bezier(0.48, 0.06, 0.25, 1) both;
+}
+
+.day-page.page-enter-backward .page-curl {
+    animation: day-curl-settle 0.56s cubic-bezier(0.2, 0.78, 0.25, 1) both;
+}
+
+@keyframes day-page-turn-forward {
+    0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, -1, 0, 0) scale(1);
+        filter: brightness(1);
+    }
+    42% {
+        opacity: 0.96;
+        transform: translate3d(-9px, -7px, 28px) rotate3d(1, -1, 0, 20deg) rotateZ(-0.8deg) scale(0.995);
+        filter: brightness(1.04);
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(-78px, -60px, 74px) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
+        filter: brightness(0.82);
+    }
+}
+
+@keyframes day-curl-lift {
+    0% {
+        opacity: 0;
+        transform: scale(0.05) rotate(0.01deg);
+    }
+    18% {
+        opacity: 0.9;
+    }
+    58% {
+        opacity: 1;
+        transform: scale(1.34) rotate(1.5deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.9) rotate(5deg);
+    }
+}
+
+@keyframes day-page-reveal-forward {
+    from {
+        opacity: 0.45;
+        transform: translate3d(7px, 7px, -16px) scale(0.982);
+        filter: brightness(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes day-page-recede-backward {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0.36;
+        transform: translate3d(8px, 8px, -18px) scale(0.98);
+        filter: brightness(0.9);
+    }
+}
+
+@keyframes day-page-turn-backward {
+    from {
+        opacity: 0;
+        transform: translate3d(-78px, -60px, 74px) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
+        filter: brightness(0.82);
+    }
+    64% {
+        opacity: 1;
+        transform: translate3d(2px, 2px, 4px) rotate3d(1, -1, 0, -3deg) rotateZ(0.15deg) scale(1);
+        filter: brightness(1.02);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, -1, 0, 0) scale(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes day-curl-settle {
+    from {
+        opacity: 0;
+        transform: scale(2.9) rotate(5deg);
+    }
+    28% {
+        opacity: 1;
+    }
+    78% {
+        opacity: 0.82;
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.05) rotate(0.01deg);
+    }
 }
 
 @media (hover: hover) {
@@ -4513,7 +4996,7 @@ html.theme-anim #themeToggle .icon {
 .settings-nav {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
     padding: 14px 10px;
     border-right: 1px solid var(--border);
     background: var(--surface-subtle);
@@ -4524,8 +5007,8 @@ html.theme-anim #themeToggle .icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 36px;
-    padding: 0 12px;
+    min-height: 40px;
+    padding: 0 13px;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;
@@ -5557,12 +6040,11 @@ html.theme-anim #themeToggle .icon {
 
     .bottom-nav {
         display: grid;
-        padding-bottom: max(8px, env(safe-area-inset-bottom));
     }
 
     /* 给固定底部导航让位 */
     .app {
-        padding-bottom: calc(78px + env(safe-area-inset-bottom));
+        padding-bottom: calc(104px + env(safe-area-inset-bottom));
     }
 
     .topbar-actions .btn {
@@ -6075,7 +6557,7 @@ html.theme-anim #themeToggle .icon {
         padding-left: max(12px, env(safe-area-inset-left));
         padding-right: max(12px, env(safe-area-inset-right));
         /* 底部导航为 fixed，必须保留让位空间，否则页面尾部内容被遮住滑不到底 */
-        padding-bottom: calc(78px + env(safe-area-inset-bottom));
+        padding-bottom: calc(104px + env(safe-area-inset-bottom));
     }
 
     .calendar-grid {
@@ -6752,5 +7234,89 @@ html.theme-anim #themeToggle .icon {
 
     #viewCalendar .calendar-panel.mode-month .calendar-footer {
         display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    #viewCalendar .overview-shell {
+        width: 100%;
+    }
+
+    #viewCalendar .overview-shell .overview-strip {
+        display: grid;
+        grid-template-columns: repeat(var(--overview-count, 3), minmax(0, 1fr));
+        width: auto;
+        flex: 1 1 auto;
+    }
+
+    #viewCalendar .overview-shell .overview-item,
+    #viewCalendar .overview-shell .overview-item:first-child {
+        min-width: 0;
+    }
+
+    #viewCalendar .overview-empty {
+        min-height: 36px;
+        border-radius: 0;
+        background: transparent;
+    }
+}
+
+@media (max-width: 760px) {
+    .modal-backdrop.recent-records-backdrop {
+        align-items: flex-end;
+    }
+
+    .recent-records-panel {
+        width: 100%;
+        height: min(70dvh, 620px);
+        border-top: 1px solid var(--border);
+        border-left: 0;
+        border-radius: var(--radius) var(--radius) 0 0;
+        box-shadow: 0 -18px 48px color-mix(in srgb, var(--shadow-color) 20%, transparent);
+    }
+
+    #viewCalendar .overview-shell {
+        align-items: center;
+        gap: 4px;
+    }
+
+    .overview-customize-body {
+        gap: 16px;
+    }
+
+    .overview-customizer-preview {
+        padding: 8px;
+        overflow-x: auto;
+    }
+
+    .overview-customizer-preview .overview-item,
+    .overview-customizer-preview .overview-item:first-child {
+        min-width: 94px;
+    }
+
+    .overview-module-row {
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        gap: 8px;
+        padding-inline: 8px;
+    }
+
+    .overview-module-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .overview-module-actions {
+        gap: 0;
+    }
+
+    .overview-module-actions .icon-only {
+        width: 32px;
+        min-width: 32px;
+        min-height: 36px;
+    }
+
+    .overview-module-toggle {
+        min-width: 48px;
+        padding-inline: 8px;
     }
 }

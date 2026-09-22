@@ -54,6 +54,13 @@
                 <button class="btn icon-btn language-btn" id="languageToggle" type="button" title="Switch to English" aria-label="Switch to English">EN</button>
                 <button class="btn icon-btn" id="guideToggle" type="button" title="界面引导" aria-label="界面引导"
                     hidden><i class="ph ph-book-open icon"></i></button>
+                <button class="btn icon-btn" id="recentRecordsToggle" type="button" title="最近记录" aria-label="最近记录">
+                    <i class="ph ph-clock-counter-clockwise icon" aria-hidden="true"></i>
+                </button>
+                <button class="btn icon-btn" id="overviewCustomize" type="button"
+                    title="自定义快捷概览" aria-label="自定义快捷概览">
+                    <i class="ph ph-squares-four icon" aria-hidden="true"></i>
+                </button>
                 <button class="btn icon-btn" id="settingsToggle" type="button" title="设置" aria-label="设置"><i class="ph ph-sliders-horizontal icon"></i></button>
             </div>
         </header>
@@ -75,7 +82,9 @@
                     <button class="seg-btn active" data-cal-mode="month" type="button">月</button>
                     <button class="seg-btn" data-cal-mode="year" type="button">年</button>
                 </div>
-                <div class="overview-strip" id="monthSummary" aria-label="本月概览"></div>
+                <div class="overview-shell">
+                    <div class="overview-strip" id="monthSummary" aria-label="快捷概览"></div>
+                </div>
             </div>
 
             <div class="panel calendar-panel">
@@ -109,21 +118,6 @@
                 </div>
             </section>
 
-            <div class="home-secondary">
-                <section class="subpanel" aria-label="年度趋势">
-                    <div class="subpanel-head">
-                        <h2>年度趋势</h2>
-                        <button class="btn ghost compact-btn" data-nav="stats" type="button">查看统计</button>
-                    </div>
-                    <div class="subpanel-body" id="homeTrend"></div>
-                </section>
-                <section class="subpanel" aria-label="最近记录">
-                    <div class="subpanel-head">
-                        <h2>最近记录</h2>
-                    </div>
-                    <div class="subpanel-body recent-list" id="recentRecords"></div>
-                </section>
-            </div>
         </section>
 
         <section class="view" id="viewStats" data-view-panel="stats" aria-label="统计" hidden>
@@ -279,9 +273,9 @@
 
 
     <nav class="bottom-nav" aria-label="主导航">
-        <button class="bottom-nav-btn" data-nav="calendar" type="button" aria-current="page"><i class="ph-fill ph-calendar-blank icon"></i><span>日历</span></button>
-        <button class="bottom-nav-btn" data-nav="stats" type="button"><i class="ph ph-chart-bar icon"></i><span>统计</span></button>
-        <button class="bottom-nav-btn" data-nav="tools" type="button"><i class="ph ph-toolbox icon"></i><span>工具</span></button>
+        <button class="bottom-nav-btn" data-nav="calendar" type="button" aria-label="日历" aria-current="page"><i class="ph-fill ph-calendar-blank icon" aria-hidden="true"></i></button>
+        <button class="bottom-nav-btn" data-nav="stats" type="button" aria-label="统计"><i class="ph ph-chart-bar icon" aria-hidden="true"></i></button>
+        <button class="bottom-nav-btn" data-nav="tools" type="button" aria-label="工具"><i class="ph ph-toolbox icon" aria-hidden="true"></i></button>
     </nav>
 
     <div class="onboarding-backdrop" id="onboardingBackdrop" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
@@ -301,6 +295,23 @@
     </div>
     <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
     <div class="note-tooltip" id="noteTooltip" role="tooltip" hidden></div>
+
+    <div class="modal-backdrop recent-records-backdrop" id="recentRecordsPanel" role="dialog"
+        aria-modal="true" aria-labelledby="recentRecordsTitle">
+        <aside class="recent-records-panel">
+            <div class="modal-head">
+                <div>
+                    <h2 id="recentRecordsTitle">最近记录</h2>
+                    <div class="subtitle">快速返回最近编辑的日期</div>
+                </div>
+                <button class="btn ghost icon-only" id="closeRecentRecords" type="button" title="关闭"
+                    aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
+            </div>
+            <div class="modal-body recent-records-body">
+                <div class="recent-list" id="recentRecords"></div>
+            </div>
+        </aside>
+    </div>
 
     <div class="modal-backdrop" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
         <div class="modal search-modal">
@@ -767,6 +778,39 @@
         </div>
     </div>
 
+    <div class="modal-backdrop" id="overviewCustomizeModal" role="dialog" aria-modal="true"
+        aria-labelledby="overviewCustomizeTitle">
+        <div class="modal overview-customize-modal">
+            <div class="modal-head">
+                <div>
+                    <h2 id="overviewCustomizeTitle">自定义快捷概览</h2>
+                    <div class="subtitle">选择最常查看的 1–3 个模块</div>
+                </div>
+                <button class="btn ghost icon-only" id="closeOverviewCustomize" type="button" title="关闭"
+                    aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button>
+            </div>
+            <div class="modal-body overview-customize-body">
+                <section aria-label="当前快捷概览">
+                    <div class="field-group-label">当前布局</div>
+                    <div class="overview-customizer-preview" id="overviewCustomizerPreview"></div>
+                </section>
+                <section aria-label="可选模块">
+                    <div class="overview-customizer-heading">
+                        <div class="field-group-label">可选模块</div>
+                        <span id="overviewCustomizerCount"></span>
+                    </div>
+                    <div class="overview-customizer-list" id="overviewCustomizerList"></div>
+                </section>
+                <p class="notice overview-customizer-status" id="overviewCustomizerStatus" aria-live="polite"></p>
+            </div>
+            <div class="modal-foot">
+                <button class="btn ghost" id="overviewCustomizeReset" type="button">恢复默认</button>
+                <span class="foot-spacer" aria-hidden="true"></span>
+                <button class="btn primary" id="overviewCustomizeDone" type="button">完成</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-backdrop" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptModalTitle">
         <div class="receipt-window">
             <div class="modal-head">
@@ -1005,6 +1049,18 @@
             overtime: "加班"
         };
         const LEAVE_STATUSES = ["personal", "sick", "annual", "comp"];
+        const DEFAULT_OVERVIEW_MODULES = ["attendance", "leaveDeduction", "nextHoliday"];
+        const OVERVIEW_MODULE_IDS = [
+            "attendance",
+            "annualQuota",
+            "leaveDeduction",
+            "estimatedSalary",
+            "nextHoliday",
+            "ticketSale",
+            "payday",
+            "overtime",
+            "habit"
+        ];
         const HABIT_ICONS = [
             {id: "flag", icon: "flag", label: "旗子"},
             {id: "book", icon: "book-open", label: "阅读"},
@@ -1044,6 +1100,7 @@
                 googleCalendar: {autoSync: true, include: {leave: true, overtime: true, work: false, notes: true}},
                 email: {defaultRecipient: ""}
             },
+            dashboard: {version: 1, overviewModules: [...DEFAULT_OVERVIEW_MODULES]},
             habits: [],
             onboardingCompleted: false,
             onboardingSkipped: false
@@ -1142,6 +1199,9 @@
             searchToggle: document.getElementById("searchToggle"),
             themeToggle: document.getElementById("themeToggle"),
             guideToggle: document.getElementById("guideToggle"),
+            recentRecordsToggle: document.getElementById("recentRecordsToggle"),
+            recentRecordsPanel: document.getElementById("recentRecordsPanel"),
+            closeRecentRecords: document.getElementById("closeRecentRecords"),
             calendarSource: document.getElementById("calendarSource"),
             calendarGrid: document.getElementById("calendarGrid"),
             noteTooltip: document.getElementById("noteTooltip"),
@@ -1153,8 +1213,16 @@
             yearStatsPanel: document.getElementById("yearStatsPanel"),
             yearStatsMode: document.getElementById("yearStatsMode"),
             monthSummary: document.getElementById("monthSummary"),
+            overviewCustomize: document.getElementById("overviewCustomize"),
+            overviewCustomizeModal: document.getElementById("overviewCustomizeModal"),
+            closeOverviewCustomize: document.getElementById("closeOverviewCustomize"),
+            overviewCustomizeDone: document.getElementById("overviewCustomizeDone"),
+            overviewCustomizeReset: document.getElementById("overviewCustomizeReset"),
+            overviewCustomizerPreview: document.getElementById("overviewCustomizerPreview"),
+            overviewCustomizerList: document.getElementById("overviewCustomizerList"),
+            overviewCustomizerCount: document.getElementById("overviewCustomizerCount"),
+            overviewCustomizerStatus: document.getElementById("overviewCustomizerStatus"),
             homeAlerts: document.getElementById("homeAlerts"),
-            homeTrend: document.getElementById("homeTrend"),
             recentRecords: document.getElementById("recentRecords"),
             welcomeCard: document.getElementById("welcomeCard"),
             welcomeTitle: document.getElementById("welcomeTitle"),
@@ -1707,6 +1775,7 @@
             window.addEventListener("restcal:languagechange", () => {
                 renderMonthSummary(calculateStats(currentYear, currentMonth));
                 window.RestCalI18n?.apply(els.monthSummary);
+                if (els.overviewCustomizeModal.classList.contains("open")) renderOverviewCustomizer();
                 if (activeDate && els.dayModal.classList.contains("open")) {
                     const date = fromISO(activeDate);
                     renderModalHeading(date, getDayInfo(date));
@@ -2017,6 +2086,8 @@
                 searchModal: closeSearch,
                 guideModal: dismissProductTourIntro,
                 settingsModal: closeSettings,
+                overviewCustomizeModal: closeOverviewCustomizer,
+                recentRecordsPanel: closeRecentRecords,
                 webdavConfigModal: closeWebdavConfigModal,
                 receiptModal: closeReceiptModal,
                 leaveGeneratorModal: closeLeaveGenerator,
@@ -2409,6 +2480,31 @@
             els.nextMonth.addEventListener("click", () => shiftMonth(1));
             els.todayBtn.addEventListener("click", () => jumpToToday());
             els.brandHome.addEventListener("click", returnToTodayDayView);
+            els.recentRecordsToggle.addEventListener("click", openRecentRecords);
+            els.closeRecentRecords.addEventListener("click", closeRecentRecords);
+            els.recentRecordsPanel.addEventListener("click", event => {
+                if (event.target === els.recentRecordsPanel) closeRecentRecords();
+            });
+            els.overviewCustomize.addEventListener("click", openOverviewCustomizer);
+            els.closeOverviewCustomize.addEventListener("click", closeOverviewCustomizer);
+            els.overviewCustomizeDone.addEventListener("click", closeOverviewCustomizer);
+            els.overviewCustomizeReset.addEventListener("click", () => updateOverviewModules([...DEFAULT_OVERVIEW_MODULES], "已恢复默认布局"));
+            els.overviewCustomizerList.addEventListener("click", handleOverviewCustomizerClick);
+            els.overviewCustomizerPreview.addEventListener("click", event => {
+                if (!event.target.closest("[data-overview-add-modules]")) return;
+                els.overviewCustomizerList.querySelector("[data-overview-add]:not(:disabled)")?.focus({preventScroll: true});
+            });
+            els.overviewCustomizeModal.addEventListener("click", event => {
+                if (event.target === els.overviewCustomizeModal) closeOverviewCustomizer();
+            });
+            els.monthSummary.addEventListener("click", event => {
+                if (event.target instanceof Element && event.target.closest("[data-overview-add-modules]")) {
+                    openOverviewCustomizer();
+                    return;
+                }
+                const button = event.target instanceof Element ? event.target.closest("[data-overview-action]") : null;
+                if (button) handleOverviewAction(button.dataset.overviewAction, button);
+            });
 
             [
                 els.salaryInput,
@@ -2520,7 +2616,7 @@
             els.ticketToolPanel.addEventListener("click", event => {
                 if (event.target === els.ticketToolPanel) closeBackdrop(els.ticketToolPanel);
             });
-            els.habitToolToggle.addEventListener("click", openHabitTool);
+            els.habitToolToggle.addEventListener("click", () => openHabitTool(els.habitToolToggle));
             document.getElementById("closeHabitTool").addEventListener("click", () => closeBackdrop(els.habitToolPanel));
             els.habitToolPanel.addEventListener("click", event => {
                 if (event.target === els.habitToolPanel) closeBackdrop(els.habitToolPanel);
@@ -2674,7 +2770,10 @@
             });
             els.recentRecords.addEventListener("click", event => {
                 const button = event.target instanceof Element ? event.target.closest("[data-record-date]") : null;
-                if (button?.dataset.recordDate) jumpToSearchDate(button.dataset.recordDate);
+                if (button?.dataset.recordDate) {
+                    closeRecentRecords();
+                    jumpToSearchDate(button.dataset.recordDate);
+                }
             });
 
             els.closeSearch.addEventListener("click", closeSearch);
@@ -2728,6 +2827,8 @@
                 if (els.confirmModal.classList.contains("open")) return resolveConfirm(false);
                 if (els.habitToolPanel.classList.contains("open")) return closeBackdrop(els.habitToolPanel);
                 if (els.ticketToolPanel.classList.contains("open")) return closeBackdrop(els.ticketToolPanel);
+                if (els.overviewCustomizeModal.classList.contains("open")) return closeOverviewCustomizer();
+                if (els.recentRecordsPanel.classList.contains("open")) return closeRecentRecords();
                 if (els.searchModal.classList.contains("open")) return closeSearch();
                 if (els.googleConfigModal.classList.contains("open")) return closeGoogleConfig();
                 if (els.webdavConfigModal.classList.contains("open")) return closeWebdavConfigModal();
@@ -2920,11 +3021,11 @@
             window.RestCalI18n?.apply?.(els.habitList);
         }
 
-        function openHabitTool() {
+        function openHabitTool(trigger = els.habitToolToggle) {
             closeHabitIconMenu();
             renderHabitTool();
             openBackdrop(els.habitToolPanel);
-            modalReturnFocus.set(els.habitToolPanel, els.habitToolToggle);
+            modalReturnFocus.set(els.habitToolPanel, trigger);
             (state.habits.length ? document.getElementById("closeHabitTool") : els.habitNameCreate).focus({preventScroll: true});
         }
 
@@ -2977,9 +3078,31 @@
         }
 
         let lastCalendarKey = "";
+        let dayPageTransitionTimer = 0;
+
+        function settleDayPageTransition() {
+            window.clearTimeout(dayPageTransitionTimer);
+            dayPageTransitionTimer = 0;
+            const pages = [...els.calendarGrid.querySelectorAll(".day-page")];
+            const current = pages.at(-1) || null;
+            pages.slice(0, -1).forEach(page => page.remove());
+            current?.classList.remove(
+                "is-page-entering",
+                "is-page-leaving",
+                "page-enter-forward",
+                "page-enter-backward",
+                "page-leave-forward",
+                "page-leave-backward"
+            );
+            current?.style.removeProperty("animation");
+            current?.removeAttribute("aria-hidden");
+            els.calendarGrid.classList.remove("day-page-turning", "turn-forward", "turn-backward");
+            return current;
+        }
 
         function renderCalendarView() {
             hideNoteTooltip();
+            if (calendarMode !== "day") settleDayPageTransition();
             const panel = document.querySelector(".calendar-panel");
             if (panel) {
                 CAL_MODES.forEach(mode => panel.classList.toggle(`mode-${mode}`, mode === calendarMode));
@@ -3299,7 +3422,7 @@
                 saveQuoteCache(cache);
                 // 仍停留在这一天的日视图时，原地替换格言
                 if (calendarMode === "day" && toISO(anchorDate) === iso) {
-                    const quoteEl = els.calendarGrid.querySelector(".page-quote");
+                    const quoteEl = els.calendarGrid.querySelector(".day-page:not(.is-page-leaving) .page-quote");
                     if (quoteEl) {
                         quoteEl.querySelector(".page-quote-text").textContent = entry.content;
                         quoteEl.querySelector(".page-quote-author").textContent = entry.author;
@@ -3329,13 +3452,18 @@
         function renderDay() {
             els.calendarGrid.classList.remove("animate");
             lastCalendarKey = `day-${toISO(anchorDate)}`;
+            const previousPage = settleDayPageTransition();
             const date = new Date(anchorDate);
             const iso = toISO(date);
             const info = getDayInfo(date);
             const record = state.records[iso];
             const solarTerm = getSolarTermText(date);
+            const traditionalFestival = getTraditionalFestival(date) || (solarTerm === "清明" ? "清明节" : "");
             const isToday = isSameDate(date, today);
-            const festival = [info.holidayName, solarTerm].filter(Boolean).join(" · ");
+            const festivalLabels = [traditionalFestival, info.holidayName, solarTerm].filter(Boolean);
+            const festival = festivalLabels
+                .filter((name, index) => festivalLabels.findIndex(item => item.replace(/节$/, "") === name.replace(/节$/, "")) === index)
+                .join(" · ");
 
             const statusTags = [];
             if (record?.status) statusTags.push(tag(STATUS_LABELS[record.status], `${record.status} primary-state`));
@@ -3344,7 +3472,8 @@
             if (checkedHabits.length) statusTags.push(tag(`习惯 · ${checkedHabits.map(habit => habit.name).join("、")}`, "habit"));
             if (info.makeupName) statusTags.push(tag("调休上班", "makeup primary-state"));
 
-            const emptyText = info.isHoliday ? "假期 · 好好休息"
+            const emptyText = traditionalFestival ? holidayGreeting(traditionalFestival)
+                : info.isHoliday ? holidayGreeting(info.holidayName)
                 : info.makeupName ? ""
                     : info.isWeekend ? "周末 · 无需打卡"
                         : "今天还没有记录";
@@ -3356,7 +3485,7 @@
                 "day-page",
                 "clickable",
                 isToday ? "today" : "",
-                info.isHoliday || info.isWeekend ? "is-red" : "",
+                info.isHoliday || info.isWeekend || traditionalFestival ? "is-red" : "",
                 record?.status ? `status-${record.status}` : "",
                 record?.overtime ? "has-overtime" : ""
             ].filter(Boolean).join(" ");
@@ -3382,9 +3511,72 @@
             <figcaption class="page-quote-author">${escapeHtml(quote.author)}</figcaption>
           </figure>
           <div class="page-hint">点击编辑当天记录</div>
+          <span class="page-curl" aria-hidden="true"></span>
         `;
-            els.calendarGrid.replaceChildren(card);
+            const previousIso = previousPage?.dataset.date || "";
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (!previousPage || previousIso === iso || reduceMotion) {
+                els.calendarGrid.replaceChildren(card);
+            } else {
+                const direction = iso > previousIso ? "forward" : "backward";
+                const animatedPage = direction === "forward" ? previousPage : card;
+                const finishTransition = () => {
+                    if (!card.isConnected) return;
+                    window.clearTimeout(dayPageTransitionTimer);
+                    dayPageTransitionTimer = 0;
+                    animatedPage.removeEventListener("animationend", handleAnimationEnd);
+                    previousPage.remove();
+                    card.classList.remove("is-page-entering", `page-enter-${direction}`);
+                    // 移除翻页类后会重新命中 .day-page 的默认入场动画；用内联 none
+                    // 保持当前页静止，下次切换时 settleDayPageTransition 会将其清除。
+                    card.style.animation = "none";
+                    els.calendarGrid.classList.remove("day-page-turning", `turn-${direction}`);
+                };
+                const handleAnimationEnd = event => {
+                    // .page-curl 也有 animationend 且会冒泡，只响应纸张本体。
+                    if (event.target !== animatedPage) return;
+                    finishTransition();
+                };
+
+                els.calendarGrid.classList.add("day-page-turning", `turn-${direction}`);
+                previousPage.classList.add("is-page-leaving", `page-leave-${direction}`);
+                previousPage.setAttribute("aria-hidden", "true");
+                previousPage.tabIndex = -1;
+                card.classList.add("is-page-entering", `page-enter-${direction}`);
+                els.calendarGrid.appendChild(card);
+
+                animatedPage.addEventListener("animationend", handleAnimationEnd);
+                dayPageTransitionTimer = window.setTimeout(finishTransition, 650);
+            }
             requestQuote(iso);
+        }
+
+        function holidayGreeting(name = "") {
+            const holiday = String(name).toLowerCase();
+            const greetings = [
+                [["元旦", "new year's day"], "元旦 · 新岁启封，万事顺意"],
+                [["春节", "spring festival"], "春节 · 阖家团圆，新春安康"],
+                [["元宵", "上元", "lantern festival"], "元宵 · 灯火可亲，喜乐团圆"],
+                [["龙抬头", "春龙", "dragon heads-raising"], "龙抬头 · 春回大地，鸿运当头"],
+                [["上巳", "shangsi"], "上巳 · 春日踏青，祓禊纳福"],
+                [["寒食", "hanshi", "cold food festival"], "寒食 · 春风寄思，清明在心"],
+                [["清明", "tomb-sweeping", "qingming"], "清明 · 慎终追远，踏青惜春"],
+                [["劳动", "labour day", "labor day"], "劳动节 · 致敬奋斗，也别忘了休息"],
+                [["端午", "dragon boat"], "端午 · 粽香安康，顺遂如意"],
+                [["七夕", "乞巧", "qixi"], "七夕 · 星河为证，所愿皆成"],
+                [["中元", "鬼节", "ghost festival"], "中元 · 缅怀先人，心怀敬意"],
+                [["中秋", "mid-autumn"], "中秋 · 月满人团圆，心安即归处"],
+                [["重阳", "double ninth"], "重阳 · 登高望远，敬老安康"],
+                [["寒衣", "十月朝", "winter clothing festival"], "寒衣 · 遥寄思念，愿岁寒有暖"],
+                [["下元", "xiayuan"], "下元 · 消灾解厄，平安顺遂"],
+                [["腊八", "laba"], "腊八 · 粥暖岁寒，静候新春"],
+                [["小年", "送灶", "little new year"], "小年 · 辞旧迎新，人间小团圆"],
+                [["除夕", "new year's eve"], "除夕 · 辞旧迎新，阖家守岁"],
+                [["国庆", "national day"], "国庆 · 山河锦绣，假日愉快"],
+                [["抗日战争", "反法西斯", "victory day"], "胜利纪念日 · 铭记历史，珍爱和平"]
+            ];
+            return greetings.find(([aliases]) => aliases.some(alias => holiday.includes(alias)))?.[1]
+                || "假日 · 愿你自在从容，平安喜乐";
         }
 
         function renderYear() {
@@ -3432,22 +3624,10 @@
         </div>
       `;
             els.calendarFooter.innerHTML = `<span class="calendar-tip">${escapeHtml(message)}</span>`;
-            els.monthSummary.innerHTML = [
-                ["剩余年假", "待发布"],
-                ["本月请假", "待发布"],
-                ["本月出勤", "待发布"],
-                ["预计实发", "待发布"]
-            ].map(([label, value]) => `
-        <div class="overview-item">
-          <span class="overview-label">${label}</span>
-          <strong class="overview-value">${value}</strong>
-          <span class="overview-compact">${label} · ${value}</span>
-        </div>
-      `).join("");
+            renderOverviewUnavailable();
             const unavailable = `<div class="empty-state">${escapeHtml(message)}，暂不计算统计。</div>`;
             els.monthStats.innerHTML = unavailable;
             els.yearStats.innerHTML = unavailable;
-            if (els.homeTrend) els.homeTrend.innerHTML = unavailable;
             els.salaryResult.innerHTML = `<div class="empty-state">${escapeHtml(message)}，暂不估算工资。</div>`;
             currentSalaryReceipt = null;
             els.ticketReminders.innerHTML = `<div class="empty-state">${escapeHtml(message)}，暂不生成购票提醒。</div>`;
@@ -3493,7 +3673,6 @@
             els.yearStats.innerHTML = yearStatsMode === "months"
                 ? yearLeaveChartHtml(yearStats)
                 : statsHeatmapHtml("year", getYearDates(currentYear), yearStats);
-            if (els.homeTrend) els.homeTrend.innerHTML = yearLeaveChartHtml(yearStats, true);
             renderQuotaSummary(yearStats);
         }
 
@@ -3510,49 +3689,200 @@
             });
         }
 
-        function renderMonthSummary(monthStats) {
-            const salary = calculateSalarySnapshot(monthStats);
-            const nextHoliday = findNextHoliday();
-            const english = getLanguage() === "en";
-            const holidayName = nextHoliday
-                ? (window.RestCalI18n?.t(nextHoliday.name) || nextHoliday.name)
-                : "";
-            const holidayDate = nextHoliday && english
-                ? new Intl.DateTimeFormat("en-US", {month: "short", day: "numeric"}).format(nextHoliday.date)
-                : nextHoliday ? formatMonthDay(nextHoliday.date) : "";
-            const items = [
-                {
-                    label: english ? "Leave / attendance" : "请假 / 出勤",
-                    value: english ? `${monthStats.totalLeave} / ${monthStats.actualWorkdays} days` : `${monthStats.totalLeave} / ${monthStats.actualWorkdays} 天`,
-                    compact: english ? `${monthStats.totalLeave} leave · ${monthStats.actualWorkdays} attended` : `${monthStats.totalLeave} 请假 · ${monthStats.actualWorkdays} 出勤`,
-                    meta: english ? "Leave days / attended days" : "请假天数 / 已出勤天数"
-                },
-                {
-                    label: english ? "Daily leave deduction" : "请假每日扣款",
-                    value: salary.salary ? `${formatMoney(salary.daily)} / ${english ? "day" : "天"}` : (english ? "Not set" : "未设置"),
-                    compact: salary.salary ? (english ? `Deduction ${formatMoney(salary.daily)}/day` : `扣款 ${formatMoney(salary.daily)} / 天`) : (english ? "Deduction not set" : "扣款未设置"),
-                    action: salary.salary ? "" : "salary",
-                    meta: salary.salary ? (english ? "Based on this month's expected workdays; actual deduction varies by leave type" : "按本月应出勤天数折算，实际按请假类型比例计算") : ""
-                },
-                {
-                    label: english ? "Next holiday in" : "距下个节假日",
-                    value: nextHoliday ? (nextHoliday.days === 0 ? (english ? "Today" : "今天") : `${nextHoliday.days} ${english ? "days" : "天"}`) : (english ? "No holiday data" : "暂无数据"),
-                    compact: nextHoliday
-                        ? (nextHoliday.days === 0
-                            ? `${holidayName} · ${english ? "Today" : "今天"}`
-                            : (english ? `${holidayName} · in ${nextHoliday.days} days` : `${holidayName} · 还有 ${nextHoliday.days} 天`))
-                        : (english ? "No holiday data" : "节假日暂无数据"),
-                    meta: nextHoliday ? `${holidayName} · ${holidayDate}` : ""
-                }
+        function overviewModuleMetadata(english = getLanguage() === "en") {
+            const rows = [
+                ["attendance", "calendar-check", "请假 / 出勤", "Leave / attendance", "跟随所选月份", "Selected month"],
+                ["annualQuota", "chart-donut", "剩余年假", "Annual leave left", "跟随所选年份", "Selected year"],
+                ["leaveDeduction", "coins", "请假每日扣款", "Daily leave deduction", "跟随所选月份", "Selected month"],
+                ["estimatedSalary", "wallet", "预计实发", "Estimated pay", "跟随所选月份", "Selected month"],
+                ["nextHoliday", "confetti", "距下个节假日", "Next holiday in", "从今天起算", "From today"],
+                ["ticketSale", "train", "火车票开售", "Ticket sale", "从今天起算", "From today"],
+                ["payday", "money", "发薪日", "Payday", "从今天起算", "From today"],
+                ["overtime", "clock-countdown", "本月加班", "Overtime", "跟随所选月份", "Selected month"],
+                ["habit", "fire", "习惯打卡", "Habit check-in", "今天", "Today"]
             ];
-            els.monthSummary.innerHTML = items.map(item => {
-                const inner = `<span class="overview-label">${escapeHtml(item.label)}</span><strong class="overview-value">${escapeHtml(item.value)}</strong><span class="overview-compact">${escapeHtml(item.compact)}</span>`;
-                const title = item.meta ? ` title="${escapeHtml(item.meta)}"` : "";
-                if (item.action) {
-                    return `<button class="overview-item is-action ${item.tone}" data-open-settings-dynamic="${item.action}" type="button"${title}>${inner}</button>`;
-                }
-                return `<div class="overview-item ${item.tone}"${title}>${inner}</div>`;
+            return Object.fromEntries(rows.map(([id, icon, zh, en, zhDesc, enDesc]) => [
+                id, {id, icon, label: english ? en : zh, description: english ? enDesc : zhDesc}
+            ]));
+        }
+
+        function nextPayday(day) {
+            if (!day) return null;
+            const build = (year, month) => new Date(year, month, Math.min(day, new Date(year, month + 1, 0).getDate()));
+            let result = build(today.getFullYear(), today.getMonth());
+            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            if (result < todayStart) result = build(today.getFullYear(), today.getMonth() + 1);
+            return result;
+        }
+
+        function nextTicketSaleReminder() {
+            const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            return [today.getFullYear(), today.getFullYear() + 1]
+                .flatMap(year => calendarApi.years.has(year) ? getTicketReminders(year) : [])
+                .find(item => item.departure >= start) || null;
+        }
+
+        function getOverviewModuleItems(monthStats) {
+            const english = getLanguage() === "en";
+            const meta = overviewModuleMetadata(english);
+            const salary = calculateSalarySnapshot(monthStats);
+            const holiday = findNextHoliday();
+            const holidayName = holiday ? (window.RestCalI18n?.t(holiday.name) || holiday.name) : "";
+            const annualQuota = cleanNumber(els.annualQuotaInput.value);
+            const annual = calculateQuotaBalances(currentYear, annualQuota, cleanNumber(els.compQuotaInput.value)).annual;
+            const annualLeft = Math.max(0, annual.total - annual.used);
+            const ticket = nextTicketSaleReminder();
+            const ticketDays = ticket ? diffDays(today, ticket.saleDate) : 0;
+            const payday = nextPayday(state.salary?.payday);
+            const paydayDays = payday ? diffDays(today, payday) : 0;
+            const habitDone = habitCheckinCountForDate(toISO(today));
+            const streak = Math.max(0, ...state.habits.map(habit => habitStreak(habit.id)));
+            const daysText = value => `${value} ${english ? "days" : "天"}`;
+            return {
+                attendance: {...meta.attendance, value: daysText(`${monthStats.totalLeave} / ${monthStats.actualWorkdays}`), compact: english ? `${monthStats.totalLeave} leave · ${monthStats.actualWorkdays} attended` : `${monthStats.totalLeave} 请假 · ${monthStats.actualWorkdays} 出勤`, meta: english ? "Selected month: leave / marked attendance" : "所选月份：请假天数 / 已标记出勤天数", action: "stats"},
+                annualQuota: {...meta.annualQuota, value: annualQuota ? daysText(roundQuota(annualLeft)) : (english ? "Not set" : "未设置"), compact: annualQuota ? (english ? `${roundQuota(annualLeft)} days annual leave left` : `${roundQuota(annualLeft)} 天年假可用`) : (english ? "Set annual leave quota" : "设置年假额度"), meta: annualQuota ? `${roundQuota(annual.total)} 天额度，已用 ${roundQuota(annual.used)} 天` : "", action: "settings:quota"},
+                leaveDeduction: {...meta.leaveDeduction, value: salary.salary ? formatMoney(salary.leaveDeduction) : (english ? "Not set" : "未设置"), compact: salary.salary ? (english ? `${formatMoney(salary.leaveDeduction)} deducted` : `${formatMoney(salary.leaveDeduction)} 请假扣款`) : (english ? "Set salary" : "设置薪资"), meta: salary.salary ? (english ? `Daily pay ${formatMoney(salary.daily)} before leave-type rate` : `日薪 ${formatMoney(salary.daily)}，再按请假类型比例计算`) : "", action: salary.salary ? "salaryReceipt" : "settings:salary"},
+                estimatedSalary: {...meta.estimatedSalary, value: salary.salary ? formatMoney(salary.actual) : (english ? "Not set" : "未设置"), compact: salary.salary ? (english ? `${formatMoney(salary.actual)} estimated pay` : `预计实发 ${formatMoney(salary.actual)}`) : (english ? "Set salary" : "设置薪资"), meta: english ? "Estimated pay for the selected month" : "所选月份预计实发工资", action: salary.salary ? "salaryReceipt" : "settings:salary"},
+                nextHoliday: {...meta.nextHoliday, value: holiday ? (holiday.days ? daysText(holiday.days) : (english ? "Today" : "今天")) : (english ? "No data" : "暂无数据"), compact: holiday ? `${holidayName} · ${holiday.days ? (english ? `in ${holiday.days} days` : `还有 ${holiday.days} 天`) : (english ? "today" : "今天")}` : (english ? "No holiday data" : "节假日暂无数据"), meta: holiday ? `${holidayName} · ${formatMonthDay(holiday.date)}` : "", action: holiday ? `date:${toISO(holiday.date)}` : ""},
+                ticketSale: {...meta.ticketSale, value: ticket ? (ticketDays > 0 ? daysText(ticketDays) : ticketDays === 0 ? (english ? "Today" : "今天") : (english ? "On sale" : "已开售")) : (english ? "No data" : "暂无数据"), compact: ticket ? `${window.RestCalI18n?.t(ticket.name) || ticket.name}${ticket.tripLabel} · ${ticketDays > 0 ? (english ? `${ticketDays} days` : `${ticketDays} 天后`) : ticketDays === 0 ? (english ? "today" : "今天开售") : (english ? "on sale" : "已开售")}` : (english ? "No ticket reminders" : "暂无购票提醒"), meta: ticket ? `${formatMonthDay(ticket.saleDate)} 开售 · ${formatMonthDay(ticket.departure)} 出行` : "", action: "ticket"},
+                payday: {...meta.payday, value: payday ? (paydayDays ? daysText(paydayDays) : (english ? "Today" : "今天")) : (english ? "Not set" : "未设置"), compact: payday ? (paydayDays ? (english ? `${paydayDays} days to payday` : `距发薪日 ${paydayDays} 天`) : (english ? "Payday · today" : "今天发薪")) : (english ? "Set payday" : "设置发薪日"), meta: payday ? formatMonthDay(payday) : "", action: "settings:salary"},
+                overtime: {...meta.overtime, value: english ? `${roundQuota(monthStats.overtimeHours)} hours` : `${roundQuota(monthStats.overtimeHours)} 小时`, compact: english ? `${roundQuota(monthStats.overtimeHours)} overtime hours` : `本月加班 ${roundQuota(monthStats.overtimeHours)} 小时`, meta: english ? `${monthStats.overtimeDays} recorded days` : `所选月份 ${monthStats.overtimeDays} 天有加班记录`, action: "stats"},
+                habit: {...meta.habit, value: state.habits.length ? `${habitDone} / ${state.habits.length}` : (english ? "Not set" : "未设置"), compact: state.habits.length ? (english ? `${habitDone}/${state.habits.length} today · ${streak}-day streak` : `今日 ${habitDone}/${state.habits.length} · 连续 ${streak} 天`) : (english ? "Add a habit" : "添加习惯"), meta: english ? "Today's check-ins / active habits" : "今日完成数 / 当前习惯数", action: "habit"}
+            };
+        }
+
+        function overviewCardHtml(item, preview = false) {
+            const inner = `<span class="overview-label">${escapeHtml(item.label)}</span><strong class="overview-value">${escapeHtml(item.value)}</strong><span class="overview-compact">${escapeHtml(item.compact)}</span>`;
+            const title = item.meta ? ` title="${escapeHtml(item.meta)}"` : "";
+            return item.action && !preview
+                ? `<button class="overview-item is-action" data-overview-action="${escapeHtml(item.action)}" type="button"${title}>${inner}</button>`
+                : `<div class="overview-item"${title}>${inner}</div>`;
+        }
+
+        function renderMonthSummary(monthStats) {
+            const items = getOverviewModuleItems(monthStats);
+            const count = state.dashboard.overviewModules.length;
+            els.monthSummary.style.setProperty("--overview-count", String(Math.max(1, count)));
+            els.monthSummary.dataset.count = String(count);
+            els.monthSummary.innerHTML = count
+                ? state.dashboard.overviewModules.map(id => items[id]).filter(Boolean).map(item => overviewCardHtml(item)).join("")
+                : overviewEmptyHtml();
+        }
+
+        function renderOverviewUnavailable() {
+            const english = getLanguage() === "en";
+            const meta = overviewModuleMetadata(english);
+            const count = state.dashboard.overviewModules.length;
+            els.monthSummary.style.setProperty("--overview-count", String(Math.max(1, count)));
+            els.monthSummary.dataset.count = String(count);
+            els.monthSummary.innerHTML = count
+                ? state.dashboard.overviewModules.map(id => {
+                    const item = meta[id] || meta.attendance;
+                    return overviewCardHtml({...item, value: english ? "Unavailable" : "待发布", compact: `${item.label} · ${english ? "unavailable" : "待发布"}`});
+                }).join("")
+                : overviewEmptyHtml();
+        }
+
+        function overviewEmptyHtml() {
+            const english = getLanguage() === "en";
+            return `
+                <button class="overview-empty" type="button" data-overview-add-modules>
+                    <i class="ph ph-plus-circle icon" aria-hidden="true"></i>
+                    <span>${english ? "Click to add modules" : "点击添加模块"}</span>
+                </button>
+            `;
+        }
+
+        function renderOverviewCustomizer() {
+            const selected = state.dashboard.overviewModules;
+            const meta = overviewModuleMetadata();
+            const stats = calculateStats(currentYear, currentMonth);
+            const items = getOverviewModuleItems(stats);
+            els.overviewCustomizerPreview.classList.toggle("is-empty", selected.length === 0);
+            els.overviewCustomizerPreview.innerHTML = selected.length
+                ? selected.map(id => overviewCardHtml(items[id], true)).join("")
+                : overviewEmptyHtml();
+            els.overviewCustomizerCount.textContent = `${selected.length} / 3`;
+            els.overviewCustomizerList.innerHTML = OVERVIEW_MODULE_IDS.map(id => {
+                const item = meta[id];
+                const index = selected.indexOf(id);
+                const active = index >= 0;
+                const actions = active
+                    ? `
+                        <button class="btn ghost icon-only" type="button" data-overview-move="up" data-overview-id="${id}" aria-label="上移 ${escapeHtml(item.label)}" title="上移" ${index === 0 ? "disabled" : ""}><i class="ph ph-arrow-up icon" aria-hidden="true"></i></button>
+                        <button class="btn ghost icon-only" type="button" data-overview-move="down" data-overview-id="${id}" aria-label="下移 ${escapeHtml(item.label)}" title="下移" ${index === selected.length - 1 ? "disabled" : ""}><i class="ph ph-arrow-down icon" aria-hidden="true"></i></button>
+                        <button class="btn ghost overview-module-toggle" type="button" data-overview-remove="${id}">移除</button>
+                    `
+                    : `<button class="btn overview-module-toggle" type="button" data-overview-add="${id}" ${selected.length >= 3 ? "disabled" : ""}>添加</button>`;
+                return `
+                    <div class="overview-module-row${active ? " is-selected" : ""}">
+                        <span class="overview-module-icon" aria-hidden="true"><i class="ph ph-${item.icon} icon"></i></span>
+                        <span class="overview-module-copy"><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.description)}</small></span>
+                        <span class="overview-module-actions">${actions}</span>
+                    </div>
+                `;
             }).join("");
+            window.RestCalI18n?.apply?.(els.overviewCustomizeModal);
+        }
+
+        function openOverviewCustomizer() {
+            els.overviewCustomizerStatus.textContent = "";
+            renderOverviewCustomizer();
+            openBackdrop(els.overviewCustomizeModal);
+            modalReturnFocus.set(els.overviewCustomizeModal, els.overviewCustomize);
+            window.setTimeout(() => els.overviewCustomizerList.querySelector("button:not(:disabled)")?.focus({preventScroll: true}), 30);
+        }
+
+        function closeOverviewCustomizer() {
+            closeBackdrop(els.overviewCustomizeModal);
+        }
+
+        function updateOverviewModules(next, message) {
+            state.dashboard = normalizeDashboard({overviewModules: next});
+            if (!saveState()) return;
+            renderMonthSummary(calculateStats(currentYear, currentMonth));
+            renderOverviewCustomizer();
+            els.overviewCustomizerStatus.textContent = message;
+        }
+
+        function handleOverviewCustomizerClick(event) {
+            const button = event.target.closest("button");
+            if (!button) return;
+            const current = [...state.dashboard.overviewModules];
+            if (button.dataset.overviewAdd) {
+                if (current.length >= 3 || current.includes(button.dataset.overviewAdd)) return;
+                current.push(button.dataset.overviewAdd);
+                updateOverviewModules(current, "模块已添加");
+                return;
+            }
+            if (button.dataset.overviewRemove) {
+                updateOverviewModules(current.filter(id => id !== button.dataset.overviewRemove), "模块已移除");
+                return;
+            }
+            if (button.dataset.overviewMove) {
+                const index = current.indexOf(button.dataset.overviewId);
+                const target = index + (button.dataset.overviewMove === "up" ? -1 : 1);
+                if (index < 0 || target < 0 || target >= current.length) return;
+                [current[index], current[target]] = [current[target], current[index]];
+                updateOverviewModules(current, "顺序已更新");
+            }
+        }
+
+        async function handleOverviewAction(action, trigger) {
+            if (action === "stats") {
+                setStatsPeriodMode("month");
+                switchView("stats");
+            } else if (action === "salaryReceipt") {
+                await openReceiptModal("salary");
+            } else if (action === "ticket") {
+                toggleTicketTool(trigger);
+            } else if (action === "habit") {
+                openHabitTool(trigger);
+            } else if (action.startsWith("settings:")) {
+                openSettings(action.slice("settings:".length));
+            } else if (action.startsWith("date:")) {
+                await openRestcalDateLink(`restcal://day/${encodeURIComponent(action.slice("date:".length))}`);
+            }
         }
 
         function findNextHoliday() {
@@ -3649,6 +3979,17 @@
                         ${alert.settings ? `<button class="btn ghost compact-btn" data-open-settings-dynamic="${alert.settings}" type="button">${escapeHtml(alert.actionLabel)}</button>` : ""}
                     </div>`;
             }).join("");
+        }
+
+        function openRecentRecords() {
+            renderRecentRecords();
+            openBackdrop(els.recentRecordsPanel);
+            modalReturnFocus.set(els.recentRecordsPanel, els.recentRecordsToggle);
+            window.setTimeout(() => (els.recentRecords.querySelector("button") || els.closeRecentRecords).focus({preventScroll: true}), 30);
+        }
+
+        function closeRecentRecords() {
+            closeBackdrop(els.recentRecordsPanel);
         }
 
         function renderRecentRecords() {
@@ -4360,7 +4701,7 @@
             resolve(result);
         }
 
-        function exportPersonalSettings() { syncSettingsFromInputs(); const blob = new Blob([JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences, habits: state.habits, habitCheckins: state.habitCheckins}, null, 2)], {type: "application/json"}); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "restcal-personal-settings.json"; link.click(); URL.revokeObjectURL(link.href); showToast("个人设置已导出"); }
+        function exportPersonalSettings() { syncSettingsFromInputs(); const blob = new Blob([JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences, dashboard: state.dashboard, habits: state.habits, habitCheckins: state.habitCheckins}, null, 2)], {type: "application/json"}); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "restcal-personal-settings.json"; link.click(); URL.revokeObjectURL(link.href); showToast("个人设置已导出"); }
 
         async function clearPersonalSettings() {
             const ok = await showConfirm({
@@ -6163,7 +6504,7 @@
         }
 
         function userDataSnapshot() {
-            return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences}));
+            return JSON.parse(JSON.stringify({profile: state.profile, workSchedule: state.workSchedule, salary: state.salary, ticketPreferences: state.ticketPreferences, dashboard: state.dashboard}));
         }
 
         function backupUserDataSnapshot() {
@@ -6174,6 +6515,7 @@
                 salary: state.salary,
                 quotaRules: state.quotaRules,
                 ticketPreferences: state.ticketPreferences,
+                dashboard: state.dashboard,
                 habits: state.habits,
                 habitCheckins: state.habitCheckins,
                 preferences: {
@@ -6220,6 +6562,10 @@
                 restored = true;
             } else if (data.settings && typeof data.settings === "object") {
                 state.ticketPreferences = normalizeTicketPreferences({}, data.settings);
+            }
+            if (data.dashboard && typeof data.dashboard === "object" && !Array.isArray(data.dashboard)) {
+                state.dashboard = normalizeDashboard(data.dashboard);
+                restored = true;
             }
             if (Array.isArray(data.habits) || data.habit?.name) {
                 const legacyHabit = data.habit?.name ? [{id: "habit-legacy", name: data.habit.name, createdAt: data.habit.createdAt}] : [];
@@ -6337,7 +6683,7 @@
             return valid;
         }
         function skipOnboarding() { state.onboardingSkipped = true; state.onboardingCompleted = false; saveState(); closeOnboarding(); renderSetupBanner(); showToast("已跳过设置，之后可在设置中重新打开"); }
-        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {}); Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name, ticketDepartureRule: state.ticketPreferences.departureRule, ticketReturnRule: state.ticketPreferences.returnRule, ticketReminderTime: state.ticketPreferences.reminderTime, ticketAdvanceDays: state.ticketPreferences.advanceDays}); fillSettingsInputs(); renderRestDaysPicker(); }
+        function applyUserData(data) { state.profile = {...DEFAULT_USER_DATA.profile, ...data.profile}; state.workSchedule = {...DEFAULT_USER_DATA.workSchedule, ...data.workSchedule, restDays: Array.isArray(data.workSchedule.restDays) ? data.workSchedule.restDays : [0, 6]}; state.salary = {...DEFAULT_USER_DATA.salary, ...data.salary}; state.ticketPreferences = normalizeTicketPreferences(data.ticketPreferences, data.settings || {}); state.dashboard = normalizeDashboard(data.dashboard); Object.assign(state.settings, {salary: state.salary.monthlySalary, deduction: state.salary.fixedDeductions, estimatedTax: state.salary.estimatedTax, payday: state.salary.payday, applicantName: state.profile.name, ticketDepartureRule: state.ticketPreferences.departureRule, ticketReturnRule: state.ticketPreferences.returnRule, ticketReminderTime: state.ticketPreferences.reminderTime, ticketAdvanceDays: state.ticketPreferences.advanceDays}); fillSettingsInputs(); renderRestDaysPicker(); }
         function clampInt(value, min, max, fallback) { const n = Number.parseInt(value, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function clampNumber(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback; }
         function nonNegativeNumber(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
@@ -6842,6 +7188,40 @@
         }
 
         const lunarTextCache = new Map();
+        const traditionalFestivalCache = new Map();
+
+        function getTraditionalFestival(date) {
+            const iso = toISO(date);
+            if (traditionalFestivalCache.has(iso)) return traditionalFestivalCache.get(iso);
+            const chineseDays = window.chineseDays;
+            let festival = getSolarTermText(addDays(date, 1)) === "清明" ? "寒食节" : "";
+            if (!festival && chineseDays?.getLunarFestivals) {
+                try {
+                    const names = chineseDays.getLunarFestivals(iso)?.[0]?.name || [];
+                    const aliases = [
+                        [["除夕"], "除夕"],
+                        [["春节"], "春节"],
+                        [["元宵节", "上元节"], "元宵节"],
+                        [["春龙节"], "龙抬头"],
+                        [["上巳节"], "上巳节"],
+                        [["端午节"], "端午节"],
+                        [["乞巧节"], "七夕节"],
+                        [["中元(鬼)节"], "中元节"],
+                        [["中秋节"], "中秋节"],
+                        [["重阳节"], "重阳节"],
+                        [["寒衣节", "十月朝"], "寒衣节"],
+                        [["下元节"], "下元节"],
+                        [["腊八节"], "腊八节"],
+                        [["官家送灶", "民间送灶"], "小年"]
+                    ];
+                    festival = aliases.find(([sourceNames]) => sourceNames.some(name => names.includes(name)))?.[1] || "";
+                } catch {
+                    festival = "";
+                }
+            }
+            traditionalFestivalCache.set(iso, festival);
+            return festival;
+        }
 
         function getLunarText(date) {
             const iso = toISO(date);
@@ -7059,7 +7439,7 @@
             const legacyHabits = source.habit?.name ? [{id: "habit-legacy", name: source.habit.name, createdAt: source.habit.createdAt}] : [];
             const habits = normalizeHabits(Array.isArray(source.habits) ? source.habits : legacyHabits);
             const result = {
-                schemaVersion: 6,
+                schemaVersion: 7,
                 records: normalizeRecords(base.records || {}, workSchedule),
                 settings,
                 profile: {...DEFAULT_USER_DATA.profile, ...(source.profile || {}), name: source.profile?.name ?? settings.applicantName ?? ""},
@@ -7082,6 +7462,7 @@
                 },
                 ticketPreferences: normalizeTicketPreferences(source.ticketPreferences, settings),
                 integrations: normalizeIntegrations(source.integrations),
+                dashboard: normalizeDashboard(source.dashboard),
                 habits,
                 habitCheckins: normalizeHabitCheckins(source.habitCheckins, habits),
                 onboardingCompleted: Boolean(source.onboardingCompleted),
@@ -7090,6 +7471,18 @@
                 setupBannerDismissed: Boolean(source.setupBannerDismissed)
             };
             return result;
+        }
+
+        function normalizeDashboard(value = {}) {
+            const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+            const requested = Array.isArray(source.overviewModules) ? source.overviewModules : DEFAULT_OVERVIEW_MODULES;
+            const overviewModules = [...new Set(requested)]
+                .filter(id => OVERVIEW_MODULE_IDS.includes(id))
+                .slice(0, 3);
+            return {
+                version: 1,
+                overviewModules
+            };
         }
 
         function normalizeIntegrations(value = {}) {
