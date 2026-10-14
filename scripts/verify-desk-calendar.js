@@ -20,8 +20,8 @@ async function run() {
                 const page = document.querySelector(".day-page"), grid = document.getElementById("calendarGrid");
                 const p = page.getBoundingClientRect(), g = grid.getBoundingClientRect();
                 return {holes: getComputedStyle(page, "::before").content,
-                    tilted: getComputedStyle(page).transform !== "none",
-                    stand: getComputedStyle(grid, "::before").clipPath !== "none",
+                    tilted: getComputedStyle(page).transform === "none",
+                    stand: getComputedStyle(grid, "::before").content === "none",
                     fits: p.left >= g.left && p.right <= g.right && document.documentElement.scrollWidth <= innerWidth};
             })()`);
             assert.deepEqual(result, {holes: "none", tilted: true, stand: true, fits: true});
@@ -50,7 +50,7 @@ async function run() {
     assert.equal(await js('Boolean(document.querySelector(".day-page"))'), false);
     await js('setCalendarMode("day");'); await wait(500);
     assert.ok(await js('document.querySelector(".day-page").getBoundingClientRect().width > 100'));
-    win.destroy(); console.log("Desk calendar verified: light/dark, desktop/mobile, no holes, 3D structure, navigation and editing.");
+win.destroy(); console.log("Desk calendar verified: light/dark, desktop/mobile, flat page structure, navigation and editing.");
 }
 app.whenReady().then(run).then(() => app.exit(0)).catch(error => {console.error(error); app.exit(1);});
 app.on("quit", () => fs.rmSync(profile, {recursive: true, force: true}));

@@ -3042,76 +3042,40 @@ i.icon {
     opacity: 0.55;
 }
 
-/* ===== 日视图：立体台历 ===== */
+/* ===== 日视图：传统撕页日历 ===== */
 .calendar-grid.day-mode {
-    position: relative;
     grid-template-columns: 1fr;
     gap: 0;
     justify-items: center;
-    min-height: 500px;
-    padding: 34px 30px 48px;
-    background:
-        radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 38%),
-        linear-gradient(135deg, color-mix(in srgb, var(--card) 38%, var(--muted-surface)), var(--muted-surface) 58%, color-mix(in srgb, var(--primary) 4%, var(--muted-surface)));
+    padding: 28px 16px 34px;
+    background: var(--muted-surface);
     overflow: hidden;
-    perspective: 1400px;
-    perspective-origin: 50% 45%;
-    isolation: isolate;
+    perspective: none;
+    isolation: auto;
 }
 
 .calendar-grid.day-mode::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    top: 28px;
-    bottom: 28px;
-    left: 50%;
-    width: min(560px, calc(100% - 120px));
-    transform: translateX(calc(-50% + 34px)) rotate(-1deg);
-    clip-path: polygon(4% 0, 83% 0, 100% 100%, 0 100%);
-    border-radius: 8px;
-    background: linear-gradient(100deg, color-mix(in srgb, var(--primary) 65%, var(--foreground)), color-mix(in srgb, var(--primary) 34%, var(--card)) 78%, color-mix(in srgb, var(--primary) 56%, var(--foreground)));
-}
-
-.calendar-grid.day-mode::after {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    bottom: 18px;
-    left: 50%;
-    width: min(620px, calc(100% - 80px));
-    height: 28px;
-    border-radius: 50%;
-    transform: translateX(-50%);
-    background: color-mix(in srgb, var(--foreground) 19%, transparent);
-    filter: blur(12px);
-    pointer-events: none;
+    content: none;
 }
 
 .day-page {
-    --desk-page-pose: rotateX(7deg) rotateY(-9deg);
     position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    width: min(540px, calc(100% - 34px));
-    min-height: 468px;
-    padding: 0 42px 22px;
+    width: min(400px, 100%);
+    min-height: 520px;
+    padding: 0 26px 20px;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--card);
     color: var(--text);
     text-align: center;
     overflow: hidden;
-    box-shadow: 2px 3px 0 var(--border), 5px 6px 0 var(--card), 7px 8px 0 var(--border), 10px 11px 0 var(--card), 12px 13px 0 var(--border), 0 22px 35px color-mix(in srgb, var(--foreground) 16%, transparent);
-    transform: var(--desk-page-pose);
-    transform-origin: center bottom;
+    box-shadow: var(--shadow-popover);
     animation: day-in 0.32s ease backwards;
     transition: box-shadow var(--transition-fast) ease;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
 }
 
 /* 切换日期时两张日历页叠放；纸面从右下角翘起并沿对角线作 3D 翻转。 */
@@ -3122,6 +3086,7 @@ i.icon {
 }
 
 .page-curl {
+    display: none;
     position: absolute;
     right: -1px;
     bottom: -1px;
@@ -3175,17 +3140,17 @@ i.icon {
 @keyframes day-page-turn-forward {
     0% {
         opacity: 1;
-        transform: translate3d(0, 0, 0) var(--desk-page-pose) rotate3d(1, -1, 0, 0) scale(1);
+        transform: translate3d(0, 0, 0) rotate3d(1, -1, 0, 0) scale(1);
         filter: brightness(1);
     }
     42% {
         opacity: 0.96;
-        transform: translate3d(-9px, -7px, 28px) var(--desk-page-pose) rotate3d(1, -1, 0, 20deg) rotateZ(-0.8deg) scale(0.995);
+        transform: translate3d(-9px, -7px, 28px) rotate3d(1, -1, 0, 20deg) rotateZ(-0.8deg) scale(0.995);
         filter: brightness(1.04);
     }
     100% {
         opacity: 0;
-        transform: translate3d(-78px, -60px, 74px) var(--desk-page-pose) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
+        transform: translate3d(-78px, -60px, 74px) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
         filter: brightness(0.82);
     }
 }
@@ -3211,12 +3176,12 @@ i.icon {
 @keyframes day-page-reveal-forward {
     from {
         opacity: 0.45;
-        transform: translate3d(7px, 7px, -16px) var(--desk-page-pose) scale(0.982);
+        transform: translate3d(7px, 7px, -16px) scale(0.982);
         filter: brightness(0.9);
     }
     to {
         opacity: 1;
-        transform: var(--desk-page-pose);
+        transform: translateY(0) scale(1);
         filter: brightness(1);
     }
 }
@@ -3224,11 +3189,11 @@ i.icon {
 @keyframes day-page-recede-backward {
     from {
         opacity: 1;
-        transform: var(--desk-page-pose);
+        transform: translateY(0) scale(1);
     }
     to {
         opacity: 0.36;
-        transform: translate3d(8px, 8px, -18px) var(--desk-page-pose) scale(0.98);
+        transform: translate3d(8px, 8px, -18px) scale(0.98);
         filter: brightness(0.9);
     }
 }
@@ -3236,17 +3201,17 @@ i.icon {
 @keyframes day-page-turn-backward {
     from {
         opacity: 0;
-        transform: translate3d(-78px, -60px, 74px) var(--desk-page-pose) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
+        transform: translate3d(-78px, -60px, 74px) rotate3d(1, -1, 0, 84deg) rotateZ(-4deg) scale(0.955);
         filter: brightness(0.82);
     }
     64% {
         opacity: 1;
-        transform: translate3d(2px, 2px, 4px) var(--desk-page-pose) rotate3d(1, -1, 0, -3deg) rotateZ(0.15deg) scale(1);
+        transform: translate3d(2px, 2px, 4px) rotate3d(1, -1, 0, -3deg) rotateZ(0.15deg) scale(1);
         filter: brightness(1.02);
     }
     to {
         opacity: 1;
-        transform: var(--desk-page-pose);
+        transform: translate3d(0, 0, 0) rotate3d(1, -1, 0, 0) scale(1);
         filter: brightness(1);
     }
 }
@@ -3270,7 +3235,7 @@ i.icon {
 
 @media (hover: hover) {
     .day-page:hover {
-        border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+        box-shadow: var(--shadow-dialog);
     }
 }
 
@@ -3279,7 +3244,7 @@ i.icon {
     outline-offset: 5px;
 }
 
-/* 台历不使用挂历装订孔。 */
+/* 平面日历不使用装订孔。 */
 .day-page::before,
 .day-page::after {
     content: none;
@@ -3289,9 +3254,9 @@ i.icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: calc(100% + 84px);
-    margin: 0 -42px;
-    padding: 12px 24px;
+    width: calc(100% + 52px);
+    margin: 0 -26px;
+    padding: 11px 18px;
     background: var(--primary);
     color: var(--primary-foreground);
     font-family: var(--font-display);
@@ -3301,9 +3266,9 @@ i.icon {
 }
 
 .page-number {
-    margin-top: 24px;
+    margin-top: 30px;
     font-family: var(--font-display);
-    font-size: clamp(112px, 18vw, 168px);
+    font-size: clamp(96px, 26vw, 148px);
     font-weight: 700;
     line-height: 0.9;
     letter-spacing: -0.02em;
@@ -3374,7 +3339,7 @@ i.icon {
 
 .page-note {
     position: relative;
-    width: min(390px, 100%);
+    width: min(320px, 100%);
     padding: 8px 8px 12px;
     color: color-mix(in srgb, var(--foreground) 78%, var(--primary));
     font-family: var(--font-handwritten);
@@ -3412,7 +3377,7 @@ i.icon {
     display: grid;
     gap: 6px;
     justify-items: center;
-    max-width: 410px;
+    max-width: 300px;
     margin: auto 0 0;
     padding-top: 22px;
 }
@@ -3420,8 +3385,8 @@ i.icon {
 .page-quote-text {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 14px;
-    line-height: 1.75;
+    font-size: 13.5px;
+    line-height: 1.9;
     color: color-mix(in srgb, var(--foreground) 85%, transparent);
     quotes: "「" "」";
 }
@@ -6378,14 +6343,7 @@ html.theme-anim #themeToggle .icon {
     }
 
     .day-page {
-        min-height: 420px;
-        --desk-page-pose: rotateX(5deg) rotateY(-6deg);
-    }
-
-    .calendar-grid.day-mode::before {
-        top: 28px;
-        bottom: 26px;
-        transform: translateX(calc(-50% + 18px));
+        min-height: 440px;
     }
 
     /* 概览压缩为 2×2 无边框网格，仅用虚线分隔 */
