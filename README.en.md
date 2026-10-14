@@ -10,12 +10,12 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Verify](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml/badge.svg)](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml)
-![Release](https://img.shields.io/badge/release-v2.3.0-b4382a)
+![Release](https://img.shields.io/badge/release-v2.3.1-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.3.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.1)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="RestCal day view with the daily calendar card, leave balance, attendance, and estimated take-home pay" width="100%">
 
@@ -31,7 +31,7 @@ It is a **zero-build, dependency-free frontend** written in native HTML, CSS, an
 
 The application interface can switch between Chinese and English. Language, theme, and all business settings are included in complete CSV and WebDAV backups.
 
-## 🆕 What's new in v2.3.0
+## 🆕 What's new in v2.3.1
 
 - Train reminders now support station search, reversed return routes, ordered transfers, and dated 12306 links.
 - Added separate airport selection for 270 mainland transport airports, with Air China and China Southern booking entries.
@@ -149,7 +149,7 @@ Settings → Appearance offers four palettes: Cinnabar paper, Bamboo, Open sea, 
 | Option | Best for | How to start |
 |---|---|---|
 | **Web app** | Most users | Open [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html); it can be installed as a PWA |
-| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v2.3.0 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0) |
+| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v2.3.1 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.1) |
 | **Local server** | Development or intranet use | Clone the repository, run `node server.js`, and open `http://localhost:8765/app.html` |
 
 You can also open `public/app.html` directly (`public/index.html` is the product page). The application works offline under `file://`, but browsers do not register Service Workers or allow PWA installation in that mode. Use HTTP(S) when you need PWA features.
@@ -166,9 +166,9 @@ The application shell and bundled holiday, lunar-calendar, and solar-term data f
 
 ## 💻 Windows desktop app
 
-Latest Android release: [RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
+Latest Android release: [RestCal v2.3.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.1)
 
-Windows offline release: [RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
+Windows offline release: [RestCal v2.3.1](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.1)
 
 | Download | Purpose |
 |---|---|
