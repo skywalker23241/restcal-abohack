@@ -3048,8 +3048,11 @@ i.icon {
     grid-template-columns: 1fr;
     gap: 0;
     justify-items: center;
-    padding: 38px 30px 54px;
-    background: var(--muted-surface);
+    min-height: 500px;
+    padding: 34px 30px 48px;
+    background:
+        radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 38%),
+        linear-gradient(135deg, color-mix(in srgb, var(--card) 38%, var(--muted-surface)), var(--muted-surface) 58%, color-mix(in srgb, var(--primary) 4%, var(--muted-surface)));
     overflow: hidden;
     perspective: 1400px;
     perspective-origin: 50% 45%;
@@ -3060,11 +3063,11 @@ i.icon {
     content: "";
     position: absolute;
     z-index: 0;
-    top: 34px;
-    bottom: 32px;
+    top: 28px;
+    bottom: 28px;
     left: 50%;
-    width: min(390px, calc(100% - 54px));
-    transform: translateX(calc(-50% + 28px));
+    width: min(560px, calc(100% - 120px));
+    transform: translateX(calc(-50% + 34px)) rotate(-1deg);
     clip-path: polygon(4% 0, 83% 0, 100% 100%, 0 100%);
     border-radius: 8px;
     background: linear-gradient(100deg, color-mix(in srgb, var(--primary) 65%, var(--foreground)), color-mix(in srgb, var(--primary) 34%, var(--card)) 78%, color-mix(in srgb, var(--primary) 56%, var(--foreground)));
@@ -3074,10 +3077,10 @@ i.icon {
     content: "";
     position: absolute;
     z-index: 0;
-    bottom: 22px;
+    bottom: 18px;
     left: 50%;
-    width: min(460px, calc(100% - 30px));
-    height: 24px;
+    width: min(620px, calc(100% - 80px));
+    height: 28px;
     border-radius: 50%;
     transform: translateX(-50%);
     background: color-mix(in srgb, var(--foreground) 19%, transparent);
@@ -3093,9 +3096,9 @@ i.icon {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    width: min(370px, calc(100% - 18px));
-    min-height: 470px;
-    padding: 0 26px 20px;
+    width: min(540px, calc(100% - 34px));
+    min-height: 468px;
+    padding: 0 42px 22px;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--card);
@@ -3286,9 +3289,9 @@ i.icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: calc(100% + 52px);
-    margin: 0 -26px;
-    padding: 11px 18px;
+    width: calc(100% + 84px);
+    margin: 0 -42px;
+    padding: 12px 24px;
     background: var(--primary);
     color: var(--primary-foreground);
     font-family: var(--font-display);
@@ -3298,9 +3301,9 @@ i.icon {
 }
 
 .page-number {
-    margin-top: 30px;
+    margin-top: 24px;
     font-family: var(--font-display);
-    font-size: clamp(96px, 26vw, 148px);
+    font-size: clamp(112px, 18vw, 168px);
     font-weight: 700;
     line-height: 0.9;
     letter-spacing: -0.02em;
@@ -3371,7 +3374,7 @@ i.icon {
 
 .page-note {
     position: relative;
-    width: min(320px, 100%);
+    width: min(390px, 100%);
     padding: 8px 8px 12px;
     color: color-mix(in srgb, var(--foreground) 78%, var(--primary));
     font-family: var(--font-handwritten);
@@ -3409,7 +3412,7 @@ i.icon {
     display: grid;
     gap: 6px;
     justify-items: center;
-    max-width: 300px;
+    max-width: 410px;
     margin: auto 0 0;
     padding-top: 22px;
 }
@@ -3417,8 +3420,8 @@ i.icon {
 .page-quote-text {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 13.5px;
-    line-height: 1.9;
+    font-size: 14px;
+    line-height: 1.75;
     color: color-mix(in srgb, var(--foreground) 85%, transparent);
     quotes: "「" "」";
 }
