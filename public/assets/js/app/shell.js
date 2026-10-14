@@ -17,6 +17,7 @@ async function init() {
     initSheetDragGestures();
     initProductTour();
     bindEvents();
+    initStationPicker();
     initSegmentedIndicators();
     fillSettingsInputs();
     renderRestDaysPicker();
@@ -96,6 +97,29 @@ function getThemePreference() {
     }
 }
 
+function getPalettePreference() {
+    try {
+        const stored = localStorage.getItem(PALETTE_KEY);
+        if (stored === null) return document.documentElement.dataset.palette || "paper";
+        return PALETTES.includes(stored) ? stored : "paper";
+    } catch {
+        return document.documentElement.dataset.palette || "paper";
+    }
+}
+
+function setPalette(palette) {
+    document.documentElement.dataset.palette = PALETTES.includes(palette) ? palette : "paper";
+    document.querySelectorAll("[data-palette-choice]").forEach(button => {
+        button.setAttribute("aria-pressed", String(button.dataset.paletteChoice === document.documentElement.dataset.palette));
+    });
+    updateThemeColor();
+}
+
+function updateThemeColor() {
+    const color = getComputedStyle(document.documentElement).getPropertyValue("--background").trim();
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
+}
+
 function applyTheme(pref, animate = false) {
     if (animate) return animateThemeChange(() => setTheme(pref));
     setTheme(pref);
@@ -107,7 +131,7 @@ function setTheme(pref) {
     const meta = THEME_META[pref] || THEME_META.auto;
     els.themeToggle.innerHTML = `<i class="ph ph-${meta.icon} icon" aria-hidden="true"></i>`;
     els.themeToggle.title = meta.label;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#171411" : "#f6f3ed");
+    setPalette(getPalettePreference());
     document.querySelectorAll("[data-theme-choice]").forEach(button => {
         const active = button.dataset.themeChoice === pref;
         button.classList.toggle("active", active);
@@ -117,6 +141,7 @@ function setTheme(pref) {
 
 function animateThemeChange(update) {
     const root = document.documentElement;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return update();
     window.clearTimeout(themeAnimTimer);
     if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         root.classList.add("theme-anim", "theme-view-transition");
@@ -408,6 +433,13 @@ function setSettingsPanel(name) {
 }
 
 function initAppearanceControls() {
+    document.querySelectorAll("[data-palette-choice]").forEach(button => {
+        button.addEventListener("click", () => {
+            const palette = button.dataset.paletteChoice;
+            try { localStorage.setItem(PALETTE_KEY, palette); } catch { }
+            animateThemeChange(() => setPalette(palette));
+        });
+    });
     document.querySelectorAll("[data-theme-choice]").forEach(button => {
         button.addEventListener("click", () => {
             try {
@@ -427,6 +459,7 @@ function initAppearanceControls() {
 }
 
 function syncAppearanceControls() {
+    setPalette(getPalettePreference());
     const theme = getThemePreference();
     document.querySelectorAll("[data-theme-choice]").forEach(button => {
         const active = button.dataset.themeChoice === theme;

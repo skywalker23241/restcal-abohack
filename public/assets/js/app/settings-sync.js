@@ -114,6 +114,7 @@ function backupUserDataSnapshot() {
         habitCheckins: state.habitCheckins,
         preferences: {
             theme: getThemePreference(),
+            palette: getPalettePreference(),
             language: window.RestCalI18n?.getLanguage() || "zh"
         },
         onboardingCompleted: state.onboardingCompleted,
@@ -172,6 +173,11 @@ function restoreUserDataBackup(data) {
         restored = true;
     }
     if (data.preferences && typeof data.preferences === "object" && !Array.isArray(data.preferences)) {
+        if (PALETTES.includes(data.preferences.palette)) {
+            try { localStorage.setItem(PALETTE_KEY, data.preferences.palette); } catch { }
+            setPalette(data.preferences.palette);
+            restored = true;
+        }
         if (THEME_SEQUENCE.includes(data.preferences.theme)) {
             try { localStorage.setItem(THEME_KEY, data.preferences.theme); } catch { }
             applyTheme(data.preferences.theme);
@@ -242,7 +248,7 @@ function syncOnboardingDraft() {
     if (RestCalOnboardingView.steps[onboardingStep].kind === "profile") onboardingDraft.profile = {name: value("obName").trim(), company: value("obCompany").trim(), hireDate: value("obHireDate")};
     if (RestCalOnboardingView.steps[onboardingStep].kind === "schedule") onboardingDraft.workSchedule = {workdaysPerWeek: clampInt(value("obWorkdays"), 1, 7, 5), dailyWorkHours: clampNumber(value("obDailyHours"), 0.5, 24, 8), scheduleType: value("obScheduleType") || "standard", restDays: [...document.querySelectorAll("#obRestDays input:checked")].map(input => Number(input.value))};
     if (RestCalOnboardingView.steps[onboardingStep].kind === "salary") onboardingDraft.salary = {monthlySalary: nonNegativeNumber(value("obSalary")), fixedDeductions: nonNegativeNumber(value("obDeductions")), estimatedTax: nonNegativeNumber(value("obTax")), payday: value("obPayday") ? clampInt(value("obPayday"), 1, 31, 10) : null};
-    if (RestCalOnboardingView.steps[onboardingStep].kind === "tickets") onboardingDraft.ticketPreferences = normalizeTicketPreferences({departureRule: value("obTicketDepartureRule"), returnRule: value("obTicketReturnRule"), advanceDays: value("obTicketAdvanceDays"), reminderTime: value("obTicketReminderTime")});
+    if (RestCalOnboardingView.steps[onboardingStep].kind === "tickets") onboardingDraft.ticketPreferences = normalizeTicketPreferences({...onboardingDraft.ticketPreferences, departureRule: value("obTicketDepartureRule"), returnRule: value("obTicketReturnRule"), advanceDays: value("obTicketAdvanceDays"), reminderTime: value("obTicketReminderTime")});
 }
 function renderOnboardingRestDays() { const host = document.getElementById("obRestDays"); if (!host) return; host.innerHTML = RestCalOnboardingView.restDayOptions(onboardingDraft.workSchedule.restDays); }
 function renderOnboardingSummary() { const host = document.getElementById("onboardingSummary"); if (!host) return; const d = onboardingDraft; const ticket = normalizeTicketPreferences(d.ticketPreferences); const departure = ticket.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日"; const returnDay = ticket.returnRule === "holiday-next" ? "假期结束后一天" : "假期最后一天"; host.innerHTML = `<div class="onboarding-summary-row"><span>个人</span><strong>${escapeHtml(d.profile.name || "未填写")}</strong></div><div class="onboarding-summary-row"><span>工作制度</span><strong>每周 ${d.workSchedule.workdaysPerWeek} 天 · 每天 ${d.workSchedule.dailyWorkHours} 小时</strong></div><div class="onboarding-summary-row"><span>工资</span><strong>${d.salary.monthlySalary ? formatMoney(d.salary.monthlySalary) + " / 月" : "未填写"}</strong></div><div class="onboarding-summary-row"><span>购票提醒</span><strong>去程：${departure} · 返程：${returnDay} · 提前 ${ticket.advanceDays} 天 · ${ticket.reminderTime}</strong></div>`; }
@@ -261,8 +267,9 @@ async function nextOnboardingStep() {
     closeOnboarding();
     await render();
     showToast("设置已保存，欢迎来到 RestCal");
+    const celebrating = window.RestCalOnboardingView?.celebrate() || false;
     if (state.productTourSeenVersion < PRODUCT_TOUR_VERSION) {
-        window.setTimeout(openGuide, 260);
+        window.setTimeout(openGuide, celebrating ? 2400 : 260);
     }
 }
 function validateOnboardingStep() {

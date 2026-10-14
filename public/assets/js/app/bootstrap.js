@@ -15,6 +15,8 @@ const WEBDAV_FILENAME = "xiuli-backup.json";
 // 本地由 server.js 处理；在线版由同源 Netlify Function 处理。
 const WEBDAV_PROXY_URL = "/__webdav";
 const THEME_KEY = "xiuli-theme";
+const PALETTE_KEY = "xiuli-palette";
+const PALETTES = ["paper", "forest", "ocean", "plum"];
 const THEME_SEQUENCE = ["auto", "light", "dark"];
 const PRODUCT_TOUR_VERSION = 2;
 const THEME_META = {
@@ -74,7 +76,7 @@ const DEFAULT_USER_DATA = {
     workSchedule: {workdaysPerWeek: 5, restDays: [0, 6], dailyWorkHours: 8, scheduleType: "standard"},
     salary: {monthlySalary: 0, fixedDeductions: 0, estimatedTax: 0, specialDeductions: 0, taxMode: "simple", payday: null},
     quotaRules: {annualExpireRule: "next-03-31", compExpireRule: "none"},
-    ticketPreferences: {departureRule: "holiday-start", returnRule: "holiday-end", reminderTime: "09:00", advanceDays: 14},
+    ticketPreferences: {departureRule: "holiday-start", returnRule: "holiday-end", reminderTime: "09:00", advanceDays: 14, origin: "", destination: "", transfers: [], flightOrigin: "", flightDestination: ""},
     integrations: {
         googleCalendar: {autoSync: true, include: {leave: true, overtime: true, work: false, notes: true}},
         email: {defaultRecipient: ""}
@@ -164,6 +166,7 @@ let dayModalBackdropPress = false;
 let googleConnection = {connected: false};
 let googleSyncTimer = 0;
 let lastGoogleSyncSignature = "";
+let stationPickerTarget = "";
 
 const els = {
     app: document.querySelector("main.app"),
@@ -284,6 +287,8 @@ const els = {
     ticketReminders: document.getElementById("ticketReminders"),
     ticketGuideText: document.getElementById("ticketGuideText"),
     ticketDepartureRule: document.getElementById("ticketDepartureRule"),
+    ticketOrigin: document.getElementById("ticketOrigin"),
+    ticketDestination: document.getElementById("ticketDestination"),
     ticketReturnRule: document.getElementById("ticketReturnRule"),
     ticketAdvanceDays: document.getElementById("ticketAdvanceDays"),
     icsTicketTime: document.getElementById("icsTicketTime"),

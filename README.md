@@ -10,12 +10,12 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Verify](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml/badge.svg)](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml)
-![Release](https://img.shields.io/badge/release-v2.2.0-b4382a)
+![Release](https://img.shields.io/badge/release-v2.3.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 立即使用](https://restcal.abohack.com/app.html)** · [产品主页](https://restcal.abohack.com) · [Telegram 频道](https://t.me/restcalabohack) · **[下载 v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)** · [问题反馈](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="休历天视图：当日日历卡片、假期额度、出勤和预计实发概览" width="100%">
 
@@ -31,20 +31,20 @@
 
 应用界面支持中文与英文一键切换；语言、主题以及所有业务设置都可以随 CSV 或 WebDAV 完整备份和恢复。
 
-## 🆕 v2.2.0 更新
+## 🆕 v2.3.0 更新
 
-- 修复桌面版 WebDAV 在系统代理或特定证书环境下无法连接的问题。
-- 新增 Google 日历单向同步、系统日历导出和默认邮箱发送，休历记录可以自然进入现有工作流。
-- 新增往返火车票购票提醒、习惯打卡，以及日、周、月视图各具层次的手写风格备注。
-- 重做首次使用与界面引导，以分块聚光覆盖日历、记录、统计、工具和设置等核心任务。
-- 点击顶栏休历图标或文字，可从任意页面直接返回今天的日视图。
-- 更新移动端月视图、节假日插图和多处交互细节。完整变化见[更新日志](CHANGELOG.md)。
+- 火车票提醒支持车站搜索、往返自动反转、多中转站排序和带日期的 12306 直达查询。
+- 新增独立机场选择，覆盖 270 个内地运输机场，并提供国航、南航官网入口。
+- 新增朱砂纸笺、竹影、晴海、暮紫四套配色，每套都支持浅色与深色。
+- 日视图恢复轻量 CSS 台历样式，并优化日历导出、按钮、滚动条和移动端设置体验。
+- 完整合并 v2.2.0 的模块化架构、Google 日历、工资核算和 WebDAV 稳定性更新。完整变化见[更新日志](CHANGELOG.md)。
 
 ## ✨ 功能一览
 
 ### 📅 日、周、月、年四种日历视图
 
 - 日视图突出当天日期、农历、节气和记录状态；周、月、年视图适合不同粒度的回顾与规划。
+- 日视图使用轻量 CSS 台历样式，保留叠页、撑架和翻页效果，不依赖 WebGL。
 - 所有视图均结合公历、农历、节气、法定节假日、调休补班和周末。
 - 五种状态一键标记：出勤、事假、病假、年假、调休；加班作为独立记录与当天状态并存，周末也可以记录加班或备注。
 - 批量标记：选择起止日期，自动跳过周末和节假日，一次性应用到多个工作日。
@@ -99,11 +99,19 @@
 
 按中国法定节假日自动计算火车票开售时间（默认提前 15 天），假期出行不再错过抢票节点。
 
+在「设置 → 购票提醒」选择往返车站。站点面板支持中文、全拼和拼音首字母搜索，并提供右侧字母索引。去程、返程提醒中的「前往 12306」会携带相应车站和出行日期，返程自动交换两站；实际可购日期以 12306 预售期为准。
+
+支持添加多个中转站并调整顺序，返程自动反转整条路线。「逐段查询」分别填写每段车站和出行日期，跨日换乘需手动调整后续日期；「中转换乘方案」打开 12306 官方入口，可能需要登录并手动填写。机票不沿用火车票开售提醒。
+
+同一设置页可独立选择机票往返机场。离线机场面板收录民航局截至 2025 年底公布的 270 个内地运输机场，支持机场／城市名称、全拼、拼音首字母搜索和字母定位；返程自动对调。「航空公司官网」可展开国航、南航直销查询入口，不经过第三方平台。南航链接对已匹配机场代码的路线携带机场和日期，国航及未匹配路线需手动填写；均可复制行程备用，实际查询效果以官网为准。
+
 ### 🌙 深色模式
 
 <img src="public/assets/images/screenshots/overview-dark.png" alt="休历深色主题" width="100%">
 
 默认跟随系统，也可在顶栏于自动、浅色、深色之间手动切换。
+
+在「设置 → 外观」中可选择朱砂纸笺、竹影、晴海、暮紫四套配色，每套均支持浅色和深色模式，提供双色预览。配色选择自动保存在本机，并随 CSV / WebDAV 个人设置备份恢复。
 
 ### 📱 移动端与 PWA
 
@@ -141,7 +149,7 @@
 | 方式 | 适合场景 | 上手方法 |
 |---|---|---|
 | **在线版** | 大多数用户 | 直接打开 [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html)，可安装为 PWA |
-| **桌面版** | Windows 免浏览器使用 | 从 [v2.2.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0) 下载便携版、安装版或 ZIP |
+| **桌面版** | Windows 免浏览器使用 | 从 [v2.3.0 Release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0) 下载便携版、安装版或 ZIP |
 | **本地运行** | 开发或内网使用 | 克隆仓库后 `node server.js`，访问 `http://localhost:8765/app.html` |
 
 也可以直接双击打开 `public/app.html` 使用（`public/index.html` 是介绍页，应用本体在 `public/app.html`）。`file://` 模式本身可以离线运行，但浏览器不会注册 Service Worker，也不能将其安装为 PWA；需要 PWA 能力时请通过 HTTP(S) 打开。
@@ -158,16 +166,16 @@
 
 ## 💻 桌面版（Windows）
 
-最新 Android 版：[RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
+最新 Android 版：[RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
 
-Windows 离线版：[RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
+Windows 离线版：[RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
 
 | 下载 | 用途 |
 |---|---|
-| [`RestCal-2.2.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-portable.exe) | 免安装，下载后直接运行 |
-| [`RestCal-2.2.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-setup.exe) | Windows 安装程序，可选择安装目录 |
-| [`RestCal-2.2.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-win.zip) | 解压后运行 `休历.exe` |
-| [`SHA256SUMS-2.2.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt) | 下载文件完整性校验值 |
+| [`RestCal-2.3.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-portable.exe) | 免安装，下载后直接运行 |
+| [`RestCal-2.3.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-setup.exe) | Windows 安装程序，可选择安装目录 |
+| [`RestCal-2.3.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-win.zip) | 解压后运行 `休历.exe` |
+| [`SHA256SUMS-2.3.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/SHA256SUMS-2.3.0.txt) | 下载文件完整性校验值 |
 
 三个程序包均包含应用和 2004–2026 年中国日历数据，无网络时也能使用。当前构建尚未进行代码签名，Windows SmartScreen 可能在首次运行时显示提醒。
 
@@ -199,7 +207,7 @@ npm run build:android
 
 Debug APK 输出在 `android/app/build/outputs/apk/debug/app-debug.apk`，可直接传到手机安装测试。`mobile/` 是由 `scripts/build-android-web.cjs` 从 `public/app.html` 和 `public/assets/` 生成的构建目录，不需要手动编辑。
 
-当前可直接安装的 APK：[RestCal-2.2.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-android.apk)。该版本包含 Android 原生 WebDAV 与系统日历通道，SHA256 见 [SHA256SUMS-2.2.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt)。
+当前可直接安装的 APK：[RestCal-2.3.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-android.apk)。该版本包含 Android 原生 WebDAV 与系统日历通道，SHA256 见 [SHA256SUMS-2.3.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/SHA256SUMS-2.3.0.txt)。
 
 ## 🛠 部署自己的实例
 

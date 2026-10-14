@@ -75,7 +75,11 @@ function bindEvents() {
         els.hireDateInput,
         els.workdaysInput,
         els.dailyHoursInput,
-        els.scheduleTypeInput
+        els.scheduleTypeInput,
+        els.ticketOrigin,
+        els.ticketDestination,
+        document.getElementById("flightOrigin"),
+        document.getElementById("flightDestination")
     ].filter(Boolean).forEach(input => {
         input.addEventListener("input", () => {
             syncSettingsFromInputs();
@@ -89,6 +93,12 @@ function bindEvents() {
         });
     });
     els.restDaysPicker.addEventListener("change", () => { syncSettingsFromInputs(); saveState(); renderStats(); renderSalary(); renderHomeExtras(); });
+    [els.ticketOrigin, els.ticketDestination].forEach(input => {
+        input.addEventListener("change", () => {
+            const invalid = input.value.trim() && !Object.hasOwn(window.RESTCAL_RAILWAY_STATIONS, input.value.trim());
+            document.getElementById(`${input.id}Error`).textContent = invalid ? (getLanguage() === "en" ? "Choose a station from the list" : "请选择列表中的车站名称") : "";
+        });
+    });
 
     els.settingsToggle.addEventListener("click", () => openSettings());
     els.searchToggle.addEventListener("click", () => openSearch());
@@ -367,9 +377,15 @@ function bindEvents() {
     window.addEventListener("scroll", () => hideNoteTooltip(), true);
     document.addEventListener("keydown", event => {
         if (event.key !== "Escape") return;
+        const openAirlinePicker = document.querySelector(".airline-picker[open]");
+        if (openAirlinePicker) {
+            openAirlinePicker.open = false;
+            return;
+        }
         if (!els.habitIconMenu.hidden) return closeHabitIconMenu(true);
         if (productTour?.active) return skipProductTour();
         if (els.confirmModal.classList.contains("open")) return resolveConfirm(false);
+        if (document.getElementById("stationPickerModal").classList.contains("open")) return closeStationPicker();
         if (els.habitToolPanel.classList.contains("open")) return closeBackdrop(els.habitToolPanel);
         if (els.ticketToolPanel.classList.contains("open")) return closeBackdrop(els.ticketToolPanel);
         if (els.overviewCustomizeModal.classList.contains("open")) return closeOverviewCustomizer();

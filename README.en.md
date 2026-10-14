@@ -10,12 +10,12 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Verify](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml/badge.svg)](https://github.com/skywalker23241/restcal-abohack/actions/workflows/verify.yml)
-![Release](https://img.shields.io/badge/release-v2.2.0-b4382a)
+![Release](https://img.shields.io/badge/release-v2.3.0-b4382a)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8)
 ![Zero Build](https://img.shields.io/badge/build-zero%20dependency-orange)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Windows%20%7C%20Android-blue)
 
-**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
+**[🌐 Open RestCal](https://restcal.abohack.com/app.html)** · [Product site](https://restcal.abohack.com) · [Telegram](https://t.me/restcalabohack) · **[Download v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)** · [Report an issue](https://github.com/skywalker23241/restcal-abohack/issues)
 
 <img src="public/assets/images/screenshots/overview-light.png" alt="RestCal day view with the daily calendar card, leave balance, attendance, and estimated take-home pay" width="100%">
 
@@ -31,20 +31,20 @@ It is a **zero-build, dependency-free frontend** written in native HTML, CSS, an
 
 The application interface can switch between Chinese and English. Language, theme, and all business settings are included in complete CSV and WebDAV backups.
 
-## 🆕 What's new in v2.2.0
+## 🆕 What's new in v2.3.0
 
-- Fixed desktop WebDAV connections in environments that rely on system proxies or certificate settings.
-- Added one-way Google Calendar sync, system-calendar export, and default-email integration so RestCal records fit existing workflows.
-- Added round-trip train-ticket reminders, habit tracking, and handwritten-style notes tailored to day, week, and month views.
-- Rebuilt onboarding and the interface tour around focused highlights for calendar, records, statistics, tools, and settings.
-- Selecting the RestCal logo or wordmark now returns directly to today's day view from anywhere in the app.
-- Refined the compact mobile month view, holiday artwork, and interaction feedback. See the full [changelog](CHANGELOG.md).
+- Train reminders now support station search, reversed return routes, ordered transfers, and dated 12306 links.
+- Added separate airport selection for 270 mainland transport airports, with Air China and China Southern booking entries.
+- Added four color palettes—Cinnabar paper, Bamboo, Open sea, and Dusk violet—each in light and dark modes.
+- Restored the lightweight CSS desk calendar and refined calendar export, buttons, scrollbars, and mobile settings.
+- Integrated all v2.2.0 modularization, Google Calendar, payroll, and WebDAV stability updates. See the full [changelog](CHANGELOG.md).
 
 ## ✨ Features
 
 ### 📅 Day, week, month, and year views
 
 - The day view emphasizes the current date, lunar date, solar terms, and record status; week, month, and year views support planning at different levels.
+- The day view uses a lightweight CSS desk calendar with layered pages, a stand and page-turn effects, without requiring WebGL.
 - Every view combines Gregorian and lunar dates, solar terms, statutory holidays, adjusted working days, and weekends.
 - Mark attendance and four leave statuses with one click. Overtime is stored alongside the day's status, and weekends support both overtime and standalone notes.
 - Apply a status to a date range while automatically skipping weekends and holidays.
@@ -99,11 +99,19 @@ The first-run experience covers only the most common tasks. Focused highlights m
 
 RestCal calculates train-ticket sale dates for Chinese statutory holidays using a configurable advance-sale window of 15 days by default.
 
+Choose outbound stations in Settings → Ticket reminders. The station picker supports Chinese names, pinyin, initials, and an alphabet index. Each trip's Open 12306 link prefills its stations and travel date, reversing the stations for return trips. Available booking dates follow 12306's advance-sale window.
+
+Add and reorder multiple transfer stations; return trips reverse the whole route. Search each leg with stations and date prefilled, adjusting later dates for overnight transfers. The official transfer entry may require login and manual station selection. Train-ticket sale reminders do not apply to flights.
+
+Choose flight airports separately on the same settings page. The offline picker includes 270 mainland transport airports from CAAC's end-2025 list, with name/city, pinyin and initials search plus an alphabet index. Return trips reverse the airports. Airline websites expands official Air China and China Southern booking entries without third-party platforms. China Southern links include airport codes and dates for matched routes; Air China and unmatched routes require manual entry. Copy the itinerary as a fallback; actual search behavior follows each airline's website.
+
 ### 🌙 Dark mode
 
 <img src="public/assets/images/screenshots/overview-dark.png" alt="RestCal dark theme" width="100%">
 
 The theme follows the system by default and can be switched manually between automatic, light, and dark modes.
+
+Settings → Appearance offers four palettes: Cinnabar paper, Bamboo, Open sea, and Dusk violet. Each supports light and dark modes with a paired preview. Your selection is saved locally and included in CSV / WebDAV settings backups.
 
 ### 📱 Mobile and PWA
 
@@ -141,7 +149,7 @@ The theme follows the system by default and can be switched manually between aut
 | Option | Best for | How to start |
 |---|---|---|
 | **Web app** | Most users | Open [restcal.abohack.com/app.html](https://restcal.abohack.com/app.html); it can be installed as a PWA |
-| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v2.2.0 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0) |
+| **Windows app** | Browser-free use | Download the portable app, installer, or ZIP from the [v2.3.0 release](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0) |
 | **Local server** | Development or intranet use | Clone the repository, run `node server.js`, and open `http://localhost:8765/app.html` |
 
 You can also open `public/app.html` directly (`public/index.html` is the product page). The application works offline under `file://`, but browsers do not register Service Workers or allow PWA installation in that mode. Use HTTP(S) when you need PWA features.
@@ -158,16 +166,16 @@ The application shell and bundled holiday, lunar-calendar, and solar-term data f
 
 ## 💻 Windows desktop app
 
-Latest Android release: [RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
+Latest Android release: [RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
 
-Windows offline release: [RestCal v2.2.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.2.0)
+Windows offline release: [RestCal v2.3.0](https://github.com/skywalker23241/restcal-abohack/releases/tag/v2.3.0)
 
 | Download | Purpose |
 |---|---|
-| [`RestCal-2.2.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-portable.exe) | Portable executable; no installation required |
-| [`RestCal-2.2.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-setup.exe) | Windows installer with a selectable installation directory |
-| [`RestCal-2.2.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-win.zip) | Extract and run `休历.exe` |
-| [`SHA256SUMS-2.2.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt) | File-integrity checksums |
+| [`RestCal-2.3.0-portable.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-portable.exe) | Portable executable; no installation required |
+| [`RestCal-2.3.0-setup.exe`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-setup.exe) | Windows installer with a selectable installation directory |
+| [`RestCal-2.3.0-win.zip`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-win.zip) | Extract and run `休历.exe` |
+| [`SHA256SUMS-2.3.0.txt`](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/SHA256SUMS-2.3.0.txt) | File-integrity checksums |
 
 All three packages include the application and Chinese calendar data for 2004–2026. The current builds are not code-signed, so Windows SmartScreen may display a warning on first launch.
 
@@ -199,7 +207,7 @@ npm run build:android
 
 The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk` and can be installed directly on an Android phone for testing. `mobile/` is generated from `public/app.html` and `public/assets/` by `scripts/build-android-web.cjs`; do not edit it manually.
 
-Installable APK: [RestCal-2.2.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/RestCal-2.2.0-android.apk). This build includes native Android WebDAV and system-calendar bridges; see [SHA256SUMS-2.2.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.2.0/SHA256SUMS-2.2.0.txt) for the checksum.
+Installable APK: [RestCal-2.3.0-android.apk](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/RestCal-2.3.0-android.apk). This build includes native Android WebDAV and system-calendar bridges; see [SHA256SUMS-2.3.0.txt](https://github.com/skywalker23241/restcal-abohack/releases/download/v2.3.0/SHA256SUMS-2.3.0.txt) for the checksum.
 
 ## 🛠 Deploy your own instance
 

@@ -843,7 +843,7 @@ async function run() {
                 `);
                 await wait(380);
                 const habitToolAudit = await win.webContents.executeJavaScript(`
-                    (() => {
+                    (async () => {
                         const modal = document.getElementById("habitToolPanel");
                         const box = modal.firstElementChild.getBoundingClientRect();
                         const today = toISO(new Date());
@@ -877,15 +877,17 @@ async function run() {
                 await win.webContents.executeJavaScript('document.getElementById("closeHabitTool").click(); undefined');
                 await wait(280);
                 const habitDayAudit = await win.webContents.executeJavaScript(`
-                    (() => {
-                        const iso = "2026-09-12";
+                    (async () => {
+                        const iso = String(currentYear) + "-" + String(currentMonth).padStart(2, "0") + "-12";
                         openModal(iso);
                         document.querySelectorAll("[data-modal-habit-id]")[0].click();
                         document.querySelectorAll("[data-modal-habit-id]")[1].click();
                         saveModalRecord();
+                        const modalClosing = document.getElementById("dayModal").classList.contains("closing");
+                        await new Promise(resolve => setTimeout(resolve, 500));
                         const checked = state.habits.filter(habit => Boolean(state.habitCheckins[habit.id]?.[iso]));
                         const marker = document.querySelector('[data-date="' + iso + '"] .habit-marker');
-                        return {checked: checked.length, marker: marker?.textContent.trim(), modalClosing: document.getElementById("dayModal").classList.contains("closing")};
+                        return {checked: checked.length, marker: marker?.textContent.trim(), modalClosing};
                     })()
                 `);
                 if (habitDayAudit.checked !== 2 || habitDayAudit.marker !== "2" || !habitDayAudit.modalClosing) {

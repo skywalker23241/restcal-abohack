@@ -251,6 +251,11 @@ function normalizeTicketPreferences(value = {}, legacySettings = {}) {
     const reminderTime = source.reminderTime ?? legacySettings.ticketReminderTime;
     const advanceDays = source.advanceDays ?? legacySettings.ticketAdvanceDays;
     return {
+        origin: typeof source.origin === "string" ? source.origin.trim().slice(0, 40) : "",
+        destination: typeof source.destination === "string" ? source.destination.trim().slice(0, 40) : "",
+        flightOrigin: typeof source.flightOrigin === "string" && Object.hasOwn(window.RESTCAL_AIRPORTS || {}, source.flightOrigin.trim()) ? source.flightOrigin.trim() : "",
+        flightDestination: typeof source.flightDestination === "string" && Object.hasOwn(window.RESTCAL_AIRPORTS || {}, source.flightDestination.trim()) && source.flightDestination.trim() !== (typeof source.flightOrigin === "string" ? source.flightOrigin.trim() : "") ? source.flightDestination.trim() : "",
+        transfers: Array.isArray(source.transfers) ? [...new Set(source.transfers.filter(name => typeof name === "string").map(name => name.trim().slice(0, 40)).filter(name => name && name !== (typeof source.origin === "string" ? source.origin.trim() : "") && name !== (typeof source.destination === "string" ? source.destination.trim() : "") && Object.hasOwn(window.RESTCAL_RAILWAY_STATIONS || {}, name)))] : [],
         departureRule: ["holiday-start", "holiday-eve"].includes(departureRule) ? departureRule : DEFAULT_USER_DATA.ticketPreferences.departureRule,
         returnRule: ["holiday-end", "holiday-next"].includes(returnRule) ? returnRule : DEFAULT_USER_DATA.ticketPreferences.returnRule,
         reminderTime: isValidReminderTime(reminderTime) ? reminderTime : DEFAULT_USER_DATA.ticketPreferences.reminderTime,

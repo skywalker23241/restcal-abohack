@@ -213,6 +213,7 @@ function dismissBackdropFromDrag(backdrop) {
         searchModal: closeSearch,
         guideModal: dismissProductTourIntro,
         settingsModal: closeSettings,
+        stationPickerModal: closeStationPicker,
         overviewCustomizeModal: closeOverviewCustomizer,
         recentRecordsPanel: closeRecentRecords,
         webdavConfigModal: closeWebdavConfigModal,

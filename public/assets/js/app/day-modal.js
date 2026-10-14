@@ -245,6 +245,11 @@ function syncSettingsFromInputs() {
         compExpireRule: els.compExpireRule?.value || "none"
     };
     state.ticketPreferences = normalizeTicketPreferences({
+        origin: els.ticketOrigin?.value,
+        destination: els.ticketDestination?.value,
+        transfers: readTicketTransfers(),
+        flightOrigin: document.getElementById("flightOrigin").value,
+        flightDestination: document.getElementById("flightDestination").value,
         departureRule: els.ticketDepartureRule?.value,
         returnRule: els.ticketReturnRule?.value,
         reminderTime: els.icsTicketTime?.value,
@@ -279,6 +284,13 @@ function fillSettingsInputs() {
     els.dailyHoursInput.value = state.workSchedule.dailyWorkHours;
     els.scheduleTypeInput.value = state.workSchedule.scheduleType;
     if (els.ticketDepartureRule) els.ticketDepartureRule.value = state.ticketPreferences.departureRule;
+    if (els.ticketOrigin) els.ticketOrigin.value = state.ticketPreferences.origin;
+    if (els.ticketDestination) els.ticketDestination.value = state.ticketPreferences.destination;
+    document.getElementById("flightOrigin").value = state.ticketPreferences.flightOrigin || "";
+    document.getElementById("flightDestination").value = state.ticketPreferences.flightDestination || "";
+    renderTicketTransferStations();
+    renderTicketRouteQueries();
+    renderFlightRoutePreview();
     if (els.ticketReturnRule) els.ticketReturnRule.value = state.ticketPreferences.returnRule;
     if (els.ticketAdvanceDays) els.ticketAdvanceDays.value = state.ticketPreferences.advanceDays;
     if (els.icsTicketTime) els.icsTicketTime.value = state.ticketPreferences.reminderTime;
@@ -398,6 +410,7 @@ async function clearAllData() {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(WEBDAV_KEY);
     localStorage.removeItem(THEME_KEY);
+    localStorage.removeItem(PALETTE_KEY);
     localStorage.removeItem("restcal-language");
     window.location.reload();
 }
@@ -637,4 +650,5 @@ function completeProductTour(skipped) {
     if (els.settingsModal.classList.contains("open")) closeSettings();
     switchView("calendar");
     showToast(skipped ? "已退出界面引导，可从右上角重新打开" : "界面引导已完成");
+    if (!skipped) window.RestCalOnboardingView?.celebrate();
 }

@@ -30,9 +30,14 @@
             try {pref = localStorage.getItem("xiuli-theme") || "auto";} catch { }
             var dark = pref === "dark" || (pref === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
             document.documentElement.dataset.theme = dark ? "dark" : "light";
+            var palette = "paper";
+            try {palette = localStorage.getItem("xiuli-palette") || "paper";} catch { }
+            document.documentElement.dataset.palette = ["paper", "forest", "ocean", "plum"].includes(palette) ? palette : "paper";
         })();
     </script>
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+    <link rel="stylesheet" href="assets/css/scrollbars.css">
 </head>
 
 <body>
@@ -232,11 +237,12 @@
                 <div class="reminder-list" id="ticketReminders"></div>
             </div>
             <aside class="ticket-guide">
-                <p id="ticketGuideText">提醒默认 09:00，实际起售时间以 12306 为准。</p>
                 <div class="ticket-links">
-                    <a class="btn" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">查询起售时间</a>
-                    <a class="btn primary" href="https://www.12306.cn/" target="_blank" rel="noopener noreferrer">前往 12306</a>
+                    <a class="btn primary" id="ticketBookingLink" href="https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc" target="_blank" rel="noopener noreferrer">火车票</a>
+                    <div id="flightBookingLink" class="airline-entry"></div>
+                    <a class="btn ghost ticket-sale-link" href="https://www.12306.cn/index/view/infos/sale_time.html" target="_blank" rel="noopener noreferrer">起售时间</a>
                 </div>
+                <p id="ticketGuideText">提前 14 天 · 09:00 提醒 · 以 12306 为准</p>
             </aside>
         </div>
     </div>
@@ -530,7 +536,26 @@
                                 <select id="icsTicketTime" aria-label="购票提醒时间"></select>
                             </div>
                         </div>
+                        <div class="settings-card ticket-route-settings">
+                            <div class="settings-card-head"><strong>往返路线</strong><span class="settings-card-meta">返程自动对调</span></div>
+                            <div class="settings-grid">
+                                <div class="field"><label for="ticketOriginPicker">出发地 / 车站</label><input id="ticketOrigin" type="hidden"><button class="station-picker-trigger" id="ticketOriginPicker" type="button" data-station-target="ticketOrigin" aria-haspopup="dialog" aria-controls="stationPickerModal"><span>选择出发站</span><i class="ph ph-caret-down" aria-hidden="true"></i></button><small class="field-error" id="ticketOriginError" aria-live="polite"></small></div>
+                                <div class="field"><label for="ticketDestinationPicker">目的地 / 车站</label><input id="ticketDestination" type="hidden"><button class="station-picker-trigger" id="ticketDestinationPicker" type="button" data-station-target="ticketDestination" aria-haspopup="dialog" aria-controls="stationPickerModal"><span>选择到达站</span><i class="ph ph-caret-down" aria-hidden="true"></i></button><small class="field-error" id="ticketDestinationError" aria-live="polite"></small></div>
+                            </div>
+                            <div class="ticket-transfer-settings"><div class="settings-card-head"><strong>中转站（按行程顺序）</strong><button class="btn ghost" id="addTicketTransfer" type="button">添加中转站</button></div><div id="ticketTransferStations" class="ticket-transfer-list"></div></div>
+                            <p class="notice">逐段查询会填写车站和出行日期；返程自动反转整条路线。跨日换乘请调整后续车段日期，预售期以 12306 为准。</p>
+                            <div id="ticketRouteQueries" class="ticket-route-queries"></div>
+                        </div>
                         <p class="notice">将分别按计划出发日和返程日倒推开售日期；实际起售时间以 12306 为准。</p>
+                        <div class="settings-card flight-route-settings">
+                            <div class="settings-card-head"><strong>机票往返机场</strong><span class="settings-card-meta">返程自动对调</span></div>
+                            <div class="settings-grid">
+                                <div class="field"><label for="flightOriginPicker">出发机场</label><input id="flightOrigin" type="hidden"><button class="station-picker-trigger" id="flightOriginPicker" type="button" data-station-target="flightOrigin" aria-haspopup="dialog" aria-controls="stationPickerModal"><span>选择出发机场</span><i class="ph ph-caret-down" aria-hidden="true"></i></button></div>
+                                <div class="field"><label for="flightDestinationPicker">到达机场</label><input id="flightDestination" type="hidden"><button class="station-picker-trigger" id="flightDestinationPicker" type="button" data-station-target="flightDestination" aria-haspopup="dialog" aria-controls="stationPickerModal"><span>选择到达机场</span><i class="ph ph-caret-down" aria-hidden="true"></i></button></div>
+                            </div>
+                            <p class="notice">机场与火车站分开保存。选择航空公司官网查询购票；无法自动填写时，可复制行程。机场名单为内地运输机场（截至 2025 年底）。</p>
+                            <div id="flightRoutePreview" class="flight-route-preview"></div>
+                        </div>
                     </section>
                     <section class="settings-panel" data-settings-panel="leave-doc" hidden>
                         <header class="settings-panel-head">
@@ -627,22 +652,21 @@
                         <p class="privacy-note"><i class="ph ph-shield-check icon" aria-hidden="true"></i><span>功能开放前，休历不会请求 Google 授权，也不会向 Google 发送数据。</span></p>
                         <div class="settings-card" id="icsCard">
                             <div class="settings-card-head">
-                                <strong>日历文件导出 (.ics)</strong>
-                                <span class="settings-card-meta">RFC 5545</span>
+                                <strong>日历文件导出</strong>
+                                <span class="ics-format">.ics</span>
                             </div>
                             <p class="notice">导出标准日历文件，可导入常用日历应用。</p>
-                            <div class="ics-options" aria-label="日历导出内容">
-                                <label><input type="checkbox" data-ics-category="leave" checked> 请假</label>
-                                <label><input type="checkbox" data-ics-category="overtime" checked> 加班</label>
-                                <label><input type="checkbox" data-ics-category="work"> 普通出勤</label>
-                                <label><input type="checkbox" data-ics-category="notes"> 仅备注</label>
-                                <label><input type="checkbox" data-ics-category="holidays" checked> 法定节假日</label>
-                                <label><input type="checkbox" data-ics-category="makeups" checked> 调休补班</label>
-                                <label><input type="checkbox" data-ics-category="tickets" checked> 抢票提醒</label>
+                            <div class="ics-content-groups">
+                                <fieldset class="ics-content-group"><legend>我的记录</legend><div class="ics-options">
+                                    <label><input type="checkbox" data-ics-category="leave" checked><span>请假</span></label><label><input type="checkbox" data-ics-category="overtime" checked><span>加班</span></label><label><input type="checkbox" data-ics-category="work"><span>普通出勤</span></label><label><input type="checkbox" data-ics-category="notes"><span>仅备注</span></label>
+                                </div></fieldset>
+                                <fieldset class="ics-content-group"><legend>假期与提醒</legend><div class="ics-options">
+                                    <label><input type="checkbox" data-ics-category="holidays" checked><span>法定节假日</span></label><label><input type="checkbox" data-ics-category="makeups" checked><span>调休补班</span></label><label><input type="checkbox" data-ics-category="tickets" checked><span>抢票提醒</span></label>
+                                </div></fieldset>
                             </div>
-                            <div class="csv-actions">
-                                <button class="btn" id="exportIcsCurrentYear" type="button">导出当前年 (.ics)</button>
-                                <button class="btn" id="exportIcsAll" type="button">导出全部记录 (.ics)</button>
+                            <div class="ics-export-actions">
+                                <button class="btn primary" id="exportIcsCurrentYear" type="button">导出当前年</button>
+                                <button class="btn ghost" id="exportIcsAll" type="button">导出全部记录</button>
                             </div>
                         </div>
                         <div class="settings-card" id="webdavCard">
@@ -664,6 +688,13 @@
                             <h3>外观</h3>
                             <p>主题与语言偏好保存在本机。</p>
                         </header>
+                        <div class="palette-heading"><strong id="paletteLabel">配色风格</strong><span>每套配色均支持浅色与深色，点击即可切换。</span></div>
+                        <div class="palette-grid" role="group" aria-labelledby="paletteLabel">
+                            <button class="palette-choice" data-palette-choice="paper" type="button" aria-pressed="false"><span class="palette-preview" aria-hidden="true"><span class="palette-preview-light"><i></i><b></b><em></em></span><span class="palette-preview-dark"><i></i><b></b><em></em></span></span><span class="palette-name">朱砂纸笺</span><span class="palette-description">暖纸与朱红，经典日历</span></button>
+                            <button class="palette-choice" data-palette-choice="forest" type="button" aria-pressed="false"><span class="palette-preview" aria-hidden="true"><span class="palette-preview-light"><i></i><b></b><em></em></span><span class="palette-preview-dark"><i></i><b></b><em></em></span></span><span class="palette-name">竹影</span><span class="palette-description">雾白与竹绿，清静自然</span></button>
+                            <button class="palette-choice" data-palette-choice="ocean" type="button" aria-pressed="false"><span class="palette-preview" aria-hidden="true"><span class="palette-preview-light"><i></i><b></b><em></em></span><span class="palette-preview-dark"><i></i><b></b><em></em></span></span><span class="palette-name">晴海</span><span class="palette-description">云白与海蓝，明净清爽</span></button>
+                            <button class="palette-choice" data-palette-choice="plum" type="button" aria-pressed="false"><span class="palette-preview" aria-hidden="true"><span class="palette-preview-light"><i></i><b></b><em></em></span><span class="palette-preview-dark"><i></i><b></b><em></em></span></span><span class="palette-name">暮紫</span><span class="palette-description">浅杏与藤紫，柔和沉静</span></button>
+                        </div>
                         <div class="appearance-row">
                             <div class="appearance-label">
                                 <strong>主题</strong>
@@ -1023,10 +1054,21 @@
         </div>
     </div>
 
+    <div class="modal-backdrop station-picker-backdrop" id="stationPickerModal" role="dialog" aria-modal="true" aria-labelledby="stationPickerTitle">
+        <section class="modal station-picker-dialog">
+            <header class="modal-head"><div><h2 id="stationPickerTitle">选择车站</h2><p id="stationPickerSubtitle">按拼音首字母浏览，或搜索站名和拼音。</p></div><button class="btn icon-only" id="closeStationPicker" type="button" title="关闭" aria-label="关闭"><i class="ph ph-x icon" aria-hidden="true"></i></button></header>
+            <div class="station-picker-search"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="stationPickerSearch" type="search" autocomplete="off" placeholder="搜索站名、拼音或首字母" aria-label="搜索车站"></div>
+            <div class="station-picker-body"><div class="station-picker-list" id="stationPickerList"></div><nav class="station-picker-index" id="stationPickerIndex" aria-label="拼音索引"></nav></div>
+            <footer class="station-picker-footer"><span id="stationPickerCountLabel">全部站点</span><strong id="stationPickerCount" aria-live="polite"></strong><button class="btn ghost" id="clearStationSelection" type="button">清除选择</button></footer>
+        </section>
+    </div>
+
     <script src="assets/vendor/chinese-days/index.min.js"></script>
     <script src="assets/js/calendar-years.js"></script>
     <script src="assets/js/ics-exporter.js"></script>
     <script src="assets/js/payroll.js"></script>
+    <script src="assets/js/railway-stations.js"></script>
+    <script src="assets/js/airports.js"></script>
     <script src="assets/js/app-i18n-v1.4.9.js"></script>
     <script src="assets/js/onboarding.js"></script>
     <script src="assets/js/product-tour.js"></script>
@@ -1044,6 +1086,7 @@
     <script src="assets/js/app/settings-sync.js"></script>
     <script src="assets/js/app/calendar-data.js"></script>
     <script src="assets/js/app/core.js"></script>
+    <script src="assets/js/app/ticket-routes.js"></script>
     <script src="assets/js/app/bootstrap.js"></script>
     <script>
         // PWA：注册 Service Worker，并申请持久化存储，降低 localStorage 被系统清理的风险。

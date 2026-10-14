@@ -35,5 +35,36 @@
         return `<div class="onboarding-heading"><h1 id="onboardingTitle">${step.title}</h1><p>${step.text}</p></div><div class="onboarding-summary" id="onboardingSummary"></div>`;
     }
 
-    window.RestCalOnboardingView = Object.freeze({steps, markup, restDayOptions});
+    function celebrate() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+        document.querySelector(".onboarding-confetti")?.remove();
+        const layer = document.createElement("div");
+        layer.className = "onboarding-confetti";
+        layer.setAttribute("aria-hidden", "true");
+        const colors = ["var(--primary)", "#e4b84c", "#dd7899", "#5ba99b", "#789bd3"];
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        for (let i = 0; i < 96; i++) {
+            const piece = document.createElement("span");
+            const side = i % 2;
+            const distance = width * (.18 + Math.random() * .6) * (side ? -1 : 1);
+            const rise = height * (.5 + Math.random() * .4);
+            const rotation = (Math.random() - .5) * 1080;
+            piece.style.left = side ? "100%" : "0";
+            piece.style.background = colors[i % colors.length];
+            piece.style.borderRadius = i % 3 === 0 ? "50%" : "2px";
+            layer.appendChild(piece);
+            piece.animate([
+                {transform: "translate(0px, 0px) rotate(0deg)", opacity: 0},
+                {transform: `translate(${distance * .18}px, ${-rise * .3}px) rotate(${rotation * .2}deg)`, opacity: 1, offset: .12},
+                {transform: `translate(${distance * .72}px, ${-rise * .82}px) rotate(${rotation * .7}deg)`, opacity: .8, offset: .55},
+                {transform: `translate(${distance}px, ${-rise}px) rotate(${rotation}deg)`, opacity: 0}
+            ], {duration: 1600 + Math.random() * 600, delay: Math.random() * 150, easing: "cubic-bezier(.18,.7,.3,1)", fill: "both"});
+        }
+        document.body.appendChild(layer);
+        window.setTimeout(() => layer.remove(), 2400);
+        return true;
+    }
+
+    window.RestCalOnboardingView = Object.freeze({steps, markup, restDayOptions, celebrate});
 })();

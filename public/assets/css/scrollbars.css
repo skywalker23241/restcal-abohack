@@ -1,0 +1,35 @@
+/* Shared native scrollbars: theme-aware, with no change to scroll behavior. */
+:root {
+    --scrollbar-thumb: color-mix(in srgb, var(--muted-foreground, var(--muted, #837b6f)) 42%, transparent);
+    --scrollbar-thumb-hover: color-mix(in srgb, var(--primary, var(--seal, #b4382a)) 65%, transparent);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+/* Non-auto scrollbar-color overrides WebKit styling in Chromium. */
+@supports not selector(::-webkit-scrollbar) {
+    *:hover { scrollbar-color: var(--scrollbar-thumb-hover) transparent; }
+}
+
+/* Let WebKit pseudo-elements control the shape; Firefox uses the rules above. */
+@supports selector(::-webkit-scrollbar) {
+    * { scrollbar-width: auto; scrollbar-color: auto; }
+}
+
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track, *::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--scrollbar-thumb); }
+*::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+*::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+.select-menu::-webkit-scrollbar,
+.station-picker-list::-webkit-scrollbar,
+.station-picker-index::-webkit-scrollbar { display: none; }
+
+@media (forced-colors: active) {
+    * { scrollbar-color: auto; }
+    *::-webkit-scrollbar-thumb { background: CanvasText; }
+}

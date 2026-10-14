@@ -89,7 +89,7 @@ function getOverviewModuleItems(monthStats) {
         annualQuota: {...meta.annualQuota, value: annualQuota ? daysText(roundQuota(annualLeft)) : (english ? "Not set" : "未设置"), compact: annualQuota ? (english ? `${roundQuota(annualLeft)} days annual leave left` : `${roundQuota(annualLeft)} 天年假可用`) : (english ? "Set annual leave quota" : "设置年假额度"), meta: annualQuota ? `${roundQuota(annual.total)} 天额度，已用 ${roundQuota(annual.used)} 天` : "", action: "settings:quota"},
         leaveDeduction: {...meta.leaveDeduction, value: salary.salary ? formatMoney(salary.leaveDeduction) : (english ? "Not set" : "未设置"), compact: salary.salary ? (english ? `${formatMoney(salary.leaveDeduction)} deducted` : `${formatMoney(salary.leaveDeduction)} 请假扣款`) : (english ? "Set salary" : "设置薪资"), meta: salary.salary ? (english ? `Daily pay ${formatMoney(salary.daily)} before leave-type rate` : `日薪 ${formatMoney(salary.daily)}，再按请假类型比例计算`) : "", action: salary.salary ? "salaryReceipt" : "settings:salary"},
         estimatedSalary: {...meta.estimatedSalary, value: salary.salary ? formatMoney(salary.actual) : (english ? "Not set" : "未设置"), compact: salary.salary ? (english ? `${formatMoney(salary.actual)} estimated pay` : `预计实发 ${formatMoney(salary.actual)}`) : (english ? "Set salary" : "设置薪资"), meta: english ? "Estimated pay for the selected month" : "所选月份预计实发工资", action: salary.salary ? "salaryReceipt" : "settings:salary"},
-        nextHoliday: {...meta.nextHoliday, value: holiday ? (holiday.days ? daysText(holiday.days) : (english ? "Today" : "今天")) : (english ? "No data" : "暂无数据"), compact: holiday ? `${holidayName} · ${holiday.days ? (english ? `in ${holiday.days} days` : `还有 ${holiday.days} 天`) : (english ? "today" : "今天")}` : (english ? "No holiday data" : "节假日暂无数据"), meta: holiday ? `${holidayName} · ${formatMonthDay(holiday.date)}` : "", action: holiday ? `date:${toISO(holiday.date)}` : ""},
+        nextHoliday: {...meta.nextHoliday, value: holiday ? (holiday.days ? daysText(holiday.days) : (english ? "Today" : "今天")) : (english ? "No holidays" : "无假"), compact: holiday ? `${holidayName} · ${holiday.days ? (english ? `in ${holiday.days} days` : `还有 ${holiday.days} 天`) : (english ? "today" : "今天")}` : (english ? "No upcoming holidays" : "暂无后续假期"), meta: holiday ? `${holidayName} · ${formatMonthDay(holiday.date)}` : (english ? "No upcoming holidays in published schedules" : "已发布安排中暂无后续假期"), action: holiday ? `date:${toISO(holiday.date)}` : ""},
         ticketSale: {...meta.ticketSale, value: ticket ? (ticketDays > 0 ? daysText(ticketDays) : ticketDays === 0 ? (english ? "Today" : "今天") : (english ? "On sale" : "已开售")) : (english ? "No data" : "暂无数据"), compact: ticket ? `${window.RestCalI18n?.t(ticket.name) || ticket.name}${ticket.tripLabel} · ${ticketDays > 0 ? (english ? `${ticketDays} days` : `${ticketDays} 天后`) : ticketDays === 0 ? (english ? "today" : "今天开售") : (english ? "on sale" : "已开售")}` : (english ? "No ticket reminders" : "暂无购票提醒"), meta: ticket ? `${formatMonthDay(ticket.saleDate)} 开售 · ${formatMonthDay(ticket.departure)} 出行` : "", action: "ticket"},
         payday: {...meta.payday, value: payday ? (paydayDays ? daysText(paydayDays) : (english ? "Today" : "今天")) : (english ? "Not set" : "未设置"), compact: payday ? (paydayDays ? (english ? `${paydayDays} days to payday` : `距发薪日 ${paydayDays} 天`) : (english ? "Payday · today" : "今天发薪")) : (english ? "Set payday" : "设置发薪日"), meta: payday ? formatMonthDay(payday) : "", action: "settings:salary"},
         overtime: {...meta.overtime, value: english ? `${roundQuota(monthStats.overtimeHours)} hours` : `${roundQuota(monthStats.overtimeHours)} 小时`, compact: english ? `${roundQuota(monthStats.overtimeHours)} overtime hours` : `本月加班 ${roundQuota(monthStats.overtimeHours)} 小时`, meta: english ? `${monthStats.overtimeDays} recorded days` : `所选月份 ${monthStats.overtimeDays} 天有加班记录`, action: "stats"},
@@ -554,9 +554,15 @@ function quotaLine(label, used, quota, inSettings = false, extraEarned = 0) {
 function renderTicketReminders() {
     const reminders = getTicketReminders(currentYear);
     const ticketPreferences = normalizeTicketPreferences(state.ticketPreferences, state.settings);
+    const nextTrip = reminders.find(item => diffDays(new Date(), item.departure) >= 0);
+    document.getElementById("flightBookingLink").innerHTML = airlineSelectorMarkup(nextTrip?.tripType || "outbound", nextTrip?.departure || today);
+    document.getElementById("ticketBookingLink").href = build12306Url(nextTrip?.tripType || "outbound", nextTrip?.departure || today) || "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc";
     const departureLabel = ticketPreferences.departureRule === "holiday-eve" ? "假期前一天晚上" : "假期首日";
     const returnLabel = ticketPreferences.returnRule === "holiday-next" ? "假期结束后一天" : "假期最后一天";
-    if (els.ticketGuideText) els.ticketGuideText.textContent = `去程按${departureLabel}、返程按${returnLabel}计算，均提前 ${ticketPreferences.advanceDays} 天售票，${ticketPreferences.reminderTime} 提醒；实际起售时间以 12306 为准。`;
+    if (els.ticketGuideText) {
+        els.ticketGuideText.textContent = getLanguage() === "en" ? `${ticketPreferences.advanceDays} days ahead · ${ticketPreferences.reminderTime} reminder · Check 12306` : `提前 ${ticketPreferences.advanceDays} 天 · ${ticketPreferences.reminderTime} 提醒 · 以 12306 为准`;
+        els.ticketGuideText.title = getLanguage() === "en" ? `Outbound: ${ticketPreferences.departureRule === "holiday-eve" ? "day before holiday" : "first holiday day"}; return: ${ticketPreferences.returnRule === "holiday-next" ? "day after holiday" : "last holiday day"}. Actual sale times follow 12306.` : `去程按${departureLabel}、返程按${returnLabel}计算；实际起售时间以 12306 为准。`;
+    }
 
     if (!reminders.length) {
         els.ticketToolHint.textContent = "本年度暂无购票提醒";
@@ -579,7 +585,7 @@ function renderTicketReminders() {
 
     const tripsByHoliday = new Map();
     reminders.forEach(item => {
-        const key = `${item.name}:${toISO(item.holidayStart)}:${toISO(item.holidayEnd)}`;
+        const key = `${item.name}:${toISO(item.holidayStart || item.departure)}:${toISO(item.holidayEnd || item.departure)}`;
         if (!tripsByHoliday.has(key)) tripsByHoliday.set(key, {key, name: item.name, items: []});
         tripsByHoliday.get(key).items.push(item);
     });
@@ -613,6 +619,8 @@ function renderTicketReminders() {
             <div class="ticket-trip-label"><i class="ph ph-${item.tripType === "return" ? "airplane-landing" : "airplane-takeoff"} icon" aria-hidden="true"></i><span>${item.tripLabel}</span></div>
             <div class="ticket-sale"><time datetime="${toISO(item.saleDate)}">${formatMonthDay(item.saleDate)}</time><span>${weekdayName(item.saleDate)} · 开售</span></div>
             <div class="ticket-departure"><span>出行日期</span><time datetime="${toISO(item.departure)}">${formatMonthDay(item.departure)}</time><small>${weekdayName(item.departure)}</small></div>
+            ${build12306Url(item.tripType, item.departure) ? `<div class="ticket-route">${getTicketRoute(item.tripType).map(escapeHtml).join(" → ")}</div>` : ""}
+            ${flightRouteMarkup(item.tripType, item.departure)}
         </section>` : "";
     const card = (trip, archived = false) => {
         const outbound = trip.items.find(item => item.tripType === "outbound");
@@ -629,12 +637,15 @@ function renderTicketReminders() {
                     ${tripLeg(returning)}
                 </div>
             </div>
-            ${archived ? "" : `<div class="ticket-card-actions"><button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${exportKey}">导出提醒</button></div>`}
+            ${archived ? "" : `<div class="ticket-card-actions">${trip.items.map(item => {
+                const url = build12306Url(item.tripType, item.departure);
+                return url ? `<a class="btn primary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${item.tripLabel} 12306</a>` : "";
+            }).join("")}${trip.items.some(item => build12306Url(item.tripType, item.departure)) ? "" : `<button class="btn" type="button" data-open-settings-dynamic="tickets">设置往返地</button>`}<button class="btn ghost ticket-export-btn" type="button" data-ticket-export="${exportKey}">导出提醒</button></div>`}
         </article>`;
     };
     els.ticketReminders.innerHTML = `
         <div class="ticket-upcoming">${upcoming.length ? upcoming.map(item => card(item)).join("") : `<div class="ticket-list-empty">暂无待出发行程</div>`}</div>
-        ${past.length ? `<details class="ticket-history"><summary><span>已结束的出行</span> · ${past.length}</summary><div class="ticket-upcoming ticket-history-list">${past.map(item => card(item, true)).join("")}</div></details>` : ""}
+        ${past.length ? `<details class="ticket-history"><summary><span>已结束的出行</span><span class="ticket-history-count">${past.length}</span><span class="ticket-history-toggle" aria-hidden="true"><i class="ph ph-caret-down icon"></i></span></summary><div class="ticket-upcoming ticket-history-list">${past.map(item => card(item, true)).join("")}</div></details>` : ""}
     `;
 }
 

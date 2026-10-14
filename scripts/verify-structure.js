@@ -26,7 +26,7 @@ function requireFile(file, source = "project") {
 }
 
 function localReference(value) {
-    if (!value || /^(?:[a-z]+:|#|data:|\/\/)/i.test(value)) return null;
+    if (!value || /^(?:[a-z]+:|#|data:|\/\/|\$\{)/i.test(value)) return null;
     const reference = value.split(/[?#]/, 1)[0].replace(/^\/+/, "");
     return reference === "." || reference === "./" ? null : reference;
 }

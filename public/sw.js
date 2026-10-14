@@ -1,6 +1,6 @@
 /* 休历 Service Worker
  * 发布新版本时递增 CACHE_VERSION，旧缓存会在 activate 阶段清除。 */
-const CACHE_VERSION = "v2.2.0-round-trip-tickets-google-disabled";
+const CACHE_VERSION = "v2.3.0-routes-themes-desk-calendar";
 const APP_CACHE = `xiuli-app-${CACHE_VERSION}`;
 const FONT_CACHE = "xiuli-fonts-v1";
 const CALENDAR_CACHE = "xiuli-calendar-data-v1";
@@ -16,6 +16,8 @@ const PRECACHE = [
     "assets/js/calendar-years.js",
     "assets/js/ics-exporter.js",
     "assets/js/payroll.js",
+    "assets/js/railway-stations.js",
+    "assets/js/airports.js",
     "assets/js/onboarding.js",
     "assets/js/product-tour.js",
     // 主脚本分片，顺序与 app.html 一致。
@@ -31,8 +33,11 @@ const PRECACHE = [
     "assets/js/app/settings-sync.js",
     "assets/js/app/calendar-data.js",
     "assets/js/app/core.js",
+    "assets/js/app/ticket-routes.js",
     "assets/js/app/bootstrap.js",
     "assets/css/styles.css",
+    "assets/css/themes.css",
+    "assets/css/scrollbars.css",
     "assets/vendor/phosphor/regular/style.css",
     "assets/vendor/phosphor/regular/Phosphor.woff2",
     "assets/vendor/phosphor/fill/style.css",
